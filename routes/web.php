@@ -18,4 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('/user', [App\Http\Controllers\usersController::class, 'index']);
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+
