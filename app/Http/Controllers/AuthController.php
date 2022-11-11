@@ -63,4 +63,21 @@ class AuthController extends Controller
 
         return compact('success');
     }
+
+    public function generateCodOtp()
+    {
+        $lenght = 6;
+
+        $characters = '0123456789';
+
+        $charactersLenght = strlen($characters);
+
+        $randomString = '';
+
+        for ($i=0; $i < $lenght; $i++) { 
+            $randomString .= $characters[rand(0, $charactersLenght -1)];
+        }
+
+        return $randomString;
+    }
 }
