@@ -17,5 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/user', [App\Http\Controllers\usersController::class, 'index']);
-
+Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detailsUser']);
+Route::get('/search-user/{rut}', [App\Http\Controllers\usersController::class, 'search']);
+Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, 'update']);
+Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);

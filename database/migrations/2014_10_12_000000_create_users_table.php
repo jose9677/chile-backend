@@ -32,9 +32,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->primary(['rut']);
-            $table->unique('email');
-
             $table->softDeletes();
         });
     }

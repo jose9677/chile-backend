@@ -18,9 +18,19 @@ class AuthController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-           'name'  => 'required|string|max:255',
-           'email' => 'required|string|email|max:255|unique:users',
-           'password' => 'required|string|min:6',
+            'rut' => 'required',
+            'names'  => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'f_nac' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'landline' => 'required',
+            'mobile_phone' => 'required',
+            'id_way' => 'required',
+            'way_name' => 'required',
+            'number_way' => 'required',
+            'id_property' => 'required',
+            'name_num_property' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -28,18 +38,30 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->get('name'),
+            'rut' => $request->get('rut'),
+            'names' => $request->get('names'),
+            'lastname' => $request->get('lastname'),
+            'f_nac' => $request->get('f_nac'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
+            'landline' => $request->get('landline'),
+            'mobile_phone' => $request->get('mobile_phone'),
+            'id_way' => $request->get('id_way'),
+            'way_name' => $request->get('way_name'),
+            'number_way' => $request->get('number_way'),
+            'id_property' => $request->get('id_property'),
+            'name_num_property'=> $request->get('name_num_property'),
+            'otp' => $this->generateCodOtp()
         ]);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);
+        
     }
     
     public function login(Request $request)
     {
-        $credentials = $request->only(['email', 'password']);
+        $credentials = $request->only(['rut', 'password']);
 
         if (Auth::guard('api')->attempt($credentials)) {
             $user = Auth::guard('api')->user();
@@ -79,5 +101,10 @@ class AuthController extends Controller
         }
 
         return $randomString;
+    }
+
+    public function validateEmail(Request $request)
+    {
+        
     }
 }
