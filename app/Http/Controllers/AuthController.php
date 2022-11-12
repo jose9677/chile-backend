@@ -105,6 +105,25 @@ class AuthController extends Controller
 
     public function validateEmail(Request $request)
     {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
         
+        $data = User::where([
+            'otp' => $request['otp']
+        ])->get();
+
+        if ($data->count()) {
+            User::query()->where('otp', $request->input('otp'))->update(['otp' => null]);
+
+            return response()->json(['message' => 'Email validated succesfull'], 200);
+        }else {
+            return response()->json(['error' => 'Invalid code, please check it again'], 400);
+        }
     }
 }

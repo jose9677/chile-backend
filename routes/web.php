@@ -21,3 +21,5 @@ Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detai
 Route::get('/search-user/{rut}', [App\Http\Controllers\usersController::class, 'search']);
 Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, 'update']);
 Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);
+
+Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);

@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->integer('number_way');
             $table->unsignedBigInteger('id_property');
             $table->string('name_num_property');
-            $table->string('otp');
+            $table->string('otp')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
