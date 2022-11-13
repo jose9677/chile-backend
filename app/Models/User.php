@@ -34,7 +34,8 @@ class User extends Authenticatable implements JWTSubject
         'number_way',
         'id_property',
         'name_num_property',
-        'otp'
+        'otp',
+        'email_active'
     ];
 
     /**

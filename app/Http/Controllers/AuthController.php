@@ -33,12 +33,7 @@ class AuthController extends Controller
             ],
             
             'landline' => 'required',
-            'mobile_phone' => 'required',
-            'id_way' => 'required',
-            'way_name' => 'required',
-            'number_way' => 'required',
-            'id_property' => 'required',
-            'name_num_property' => 'required'
+            'mobile_phone' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -54,12 +49,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password')),
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
-            'id_way' => $request->get('id_way'),
-            'way_name' => $request->get('way_name'),
-            'number_way' => $request->get('number_way'),
-            'id_property' => $request->get('id_property'),
-            'name_num_property'=> $request->get('name_num_property'),
-            'otp' => $this->generateCodOtp()
+            'otp' => $this->generateCodOtp(),
+            'email_active' => false
         ]);
 
         $token = JWTAuth::fromUser($user);
@@ -134,7 +125,7 @@ class AuthController extends Controller
         ])->get();
 
         if ($data->count()) {
-            User::query()->where('otp', $request->input('otp'))->update(['otp' => null]);
+            User::query()->where('otp', $request->input('otp'))->update(['otp' => null, 'email_active' => true]);
 
             return response()->json(['message' => 'Email validated succesfull'], 200);
         }else {

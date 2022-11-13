@@ -41,12 +41,7 @@ class usersController extends Controller
         'f_nac' => 'required',
         'email' => 'required|string|email|max:255|unique:users',
         'landline' => 'required',
-        'mobile_phone' => 'required',
-        'id_way' => 'required',
-        'way_name' => 'required',
-        'number_way' => 'required',
-        'id_property' => 'required',
-        'name_num_property' => 'required'
+        'mobile_phone' => 'required'
     ]);
     
     if ($validator->fails()) {
@@ -62,11 +57,6 @@ class usersController extends Controller
     $data->email = $request->email;
     $data->landline = $request->landline;
     $data->mobile_phone = $request->mobile_phone;
-    $data->id_way = $request->id_way;
-    $data->way_name = $request->way_name;
-    $data->number_way = $request->number_way;
-    $data->id_property = $request->id_property;
-    $data->name_num_property = $request->name_num_property;
 
     try {
         $data->save();

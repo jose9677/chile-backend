@@ -26,3 +26,9 @@ Route::put('/change-password', [App\Http\Controllers\usersController::class, 'ch
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
+
+//REQUESTCONTROLLER
+Route::post('/create-request', [App\Http\Controllers\requestController::class, 'createRequest']);
+
+// USER_REQUESTCONTROLLER
+Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);

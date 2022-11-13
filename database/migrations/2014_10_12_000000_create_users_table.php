@@ -22,12 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('landline');
             $table->integer('mobile_phone');
-            $table->unsignedBigInteger('id_way');
-            $table->string('way_name');
-            $table->integer('number_way');
-            $table->unsignedBigInteger('id_property');
-            $table->string('name_num_property');
             $table->string('otp')->nullable();
+            $table->boolean('email_active');
 
             $table->rememberToken();
             $table->timestamps();
