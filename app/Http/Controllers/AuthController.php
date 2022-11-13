@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,14 @@ class AuthController extends Controller
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            
+            'password' => ['required',
+                Password::min(8)
+                ->letters() //al menos una letra
+                ->mixedCase() //al menos una letra minuscula y una mayuscula
+                ->numbers() //al menos un caracter numerico
+            ],
+            
             'landline' => 'required',
             'mobile_phone' => 'required',
             'id_way' => 'required',
@@ -61,6 +69,13 @@ class AuthController extends Controller
     
     public function login(Request $request)
     {
+        $data = new User();
+        $data = User::query()->where(['rut' => $request->input('rut')])->first();
+
+        if (!$data) {
+            return response()->json(['message' => 'User does not exists in Data Base'], 400);
+        }
+        
         $credentials = $request->only(['rut', 'password']);
 
         if (Auth::guard('api')->attempt($credentials)) {
@@ -72,7 +87,7 @@ class AuthController extends Controller
             return compact('success', 'data');
         }else {
             $success = false;
-            $message = 'Failed Validation';
+            $message = 'User or Password Incorrect';
 
             return compact('success', 'message');
         }

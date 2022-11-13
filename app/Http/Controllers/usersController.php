@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class usersController extends Controller
 {
@@ -88,6 +90,38 @@ class usersController extends Controller
             return response()->json(['User Does not exist in Data Base'], 400);
         }
 
-        return response()->json(['message' => 'User'.$data->rut.'was deleted successfull'], 200);
+        return response()->json(['message' => 'User '.$data->rut.' was deleted successfull'], 200);
+   }
+
+   public function changePassword(Request $request)
+   {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [    
+            'password' => ['required',
+                Password::min(8)
+                ->letters() //al menos una letra
+                ->mixedCase() //al menos una letra minuscula y una mayuscula
+                ->numbers() //al menos un caracter numerico
+            ],
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        
+        $data = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if ($data->count()) {
+            $data = new User();
+            $data->password = Hash::make($request->password);
+            
+            User::query()->where('rut', $request->input('rut'))->update(['password' => $data->password]);
+
+            return response()->json(['message' => 'Password Changed successfull'], 200);
+        }else {
+            return response()->json(['error' => 'Rut does not exists in Data Base'], 400);
+        }   
    }
 }

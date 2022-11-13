@@ -17,9 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//USERCONTROLLER
 Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detailsUser']);
 Route::get('/search-user/{rut}', [App\Http\Controllers\usersController::class, 'search']);
 Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, 'update']);
 Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);
+Route::put('/change-password', [App\Http\Controllers\usersController::class, 'changePassword']);
 
+//AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
