@@ -32,3 +32,8 @@ Route::post('/create-request', [App\Http\Controllers\requestController::class, '
 
 // USER_REQUESTCONTROLLER
 Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);
+
+//DOCUMENTS
+
+Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
+Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
