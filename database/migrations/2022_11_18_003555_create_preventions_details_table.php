@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWaysTable extends Migration
+class CreatePreventionsDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateWaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('ways', function (Blueprint $table) {
+        Schema::create('preventions_details', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->unsignedBigInteger('id_prevention_type');
+            $table->string('prevention_detail');
             $table->timestamps();
+
+            $table->foreign('id_prevention_type')->references('id')->on('preventions_types')->onUpdate('cascade');
         });
     }
 
@@ -27,6 +30,6 @@ class CreateWaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ways');
+        Schema::dropIfExists('preventions_details');
     }
 }

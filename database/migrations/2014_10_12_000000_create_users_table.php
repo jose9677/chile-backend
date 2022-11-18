@@ -22,8 +22,11 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('landline');
             $table->integer('mobile_phone');
+            $table->boolean('employee');
+            $table->integer('supervisor_rut');
             $table->string('otp')->nullable();
             $table->boolean('email_active');
+            $table->string('profile_pic');
 
             $table->rememberToken();
             $table->timestamps();

@@ -16,10 +16,13 @@ class CreateDocumentsTable extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_request');
-            $table->string('property_doc');
+            $table->unsignedBigInteger('id_document_type');
+            $table->string('document_path');
+            $table->string('document_ext');
             $table->timestamps();
 
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');
+            $table->foreign('id_document_type')->references('id')->on('documents_types')->onUpdate('cascade');
         });
     }
 
