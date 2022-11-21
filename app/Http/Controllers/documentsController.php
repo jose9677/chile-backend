@@ -19,9 +19,9 @@ class documentsController extends Controller
         documents::insert($document);
         
         return response()->json($document);
-        
-        /*if ($request->hasFile("urlpdf")) {
-            $file = $request->file("urlpdf");
+
+        /*if ($request->hasFile("document_path")) {
+            $file = $request->file("document_path");
             $name = "pdf_".time().".".$file->guessExtension();
 
             $route = public_path("pdf/".$name);
@@ -32,5 +32,6 @@ class documentsController extends Controller
         }else {
             return response()->json('NO ES UN PDF');
         }*/
+        
     }
 }

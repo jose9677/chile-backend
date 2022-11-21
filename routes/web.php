@@ -23,12 +23,21 @@ Route::get('/search-user/{rut}', [App\Http\Controllers\usersController::class, '
 Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, 'update']);
 Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);
 Route::put('/change-password', [App\Http\Controllers\usersController::class, 'changePassword']);
+Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'validateUser']);
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
+Route::put('/refresh-otp/{rut}', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
 
 //REQUESTCONTROLLER
-Route::post('/create-request', [App\Http\Controllers\requestController::class, 'createRequest']);
+Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
+Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
+Route::get('/get-request/{id}', [App\Http\Controllers\solicitudesController::class, 'getRequest']);
+Route::put('/update-request/{id}', [App\Http\Controllers\solicitudesController::class, 'updateRequest']);
+Route::delete('/delete-request/{id}', [App\Http\Controllers\solicitudesController::class, 'deleteRequest']);
+
+Route::put('/approve-request/{id}', [App\Http\Controllers\solicitudesController::class, 'approveRequest']);
+Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::class, 'rejectRequest']);
 
 // USER_REQUESTCONTROLLER
 Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);

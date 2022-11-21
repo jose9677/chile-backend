@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\reenviarOTPMailable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -33,7 +36,10 @@ class AuthController extends Controller
             ],
             
             'landline' => 'required',
-            'mobile_phone' => 'required'
+            'mobile_phone' => 'required',
+            'employee' => 'required',
+            'supervisor_rut' => 'required',
+            'profile_pic' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -49,8 +55,11 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password')),
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
+            'employee' => $request->get('employee'),
+            'supervisor_rut' => $request->get('supervisor_rut'),
             'otp' => $this->generateCodOtp(),
-            'email_active' => false
+            'email_active' => false,
+            'profile_pic' => $request->get('profile_pic'),
         ]);
 
         $token = JWTAuth::fromUser($user);
@@ -107,6 +116,32 @@ class AuthController extends Controller
         }
 
         return $randomString;
+    }
+
+    public function refreshOtp($rut)
+    {
+        $user = User::find($rut);
+        
+        if (!$user) {
+            return response()->json(['error' => 'User does not exists in Data Base'], 400);
+        }
+
+        if (!empty($user->otp)) {
+            $otp = $this->generateCodOtp();
+            $user->otp = $otp;
+
+            $query = DB::update("UPDATE consultants.users SET otp = '$otp' WHERE rut = $rut");
+
+            $send = new reenviarOTPMailable($user->otp);
+            Mail::to('josedarkrai@gmail.com')->send($send);
+
+            return response()->json(
+                ['message' => 'OTP Updated',
+                 'user_rut' => $user->rut
+                ], 200);
+        }else {
+            return response()->json(['error' => 'This user does not need a OTP'], 400);
+        }
     }
 
     public function validateEmail(Request $request)

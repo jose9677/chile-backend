@@ -14,7 +14,9 @@ class documents extends Model
 
     protected $fillable = [
         'id_request',
-        'property_doc'
+        'id_document_type',
+        'document_path',
+        'document_ext'
     ];
 
     protected $hidden = [

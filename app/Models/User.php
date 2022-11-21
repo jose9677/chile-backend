@@ -29,13 +29,12 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'landline',
         'mobile_phone',
-        'id_way',
-        'way_name',
-        'number_way',
-        'id_property',
-        'name_num_property',
+        'employee',
+        'supervisor_rut',
         'otp',
-        'email_active'
+        'email_active',
+        'profile_pic',
+        'api_token'
     ];
 
     /**

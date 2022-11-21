@@ -27,7 +27,7 @@ class CreateSolicitudesTable extends Migration
             $table->boolean('applicant_at_home');
             $table->boolean('prevention_is_valid');
             $table->boolean('location_is_valid');
-            $table->string('comments');
+            $table->string('comments')->nullable();
             $table->boolean('is_active');
 
             $table->timestamps();

@@ -24,10 +24,13 @@
             <form action="/save" method="post" enctype="multipart/form-data">
                 @csrf
                 <label for="id_request">{{"id_request"}}</label>
-                <input type="number" name="id_request">
+                <input style="border: solid;" type="number" name="id_request">
 
-                <label for="property_doc">{{"property_doc"}}</label>
-                <input type="file" name="property_doc">
+                <label for="id_document_type">{{"id_document_type"}}</label>
+                <input style="border: solid;" type="number" name="id_document_type">
+
+                <label for="document_path">{{"document_path"}}</label>
+                <input type="file" name="document_path">
 
                 <input type="submit" value="save">
             </form>

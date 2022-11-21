@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class solicitudes extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'id_prevention_type',
+        'assurance',
+        'id_location',
+        'way_number',
+        'id_property_type',
+        'property_number',
+        'terms_condition',
+        'request_date',
+        'id_status',
+        'applicant_at_home',
+        'prevention_is_valid',
+        'location_is_valid',
+        'comments',
+        'is_active'
+    ];
+
+    protected $hidden = [
+
+    ];
+
+    protected $casts = [
+
+    ];
+}
