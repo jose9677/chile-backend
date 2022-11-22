@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Mail\reenviarOTPMailable;
+use App\Mail\registroMailable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -61,6 +62,9 @@ class AuthController extends Controller
             'email_active' => false,
             'profile_pic' => $request->get('profile_pic'),
         ]);
+
+        $send = new registroMailable($user->rut, $user->otp);
+        Mail::to('josedarkrai@gmail.com')->send($send);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);
