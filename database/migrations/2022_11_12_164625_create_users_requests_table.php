@@ -20,6 +20,7 @@ class CreateUsersRequestsTable extends Migration
 
             $table->foreign('rut')->references('rut')->on('users')->onUpdate('cascade');
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');
+            $table->foreign('employee_rut')->references('rut')->on('users')->onUpdate('cascade');
 
             $table->timestamps();
             $table->primary(['rut', 'id_request']);
