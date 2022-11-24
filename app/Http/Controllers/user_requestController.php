@@ -15,7 +15,8 @@ class user_requestController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(), [
             'rut' => 'required',
-            'id_request' => 'required'
+            'id_request' => 'required',
+            'employee_rut' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -26,6 +27,7 @@ class user_requestController extends Controller
 
         $data->rut = $request->rut;
         $data->id_request = $request->id_request;
+        $data->employee_rut = $request->employee_rut;
 
         try {
             $data->save();

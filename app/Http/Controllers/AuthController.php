@@ -17,9 +17,13 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
+use Malahierba\ChileRut\ChileRut;
+use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
+use Malahierba\ChileRut\Rules\ValidChileanRut;
+
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function registerEmployee(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -38,7 +42,6 @@ class AuthController extends Controller
             
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'employee' => 'required',
             'supervisor_rut' => 'required',
             'profile_pic' => 'required'
         ]);
@@ -56,7 +59,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password')),
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
-            'employee' => $request->get('employee'),
+            'employee' => true,
             'supervisor_rut' => $request->get('supervisor_rut'),
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
@@ -67,8 +70,53 @@ class AuthController extends Controller
         Mail::to('josedarkrai@gmail.com')->send($send);
 
         $token = JWTAuth::fromUser($user);
-        return response()->json(compact('user', 'token'), 201);
+        return response()->json(compact('user', 'token'), 201);   
+    }
+
+    public function registerNeighbor(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => 'required',
+            'names'  => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'f_nac' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            
+            'password' => ['required',
+                Password::min(8)
+                ->letters() //al menos una letra
+                ->mixedCase() //al menos una letra minuscula y una mayuscula
+                ->numbers() //al menos un caracter numerico
+            ],
+            
+            'landline' => 'required',
+            'mobile_phone' => 'required'
+        ]);
         
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::create([
+            'rut' => $request->get('rut'),
+            'names' => $request->get('names'),
+            'lastname' => $request->get('lastname'),
+            'f_nac' => $request->get('f_nac'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+            'landline' => $request->get('landline'),
+            'mobile_phone' => $request->get('mobile_phone'),
+            'employee' => false,
+            'otp' => $this->generateCodOtp(),
+            'email_active' => false
+        ]);
+
+        $send = new registroMailable($user->rut, $user->otp);
+        Mail::to('josedarkrai@gmail.com')->send($send);
+
+        $token = JWTAuth::fromUser($user);
+        return response()->json(compact('user', 'token'), 201); 
     }
     
     public function login(Request $request)
@@ -170,5 +218,33 @@ class AuthController extends Controller
         }else {
             return response()->json(['error' => 'Invalid code, please check it again'], 400);
         }
+    }
+
+    public function validateRut(Request $request)
+    {
+        $request->validate([
+            'rut' => ['required', 'string', new ValidChileanRut(new ChileRut)],
+        ]);
+
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if ($user->count()) {
+            return response()->json(['error' => 'User exists in Data Base'], 400);
+        }
+        
+        if ($request->rut) {
+            return response()->json(['message' => $request->rut.' Is Valid'], 200);
+        }else {
+            return response()->json(['error' => $request->rut.' Is not Valid'], 400);
+        }
+    }
+
+    public function test(Request $request)
+    {
+        $digitoVerificador = FacadesChileRut::digitoVerificador($request->rut);
+
+        return response()->json($digitoVerificador);
     }
 }

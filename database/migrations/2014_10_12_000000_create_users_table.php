@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->integer('rut')->primary();
+            $table->string('rut')->primary();
             $table->string('names');
             $table->string('lastname');
             $table->date('f_nac');
@@ -23,13 +23,17 @@ class CreateUsersTable extends Migration
             $table->integer('landline');
             $table->integer('mobile_phone');
             $table->boolean('employee');
-            $table->integer('supervisor_rut');
+            $table->string('supervisor_rut')->nullable();
             $table->string('otp')->nullable();
             $table->boolean('email_active');
             $table->string('profile_pic');
+            $table->unsignedBigInteger('id_rol');
 
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('supervisor_rut')->references('rut')->on('users')->onUpdate('CASCADE');
+            $table->foreign('id_rol')->references('id')->on('roles')->onUpdate('CASCADE');
 
             $table->softDeletes();
         });
