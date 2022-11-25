@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('supervisor_rut')->references('rut')->on('users')->onUpdate('CASCADE');
+            //$table->foreign('supervisor_rut')->references('rut')->on('users')->onUpdate('CASCADE');
             $table->foreign('id_rol')->references('id')->on('roles')->onUpdate('CASCADE');
 
             $table->softDeletes();

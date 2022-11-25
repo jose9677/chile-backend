@@ -17,9 +17,11 @@ class CreateModulesTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('id_action');
+            $table->unsignedBigInteger('id_aplication');
             $table->timestamps();
 
             $table->foreign('id_action')->references('id')->on('actions')->onUpdate('cascade');
+            $table->foreign('id_aplication')->references('id')->on('aplications')->onUpdate('cascade');
         });
     }
 

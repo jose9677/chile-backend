@@ -34,7 +34,8 @@ class User extends Authenticatable implements JWTSubject
         'otp',
         'email_active',
         'profile_pic',
-        'api_token'
+        'api_token',
+        'id_rol'
     ];
 
     /**

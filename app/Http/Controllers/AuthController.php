@@ -43,7 +43,8 @@ class AuthController extends Controller
             'landline' => 'required',
             'mobile_phone' => 'required',
             'supervisor_rut' => 'required',
-            'profile_pic' => 'required'
+            'profile_pic' => 'required',
+            'id_rol' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -64,6 +65,7 @@ class AuthController extends Controller
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'profile_pic' => $request->get('profile_pic'),
+            'id_rol' => $request->get('id_rol')
         ]);
 
         $send = new registroMailable($user->rut, $user->otp);
@@ -91,7 +93,7 @@ class AuthController extends Controller
             ],
             
             'landline' => 'required',
-            'mobile_phone' => 'required'
+            'mobile_phone' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -109,7 +111,8 @@ class AuthController extends Controller
             'mobile_phone' => $request->get('mobile_phone'),
             'employee' => false,
             'otp' => $this->generateCodOtp(),
-            'email_active' => false
+            'email_active' => false,
+            'id_rol' => 1
         ]);
 
         $send = new registroMailable($user->rut, $user->otp);
