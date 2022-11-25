@@ -16,11 +16,8 @@ class documentsController extends Controller
     public function save(Request $request)
     {
         $document = request()->except('_token');
-        documents::insert($document);
         
-        return response()->json($document);
-
-        /*if ($request->hasFile("document_path")) {
+        if ($request->hasFile("document_path")) {
             $file = $request->file("document_path");
             $name = "pdf_".time().".".$file->guessExtension();
 
@@ -29,9 +26,12 @@ class documentsController extends Controller
 
         if ($file->guessExtension() == "pdf") {
             copy($file, $route);
+            documents::insert($document);
+        
+            return response()->json($document);
         }else {
             return response()->json('NO ES UN PDF');
-        }*/
+        }
         
     }
 }

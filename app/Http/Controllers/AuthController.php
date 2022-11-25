@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\claveEmpleadoMailable;
 use App\Mail\reenviarOTPMailable;
 use App\Mail\registroMailable;
 use Illuminate\Http\Request;
@@ -33,12 +34,12 @@ class AuthController extends Controller
             'f_nac' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
             
-            'password' => ['required',
+            /*'password' => ['required',
                 Password::min(8)
                 ->letters() //al menos una letra
                 ->mixedCase() //al menos una letra minuscula y una mayuscula
                 ->numbers() //al menos un caracter numerico
-            ],
+            ],*/
             
             'landline' => 'required',
             'mobile_phone' => 'required',
@@ -57,7 +58,7 @@ class AuthController extends Controller
             'lastname' => $request->get('lastname'),
             'f_nac' => $request->get('f_nac'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
+            'password' => Hash::make($this->employeePassword()),
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
             'employee' => true,
@@ -71,8 +72,28 @@ class AuthController extends Controller
         $send = new registroMailable($user->rut, $user->otp);
         Mail::to('josedarkrai@gmail.com')->send($send);
 
+        $send_2 = new claveEmpleadoMailable($user->rut);
+        Mail::to('josedarkrai@gmail.com')->send($send_2);
+
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
+    }
+
+    public function employeePassword()
+    {
+        $lenght = 8;
+
+        $characters = '0123456789#$%&/=-+_.';
+
+        $charactersLenght = strlen($characters);
+
+        $randomString = '';
+
+        for ($i=0; $i < $lenght; $i++) { 
+            $randomString .= $characters[rand(0, $charactersLenght -1)];
+        }
+
+        return $randomString;
     }
 
     public function registerNeighbor(Request $request)
