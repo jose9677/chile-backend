@@ -15,7 +15,7 @@ class solicitudesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-           'id_prevention_type' => 'required',
+           'id_prevention_type_detail' => 'required',
            'assurance' => 'required',
            'id_location' => 'required',
            'way_number' => 'required',
@@ -36,7 +36,7 @@ class solicitudesController extends Controller
         }
 
         $data = solicitudes::create([
-            'id_prevention_type' => $request->get('id_prevention_type'),
+            'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
             'assurance' => $request->get('assurance'),
             'id_location' => $request->get('id_location'),
             'way_number' => $request->get('way_number'),
@@ -73,7 +73,7 @@ class solicitudesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'id_prevention_type' => 'required',
+            'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
             'way_number' => 'required',
@@ -96,7 +96,7 @@ class solicitudesController extends Controller
         $data = new solicitudes();
         $data = solicitudes::findOrFail($id);
 
-        $data->id_prevention_type = $request->id_prevention_type;
+        $data->id_prevention_type_detail = $request->id_prevention_type_detail;
         $data->assurance = $request->assurance;
         $data->id_location = $request->id_location;
         $data->way_number = $request->way_number;

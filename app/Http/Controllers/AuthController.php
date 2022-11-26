@@ -195,7 +195,7 @@ class AuthController extends Controller
         $solicitudes = $request->only([
             'id_location',
             'way_number',
-            'id_property_type',
+            'id_property_type_detail',
             'property_number',
             'id_prevention_type',
             'assurance'

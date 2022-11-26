@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\solicitudes;
-use App\Models\User;
 use App\Models\users_requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +12,7 @@ class user_requestController extends Controller
 {
     public function add_request(Request $request)
     {
-        /*Log::info($request);
+        Log::info($request);
         $validator = Validator::make($request->all(), [
             'rut' => 'required',
             'id_request' => 'required',
@@ -23,13 +21,21 @@ class user_requestController extends Controller
         
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
-        }*/
+        }
 
-        users_requests::create([
-            'rut' => User::select("rut")->latest()->first(),
-            'id_request' => solicitudes::max('id'),
-            'employee_rut' => User::select('supervisor_rut')->orderBy('created_at', 'desc')->first()
-        ]);
+        $data = new users_requests();
+
+        $data->rut = $request->rut;
+        $data->id_request = $request->id_request;
+        $data->employee_rut = $request->employee_rut;
+        
+        
+        try {
+            $data->save();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Bad Request'], 400);
+        }
+
         return response()->json(['message' => 'Request successfull'], 200);
     }
 }

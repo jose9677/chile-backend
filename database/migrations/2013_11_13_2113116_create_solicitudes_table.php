@@ -15,8 +15,8 @@ class CreateSolicitudesTable extends Migration
     {
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_prevention_type');
-            $table->string('assurance');
+            $table->unsignedBigInteger('id_prevention_type_detail');
+            $table->boolean('assurance');
             $table->unsignedBigInteger('id_location');
             $table->integer('way_number');
             $table->unsignedBigInteger('id_property_type');
@@ -35,7 +35,7 @@ class CreateSolicitudesTable extends Migration
             $table->foreign('id_property_type')->references('id')->on('property_types')->onUpdate('cascade');
             $table->foreign('id_location')->references('id')->on('locations')->onUpdate('cascade');
             $table->foreign('id_status')->references('id')->on('status')->onUpdate('cascade');
-            $table->foreign('id_prevention_type')->references('id')->on('preventions_types')->onUpdate('cascade');
+            $table->foreign('id_prevention_type_detail')->references('id')->on('preventions_details')->onUpdate('cascade');
         });
     }
 
