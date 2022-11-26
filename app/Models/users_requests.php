@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class user_request extends Model
+class users_requests extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'rut',
-        'id_request'
+        'id_request',
+        'employee_rut'
     ];
 
     protected $hidden = [
@@ -21,4 +22,7 @@ class user_request extends Model
     protected $casts = [
 
     ];
+
+    protected $primaryKey = ['rut', 'id_request', 'employee_rut'];
+    public $incrementing = false;
 }

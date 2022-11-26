@@ -28,6 +28,7 @@ Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'val
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
 Route::put('/refresh-otp/{rut}', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);
 Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
 

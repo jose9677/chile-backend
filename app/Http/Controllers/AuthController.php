@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Mail\claveEmpleadoMailable;
 use App\Mail\reenviarOTPMailable;
 use App\Mail\registroMailable;
+use App\Models\solicitudes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 use App\Models\User;
+use App\Models\users_requests;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -24,6 +26,60 @@ use Malahierba\ChileRut\Rules\ValidChileanRut;
 
 class AuthController extends Controller
 {
+    public function register(Request $request)
+    {
+        $user = new User();
+        $solicitudes = new solicitudes();
+
+        $user = $request->only([
+            'rut',
+            'names',
+            'lastname',
+            'f_nac',
+            'email',
+            'landline',
+            'mobile_phone'
+        ]);
+
+        User::create($user);
+
+        $solicitudes = $request->only([
+            'id_location',
+            'way_number',
+            'id_property_type',
+            'property_number',
+            'id_prevention_type',
+            'assurance'
+        ]);
+
+        solicitudes::create($solicitudes);
+
+        $this->add_request();
+
+        return response()->json([
+            'user' => $user, 
+            'request' => $solicitudes
+        ], 200);
+    }
+
+    public function add_request()
+    {
+        $query = DB::insert(
+                    
+        "INSERT INTO consultants.users_requests
+        SELECT 
+        consultants.users.rut,
+        MAX(consultants.solicitudes.id),
+        consultants.users.supervisor_rut
+        FROM
+        consultants.users, consultants.solicitudes
+        GROUP BY
+        consultants.users.rut,
+        consultants.users.supervisor_rut
+        ORDER BY  consultants.users.created_at DESC LIMIT 1"
+        );
+    }
+    
     public function registerEmployee(Request $request)
     {
         Log::info($request);
@@ -136,11 +192,24 @@ class AuthController extends Controller
             'id_rol' => 1
         ]);
 
+        $solicitudes = $request->only([
+            'id_location',
+            'way_number',
+            'id_property_type',
+            'property_number',
+            'id_prevention_type',
+            'assurance'
+        ]);
+
+        solicitudes::create($solicitudes);
+
+        $this->add_request();
+
         $send = new registroMailable($user->rut, $user->otp);
         Mail::to('josedarkrai@gmail.com')->send($send);
 
         $token = JWTAuth::fromUser($user);
-        return response()->json(compact('user', 'token'), 201); 
+        return response()->json(compact('user', 'solicitudes', 'token'), 201); 
     }
     
     public function login(Request $request)
