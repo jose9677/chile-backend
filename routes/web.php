@@ -44,6 +44,8 @@ Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::
 
 // USER_REQUESTCONTROLLER
 Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);
+Route::post('/add_employeeRut', [App\Http\Controllers\user_requestController::class, 'add_employeeRut']);
+Route::get('/detailUserRequest', [App\Http\Controllers\user_requestController::class, 'detailUserRequest']);
 
 //DOCUMENTS
 

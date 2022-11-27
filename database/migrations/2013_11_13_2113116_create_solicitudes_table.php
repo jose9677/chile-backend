@@ -29,6 +29,7 @@ class CreateSolicitudesTable extends Migration
             $table->boolean('location_is_valid');
             $table->string('comments')->nullable();
             $table->boolean('is_active');
+            $table->boolean('rut_match');
 
             $table->timestamps();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\cambiarclaveMailable;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 
 use App\Mail\ContactanosMailable;
 use App\Mail\validarMailable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class usersController extends Controller
@@ -41,6 +43,15 @@ class usersController extends Controller
         $datafound = $data->findOrFail($rut);
 
         return response()->json([$datafound], 200);
+   }
+
+   public function employees()
+   {
+        $query = DB::select(
+            "SELECT * FROM consultants.users WHERE employee = true"
+        );
+
+        return response()->json(['data' => $query], 200);
    }
 
    public function update(Request $request, $rut)
@@ -177,8 +188,8 @@ class usersController extends Controller
             
             User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
 
-            /*$send = new ContactanosMailable();
-            Mail::to('joseandres9677@gmail.com')->send($send);*/
+            $send = new cambiarclaveMailable($data); // CORREGIR NO IMPRIME EL RUT DEL USUARIO...
+            Mail::to('josedarkrai@gmail.com')->send($send);
 
             return response()->json(['message' => 'Password Changed successfull'], 200);
         }else {

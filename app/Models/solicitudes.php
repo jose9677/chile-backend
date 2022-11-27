@@ -25,7 +25,8 @@ class solicitudes extends Model
         'prevention_is_valid',
         'location_is_valid',
         'comments',
-        'is_active'
+        'is_active',
+        'rut_match'
     ];
 
     protected $hidden = [
