@@ -24,6 +24,7 @@ Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, '
 Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);
 Route::put('/change-password', [App\Http\Controllers\usersController::class, 'changePassword']);
 Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'validateUser']);
+Route::get('/employees', [App\Http\Controllers\usersController::class, 'employees']);
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
