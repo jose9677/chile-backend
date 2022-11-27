@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\solicitudes;
 use App\Models\User;
 use App\Models\users_requests;
 use Illuminate\Http\Request;
@@ -67,9 +68,18 @@ class user_requestController extends Controller
 
         $data = new users_requests();
         $data->employee_rut = $request->employee_rut;
-        $query = DB::select("SELECT rut FROM users WHERE employee = true ORDER BY rut");
-            
-        for ($i=0; $i < 2 ; $i++) { 
+         
+        $data = users_requests::query()->where([
+            'rut' => $request->input('rut'), 'id_request' => $request->input('id_request')
+            ])->update(['employee_rut' => $request->employee_rut]);
+
+        $sol = new solicitudes();
+        $sol = solicitudes::query()->where(['id' => $request->input('id_request')])->update(['id_status' => 2]);
+        
+        return response()->json(['data' => $data], 200);
+        
+        //$query = DB::select("SELECT rut FROM users WHERE employee = true ORDER BY rut");
+        /*for ($i=0; $i < 2 ; $i++) { 
             if ($query[$i] == $request->employee_rut ) {
                 
                 $data = users_requests::query()->where([
@@ -77,11 +87,9 @@ class user_requestController extends Controller
                 ])->update(['employee_rut' => $request->employee_rut]);
                 
             }
-        }
-
-        return response()->json($request->employee_rut);
+        }*/
     }
-
+    
     public function detailUserRequest()
     {
         $query = DB::select(            

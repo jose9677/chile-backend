@@ -135,6 +135,39 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Request deleted successfull'], 200);
     }
 
+    public function programDate(Request $request, $id)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'request_date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = new solicitudes();
+        $data = solicitudes::findOrFail($id);
+
+        $data->request_date = $request->request_date;
+        $data->id_status = 3;
+
+        try {
+            $data->save();
+        } catch (\Throwable $th) {
+            return response()->json(['erro' => 'Bad Requets'], 400);
+        }
+        
+        return response()->json([
+            'message' => 'Request '.$id. ' assigned for the date '.$request->request_date
+        ], 200);
+    }
+
+    public function reprogramDate(Request $request, $id)
+    {
+        
+    }
+
     public function approveRequest(Request $request, $id)
     {
         Log::info($request);

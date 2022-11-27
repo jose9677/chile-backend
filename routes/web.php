@@ -39,6 +39,7 @@ Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class
 Route::get('/get-request/{id}', [App\Http\Controllers\solicitudesController::class, 'getRequest']);
 Route::put('/update-request/{id}', [App\Http\Controllers\solicitudesController::class, 'updateRequest']);
 Route::delete('/delete-request/{id}', [App\Http\Controllers\solicitudesController::class, 'deleteRequest']);
+Route::put('/programDate/{id}', [App\Http\Controllers\solicitudesController::class, 'programDate']);
 
 Route::put('/approve-request/{id}', [App\Http\Controllers\solicitudesController::class, 'approveRequest']);
 Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::class, 'rejectRequest']);
