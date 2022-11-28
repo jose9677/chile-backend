@@ -131,4 +131,60 @@ class user_requestController extends Controller
 
         return response()->json(['data' => $query], 200);
     }
+
+    //This Method get all data about Users and their Request assigned throught rut
+    public function joinUsersRequest($rut)
+    {
+        $query = DB::select(
+            "SELECT 
+            a.*,
+            c.*
+            FROM consultants.users as a
+            JOIN consultants.users_requests as b
+            USING (rut)
+            JOIN consultants.solicitudes as c ON b.id_request = c.id
+            WHERE a.rut = '$rut'"
+        );
+
+        return response()->json($query);
+    }
+
+    //This Method get all data about Users and their Request assigned throught id_request
+    public function joinRequestUsers($id)
+    {
+        $query = DB::select(
+            "SELECT 
+            a.*,
+            c.*
+            FROM consultants.users as a
+            JOIN consultants.users_requests as b
+            USING (rut)
+            JOIN consultants.solicitudes as c ON b.id_request = c.id
+            WHERE c.id = $id"
+        );
+
+        return response()->json($query);
+    }
+
+    public function joinRequestEmployee($employee_rut)
+    {
+        $data = new User();
+        $data = User::findOrFail($employee_rut);
+
+        $query = DB::select(
+            "SELECT 
+            a.*,
+            c.*
+            FROM consultants.users as a
+            JOIN consultants.users_requests as b
+            USING (rut)
+            JOIN consultants.solicitudes as c ON b.id_request = c.id
+            WHERE b.employee_rut = '$employee_rut'"
+        );
+
+        return response()->json([
+            'data_employe' => $data,
+            'data_Neightbor' => $query
+        ]);
+    }
 }

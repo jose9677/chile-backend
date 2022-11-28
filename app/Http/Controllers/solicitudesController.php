@@ -135,6 +135,23 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Request deleted successfull'], 200);
     }
 
+    public function confirmNeightbor($id)
+    {
+        $data = new solicitudes();
+        $data = solicitudes::findOrFail($id);
+
+        $data->applicant_at_home = true;
+        $data->id_status = 4;
+
+        try {
+            $data->save();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Bad Request'], 400);
+        }
+
+        return response()->json(['message' => 'Neightbor has confirmed his date'], 200);
+    }
+
     public function programDate(Request $request, $id)
     {
         Log::info($request);
@@ -165,64 +182,57 @@ class solicitudesController extends Controller
 
     public function reprogramDate(Request $request, $id)
     {
-        
-    }
-
-    public function approveRequest(Request $request, $id)
-    {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'id_status' => 'required'
+            'request_date' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = solicitudes::find($id);
-        $data->id_status = $request->id_status;
+        $data = new solicitudes();
+        $data = solicitudes::findOrFail($id);
 
-        if ($data->id_status == 3) {
-            $data->is_active = true;
-        }
-        elseif ($data->id_status <> 3) {
-            $data->is_active = false;
-            return response()->json(['message' => 'Status does not let to active Request'], 400);
-        }
-        
-        try {
-            $data->save();
-        } catch (\Throwable $th) {
-            return response()->json(['message' => 'Bad Request'], 400);
-        }
-
-        return response()->json(['message' => 'Request '.$id.' has been Approved'], 200);
+        if ($data) {
+            $data = solicitudes::query()->where(['id' => $id])->update(['request_date' => $request->request_date,
+             'id_status' => 5]);
+            return response()->json([
+                'message' => 'Request '.$id. ' reprogramed for the date '.$request->request_date
+            ], 200);   
+       }
     }
 
-    public function rejectRequest(Request $request, $id)
+    public function approveRequest($id)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'id_status' => 'required'
-        ]);
+        $data = new solicitudes();
+        $data = solicitudes::findOrFail($id);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+        $data->id_status = 6;
 
-        $data = solicitudes::find($id);
-        $data->id_status = $request->id_status;
-
-        if ($data->id_status <> 3) {
-            $data->is_active = false;
-        }
-        
         try {
             $data->save();
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Bad Request'], 400);
+            return response()->json(['error' => 'Bad Request'], 400);
         }
 
-        return response()->json(['message' => 'This Request '.$id.' Has been Rejected'], 200);
+        return response()->json(['message' => 'Date has been approved'], 200);
+    }
+
+    public function rejectRequest($id)
+    {
+        
+        $data = new solicitudes();
+        $data = solicitudes::findOrFail($id);
+
+        $data->id_status = 7;
+
+        try {
+            $data->save();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Bad Request'], 400);
+        }
+
+        return response()->json(['message' => 'Date has been rejected'], 200);
     }
 }
