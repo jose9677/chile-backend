@@ -160,14 +160,14 @@ class user_requestController extends Controller
             a.is_active,
             a.rut_match
             FROM consultants.solicitudes as a 
-            JOIN consultants.users_requests as b ON a.id = b.id_request
-            JOIN consultants.users as c ON b.rut = c.rut
-            JOIN consultants.locations as d ON a.id_location = d.id
-            JOIN consultants.status as e ON a.id_status = e.id
-            JOIN consultants.property_types as f ON a.id_property_type = f.id
-            JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
-            JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
-            JOIN consultants.users as i ON b.employee_rut = i.rut"
+            LEFT JOIN consultants.users_requests as b ON a.id = b.id_request
+            LEFT JOIN consultants.users as c ON b.rut = c.rut
+            LEFT JOIN consultants.locations as d ON a.id_location = d.id
+            LEFT JOIN consultants.status as e ON a.id_status = e.id
+            LEFT JOIN consultants.property_types as f ON a.id_property_type = f.id
+            LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
+            LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
+            LEFT JOIN consultants.users as i ON b.employee_rut = i.rut"
         );
 
         return response()->json([
