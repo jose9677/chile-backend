@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('supervisor_rut')->nullable();
             $table->string('otp')->nullable();
             $table->boolean('email_active');
-            $table->string('profile_pic');
+            $table->string('profile_pic')->nullable();
             $table->unsignedBigInteger('id_rol');
 
             $table->rememberToken();

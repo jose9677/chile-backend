@@ -12,6 +12,7 @@ class solicitudes extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'rut_user',
         'id_prevention_type',
         'assurance',
         'id_location',
@@ -21,6 +22,8 @@ class solicitudes extends Model
         'terms_condition',
         'request_date',
         'id_status',
+        'rut_employee',
+        'visit_date',
         'applicant_at_home',
         'prevention_is_valid',
         'location_is_valid',
