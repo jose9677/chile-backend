@@ -33,7 +33,7 @@ Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'
 Route::post('/validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);
 Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
 
-//REQUESTCONTROLLER
+//SOLICITUDESCONTROLLER
 Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
 Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
 Route::get('/get-request/{id}', [App\Http\Controllers\solicitudesController::class, 'getRequest']);
@@ -46,11 +46,12 @@ Route::put('/reprogramDate/{id}', [App\Http\Controllers\solicitudesController::c
 Route::put('/approve-request/{id}', [App\Http\Controllers\solicitudesController::class, 'approveRequest']);
 Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::class, 'rejectRequest']);
 
+Route::get('/joinUsersRequest/{rut}', [App\Http\Controllers\solicitudesController::class, 'joinUsersRequest']);
+
 // USER_REQUESTCONTROLLER
 Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);
 Route::post('/add_employeeRut', [App\Http\Controllers\user_requestController::class, 'add_employeeRut']);
 Route::get('/detailUserRequest', [App\Http\Controllers\user_requestController::class, 'detailUserRequest']);
-Route::get('/joinUsersRequest/{rut}', [App\Http\Controllers\user_requestController::class, 'joinUsersRequest']);
 Route::get('/joinRequestUsers/{id}', [App\Http\Controllers\user_requestController::class, 'joinRequestUsers']);
 Route::get('/joinRequestEmployee/{employee_rut}', [App\Http\Controllers\user_requestController::class, 'joinRequestEmployee']);
 //DOCUMENTS

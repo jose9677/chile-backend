@@ -174,23 +174,6 @@ class user_requestController extends Controller
             'data_User_Request' => $query]);
     }
 
-    //This Method get all data about Users and their Request assigned throught rut
-    public function joinUsersRequest($rut)
-    {
-        $query = DB::select(
-            "SELECT 
-            a.*,
-            c.*
-            FROM consultants.users as a
-            JOIN consultants.users_requests as b
-            USING (rut)
-            JOIN consultants.solicitudes as c ON b.id_request = c.id
-            WHERE a.rut = '$rut'"
-        );
-
-        return response()->json($query);
-    }
-
     //This Method get all data about Users and their Request assigned throught id_request
     public function joinRequestUsers($id)
     {

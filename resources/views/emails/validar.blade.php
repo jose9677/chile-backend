@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="{{$api_token}}">http://localhost:4200/auth/recovery?api_token={{$api_token}}</a>
+    <a href="{{$api_token}}">http://localhost:4200/auth/cambiar-contrasena?api_token={{$api_token}}</a>
 </body>
 </html>
