@@ -180,12 +180,10 @@ class user_requestController extends Controller
         $query = DB::select(
             "SELECT 
             a.*,
-            c.*
+            b.*
             FROM consultants.users as a
-            JOIN consultants.users_requests as b
-            USING (rut)
-            JOIN consultants.solicitudes as c ON b.id_request = c.id
-            WHERE c.id = $id"
+            JOIN consultants.solicitudes as b ON a.rut = b.rut_user
+            WHERE b.id = $id"
         );
 
         return response()->json($query);
