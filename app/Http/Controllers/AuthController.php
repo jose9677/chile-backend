@@ -126,10 +126,10 @@ class AuthController extends Controller
         ]);
 
         $send = new registroMailable($user->rut, $user->otp);
-        Mail::to('josedarkrai@gmail.com')->send($send);
+        Mail::to('testing@angulo-group.com')->send($send);
 
         $send_2 = new claveEmpleadoMailable($user->rut);
-        Mail::to('josedarkrai@gmail.com')->send($send_2);
+        Mail::to('testing@angulo-group.com')->send($send_2);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
@@ -199,17 +199,16 @@ class AuthController extends Controller
             'id_property_type_detail',
             'property_number',
             'id_prevention_type',
-            'assurance',
-            'visit_date',
+            'assurance'
         ]);
 
 
         solicitudes::create($solicitudes);
-        $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");
+        //$query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");
 
         $send = new registroMailable($user->rut, $user->otp);
-        Mail::to('josedarkrai@gmail.com')->send($send);
-
+        //Mail::to('testing@angulo-group.com')->send($send);
+        Mail::to($user->emai)->send($send);
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'solicitudes', 'token'), 201); 
     }
@@ -280,7 +279,7 @@ class AuthController extends Controller
             $query = DB::update("UPDATE consultants.users SET otp = '$otp' WHERE rut = $rut");
 
             $send = new reenviarOTPMailable($user->otp);
-            Mail::to('josedarkrai@gmail.com')->send($send);
+            Mail::to('testing@angulo-group.com')->send($send);
 
             return response()->json(
                 ['message' => 'OTP Updated',

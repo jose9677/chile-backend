@@ -68,7 +68,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', 'lareina-database.cpwa51qkkrgf.us-east-1.rds.amazonaws.com'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'lareina_dev'),
+            'database' => env('DB_DATABASE', 'lareina_test'),
             'username' => env('DB_USERNAME', 'lareina'),
             'password' => env('DB_PASSWORD', 'lareinaadmin'),
             'charset' => 'utf8',

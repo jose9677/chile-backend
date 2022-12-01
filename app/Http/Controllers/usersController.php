@@ -148,7 +148,7 @@ class usersController extends Controller
             User::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
 
             $send = new validarMailable($data->api_token);
-            Mail::to('josedarkrai@gmail.com')->send($send);
+            Mail::to('testing@angulo-group.com')->send($send);
 
             return response()->json(
                 [
@@ -189,7 +189,7 @@ class usersController extends Controller
             User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
 
             $send = new cambiarclaveMailable($data); // CORREGIR NO IMPRIME EL RUT DEL USUARIO...
-            Mail::to('josedarkrai@gmail.com')->send($send);
+            Mail::to('testing@angulo-group.com')->send($send);
 
             return response()->json(['message' => 'Password Changed successfull'], 200);
         }else {
