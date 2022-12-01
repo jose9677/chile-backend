@@ -204,7 +204,7 @@ class AuthController extends Controller
 
 
         solicitudes::create($solicitudes);
-        //$query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");
+        $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");
 
         $send = new registroMailable($user->rut, $user->otp);
         //Mail::to('testing@angulo-group.com')->send($send);
