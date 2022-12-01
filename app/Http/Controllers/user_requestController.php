@@ -189,28 +189,31 @@ class user_requestController extends Controller
         return response()->json($query);
     }
 
-    public function joinRequestEmployee($employee_rut)
+    public function joinRequestEmployee($rut_employee)
     {
         $data = new User();
-        $data = User::findOrFail($employee_rut);
+        $data = User::findOrFail($rut_employee);
 
         $query = DB::select(
-            "SELECT 
-            a.*,
-            b.*,
-			c.street,
-			d.status,
-			g.description,
-			e.prevention_detail,
-			f.prevention_type
-            FROM consultants.users as a
-            JOIN consultants.solicitudes as b ON a.rut =  b.rut_employee
-			JOIN consultants.locations as c ON b.id_location = c.id
-			JOIN consultants.status as d ON d.id = b.id_status
-			JOIN consultants.preventions_details as e ON b.id_prevention_type_detail = e.id
-			JOIN consultants.preventions_types as f ON e.id_prevention_type = f.id
-			JOIN consultants.property_types as g ON g.id = b.id_property_type
-            WHERE b.rut_employee = '$employee_rut'"
+           "SELECT 
+           a.id,
+           a.created_at, 
+           a.rut_user,
+           a.rut_employee, 
+           b.names,
+           b.lastname,
+           a.id_location,
+           a.id_property_type,
+           c.description,
+           d.street,
+           a.id_status,
+           e.status
+           FROM consultants.solicitudes as a 
+           JOIN consultants.users as b ON a.rut_user = b.rut
+           JOIN consultants.property_types as c ON c.id = a.id_property_type
+           JOIN consultants.locations as d ON d.id = a.id_location
+           JOIN consultants.status as e ON e.id = a.id_status
+           WHERE a.rut_employee = '$rut_employee'"
         );
 
         return response()->json([
