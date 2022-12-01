@@ -182,25 +182,45 @@ class solicitudesController extends Controller
 
     public function reprogramDate(Request $request, $id)
     {
+        $data = new solicitudes();
+        $data = solicitudes::findOrFail($id);
+
+        if ($data) {
+            $data = solicitudes::query()->where(['id' => $id])->update(['id_status' => 5]);
+            return response()->json([
+                'message' => 'Request id_request was changed to Reprogram'
+            ], 200);   
+       }
+    }
+
+    public function programVisitDate(Request $request, $id)
+    {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'request_date' => 'required',
+            'visit_date' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = new solicitudes();
         $data = solicitudes::findOrFail($id);
+        
+        if ($data->id_status == 2) {
+            solicitudes::query()->where(['id' => $id])->update(['visit_date' => $request->visit_date,
+            'id_status' => 3]);
 
-        if ($data) {
-            $data = solicitudes::query()->where(['id' => $id])->update(['request_date' => $request->request_date,
-             'id_status' => 5]);
-            return response()->json([
-                'message' => 'Request '.$id. ' reprogramed for the date '.$request->request_date
-            ], 200);   
-       }
+            return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
+        }
+
+        if ($data->id_status == 5) {
+            solicitudes::query()->where(['id' => $id])->update(['visit_date' => $request->visit_date,
+            'id_status' => 4]);
+
+            return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
+        }else {
+            return response()->json(['error'=> 'Bad status'], 400);
+        }
     }
 
     public function approveRequest($id)
