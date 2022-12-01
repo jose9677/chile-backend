@@ -197,12 +197,20 @@ class user_requestController extends Controller
         $query = DB::select(
             "SELECT 
             a.*,
-            c.*
+            b.*,
+			c.street,
+			d.status,
+			g.description,
+			e.prevention_detail,
+			f.prevention_type
             FROM consultants.users as a
-            JOIN consultants.users_requests as b
-            USING (rut)
-            JOIN consultants.solicitudes as c ON b.id_request = c.id
-            WHERE b.employee_rut = '$employee_rut'"
+            JOIN consultants.solicitudes as b ON a.rut =  b.rut_employee
+			JOIN consultants.locations as c ON b.id_location = c.id
+			JOIN consultants.status as d ON d.id = b.id_status
+			JOIN consultants.preventions_details as e ON b.id_prevention_type_detail = e.id
+			JOIN consultants.preventions_types as f ON e.id_prevention_type = f.id
+			JOIN consultants.property_types as g ON g.id = b.id_property_type
+            WHERE b.rut_employee = '$employee_rut'"
         );
 
         return response()->json([
