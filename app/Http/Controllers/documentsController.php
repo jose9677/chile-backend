@@ -54,9 +54,9 @@ class documentsController extends Controller
             $data->document_path = $comPic;
         }
         if ($data->save()) {
-            return response()->json(['message' => 'OK'],200);
+            return response()->json(['message' => 'Docuemten uploaded successfull'],200);
         }else {
-            return response()->json(['error' => 'ERROR'],400);
+            return response()->json(['error' => 'Error to upload document'],400);
         }
     }
 }

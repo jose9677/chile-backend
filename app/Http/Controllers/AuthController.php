@@ -200,10 +200,12 @@ class AuthController extends Controller
             'property_number',
             'id_prevention_type',
             'assurance',
-            'visit_date'
+            'visit_date',
         ]);
 
+
         solicitudes::create($solicitudes);
+        $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");
 
         $send = new registroMailable($user->rut, $user->otp);
         Mail::to('josedarkrai@gmail.com')->send($send);

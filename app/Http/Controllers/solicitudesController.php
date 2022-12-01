@@ -272,7 +272,7 @@ class solicitudesController extends Controller
          );*/
  
          //New query
-         $query = DB::select(
+        /* $query = DB::select(
             "SELECT 
             a.rut,
             a.names,
@@ -300,6 +300,37 @@ class solicitudesController extends Controller
             JOIN consultants.status as f ON b.id_status = f.id
             JOIN consultants.documents as g ON g.id_request = b.id
             JOIN consultants.documents_types as h ON h.id = g.id_document_type
+            WHERE a.rut = '$rut'"
+         );*/
+
+         $query = DB::select(
+            "SELECT 
+            a.rut,
+            a.names,
+            a.lastname,
+            b.id as id_request,
+            b.id_prevention_type_detail,
+            b.visit_date,
+            b.created_at as solicitude_date,
+            b.request_date,
+            c.prevention_detail,
+            d.prevention_type,
+            b.id_status,
+            f.status, 
+            e.rut as visitor_rut,
+            e.names as employee_name, 
+            e.lastname as employee_lastname,
+                        g.id as id_document,
+                        g.document_path, 
+                        h.document_type
+            FROM consultants.users as a 
+            LEFT JOIN consultants.solicitudes as b ON a.rut = b.rut_user
+            LEFT JOIN consultants.preventions_details as c ON b.id_prevention_type_detail = c.id
+            LEFT JOIN consultants.preventions_types as d ON c.id_prevention_type = d.id
+            LEFT JOIN consultants.users as e ON b.rut_employee = e.rut
+            LEFT JOIN consultants.status as f ON b.id_status = f.id
+                        LEFT JOIN consultants.documents as g ON g.id_request = b.id
+                        LEFT JOIN consultants.documents_types as h ON h.id = g.id_document_type
             WHERE a.rut = '$rut'"
          );
  
