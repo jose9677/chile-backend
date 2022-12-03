@@ -192,7 +192,7 @@ class AuthController extends Controller
             'id_rol' => 1
         ]);
 
-        $solicitudes = $request->only([
+        /*$solicitudes = $request->only([
             'rut_user',
             'id_location',
             'way_number',
@@ -204,7 +204,27 @@ class AuthController extends Controller
 
 
         solicitudes::create($solicitudes);
-        $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");
+        $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");*/
+
+        $solicitudes = solicitudes::create([
+            'rut_user' => $request->rut,
+            'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
+            'assurance' => $request->get('assurance'),
+            'id_location' => $request->get('id_location'),
+            'way_number' => $request->get('way_number'),
+            'id_property_type' => $request->get('id_property_type'),
+            'property_number' => $request->get('property_number'),
+            'terms_condition' => false,
+            'id_status' => 1,
+            'applicant_at_home' => false,
+            'prevention_is_valid' => false,
+            'location_is_valid' => false,
+            'comments' => $request->get('comments'),
+            'is_active' => false,
+            'rut_match' => false
+        ]);
+
+
 
         $send = new registroMailable($user->rut, $user->otp);
         //Mail::to('testing@angulo-group.com')->send($send);
