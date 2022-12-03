@@ -13,7 +13,7 @@ class solicitudes extends Model
 
     protected $fillable = [
         'rut_user',
-        'id_prevention_type',
+        'id_prevention_type_detail',
         'assurance',
         'id_location',
         'way_number',

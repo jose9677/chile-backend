@@ -99,7 +99,7 @@ class AuthController extends Controller
             
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'supervisor_rut' => 'required',
+            //'supervisor_rut' => 'required',
             'profile_pic' => 'required',
             'id_rol' => 'required'
         ]);
@@ -201,8 +201,7 @@ class AuthController extends Controller
             'id_prevention_type',
             'assurance'
         ]);
-
-
+        
         solicitudes::create($solicitudes);
         $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");*/
 
@@ -214,17 +213,15 @@ class AuthController extends Controller
             'way_number' => $request->get('way_number'),
             'id_property_type' => $request->get('id_property_type'),
             'property_number' => $request->get('property_number'),
-            'terms_condition' => false,
+            'terms_condition' => $request->get('terms_condition'),
             'id_status' => 1,
-            'applicant_at_home' => false,
-            'prevention_is_valid' => false,
-            'location_is_valid' => false,
+            'applicant_at_home' => $request->get('applicant_at_home'),
+            'prevention_is_valid' => $request->get('prevention_is_valid'),
+            'location_is_valid' => $request->get('location_is_valid'),
             'comments' => $request->get('comments'),
-            'is_active' => false,
-            'rut_match' => false
+            'is_active' => $request->get('is_active'),
+            'rut_match' => $request->get('rut_match')
         ]);
-
-
 
         $send = new registroMailable($user->rut, $user->otp);
         //Mail::to('testing@angulo-group.com')->send($send);
