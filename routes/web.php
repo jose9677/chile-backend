@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/info', [App\Http\Controllers\decriptionsController::class, 'info']);
+Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 'dropdownInfo']);
 
 //USERCONTROLLER
 Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detailsUser']);

@@ -9,17 +9,10 @@ class status extends Model
 {
     use HasFactory;
 
+    protected $table = 'status';
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'status'
-    ];
-
-    protected $hidden = [
-
-    ];
-
-    protected $casts = [
-
     ];
 }
