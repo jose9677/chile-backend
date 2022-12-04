@@ -153,7 +153,7 @@ class AuthController extends Controller
         return $randomString;
     }
 
-    public function registerNeighbor(Request $request, $id_document_type)
+    public function registerNeighbor(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
