@@ -57,9 +57,9 @@ Route::post('/add_employeeRut', [App\Http\Controllers\user_requestController::cl
 Route::get('/detailUserRequest', [App\Http\Controllers\user_requestController::class, 'detailUserRequest']);
 Route::get('/joinRequestUsers/{id}', [App\Http\Controllers\user_requestController::class, 'joinRequestUsers']);
 Route::get('/joinRequestEmployee/{employee_rut}', [App\Http\Controllers\user_requestController::class, 'joinRequestEmployee']);
-//DOCUMENTS
 
+//DOCUMENTS
 Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
 Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 
-Route::post('/file/{id_request}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
+Route::post('/file/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);

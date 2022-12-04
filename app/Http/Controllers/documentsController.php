@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\documents;
+use App\Models\solicitudes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -36,11 +37,12 @@ class documentsController extends Controller
         
     }
 
-    public function file(Request $request, $id_request, $id_document_type)
+    public function file(Request $request, $id_document_type)
     {
         $data = new documents();
-        //$query = DB::insert("INSERT INTO consultants.documents (id_request, id_document_type) VALUES ($id_request,  $id_document_type)");
-        $data->id_request = $id_request;
+        
+        $query = solicitudes::max('id');
+        $data->id_request = $query;
         $data->id_document_type = $id_document_type;
 
         if ($request->hasFile('document_path')) {
@@ -54,7 +56,7 @@ class documentsController extends Controller
             $data->document_path = $comPic;
         }
         if ($data->save()) {
-            return response()->json(['message' => 'Docuemten uploaded successfull'],200);
+            return response()->json(['message' => 'Document uploaded successfull'],200);
         }else {
             return response()->json(['error' => 'Error to upload document'],400);
         }

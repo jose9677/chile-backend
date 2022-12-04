@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\claveEmpleadoMailable;
 use App\Mail\reenviarOTPMailable;
 use App\Mail\registroMailable;
+use App\Models\documents;
 use App\Models\solicitudes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -152,7 +153,7 @@ class AuthController extends Controller
         return $randomString;
     }
 
-    public function registerNeighbor(Request $request)
+    public function registerNeighbor(Request $request, $id_document_type)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -192,20 +193,7 @@ class AuthController extends Controller
             'id_rol' => 1
         ]);
 
-        /*$solicitudes = $request->only([
-            'rut_user',
-            'id_location',
-            'way_number',
-            'id_property_type_detail',
-            'property_number',
-            'id_prevention_type',
-            'assurance'
-        ]);
-        
-        solicitudes::create($solicitudes);
-        $query = DB::update("UPDATE consultants.solicitudes SET id_status = 1 WHERE id_status is Null");*/
-
-        $solicitudes = solicitudes::create([
+       /* $solicitudes = solicitudes::create([
             'rut_user' => $request->rut,
             'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
             'assurance' => $request->get('assurance'),
@@ -215,19 +203,44 @@ class AuthController extends Controller
             'property_number' => $request->get('property_number'),
             'terms_condition' => $request->get('terms_condition'),
             'id_status' => 1,
-            'applicant_at_home' => $request->get('applicant_at_home'),
-            'prevention_is_valid' => $request->get('prevention_is_valid'),
-            'location_is_valid' => $request->get('location_is_valid'),
+            'applicant_at_home' => false,
+            'prevention_is_valid' => false,
+            'location_is_valid' => false,
             'comments' => $request->get('comments'),
-            'is_active' => $request->get('is_active'),
-            'rut_match' => $request->get('rut_match')
-        ]);
+            'is_active' => false,
+            'rut_match' => false
+        ]); */
 
-        $send = new registroMailable($user->rut, $user->otp);
-        //Mail::to('testing@angulo-group.com')->send($send);
-        Mail::to($user->emai)->send($send);
+        $sol = new solicitudes();
+        $sol->rut_user = $request->rut;
+        $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
+        $sol->assurance = $request->get('assurance');
+        $sol->id_location = $request->get('id_location');
+        $sol->way_number = $request->get('way_number');
+        $sol->id_property_type = $request->get('id_property_type');
+        $sol->property_number = $request->get('property_number');
+        $sol->terms_condition = $request->get('terms_condition');
+        $sol->id_status = 1;
+        $sol->applicant_at_home = false;
+        $sol->prevention_is_valid = false;
+        $sol->location_is_valid = false;
+        $sol->comments = $request->get('comments');
+        $sol->is_active = false;
+        $sol->rut_match = false;
+
+        if ($request->terms_condition == false) {
+            return response()->json(['error' => 'User must to accept terms condition'], 400);
+        }
+        elseif ($request->terms_condition == true) {
+            $sol->save();
+        }
+
+        //$send = new registroMailable($user->rut, $user->otp);
+        //Mail::to('dpadonre@zohomail.com')->send($send);
+        //Mail::to($request->emai)->send($send);
+
         $token = JWTAuth::fromUser($user);
-        return response()->json(compact('user', 'solicitudes', 'token'), 201); 
+        return response()->json(compact('user', 'sol', 'token'), 201); 
     }
     
     public function login(Request $request)

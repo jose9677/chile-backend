@@ -92,7 +92,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'testing@angulo-group.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'dpadonre@zohomail.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
