@@ -382,18 +382,13 @@ class solicitudesController extends Controller
             f.status, 
             e.rut as visitor_rut,
             e.names as employee_name, 
-            e.lastname as employee_lastname,
-                        g.id as id_document,
-                        g.document_path, 
-                        h.document_type
+            e.lastname as employee_lastname
             FROM consultants.users as a 
             LEFT JOIN consultants.solicitudes as b ON a.rut = b.rut_user
             LEFT JOIN consultants.preventions_details as c ON b.id_prevention_type_detail = c.id
             LEFT JOIN consultants.preventions_types as d ON c.id_prevention_type = d.id
             LEFT JOIN consultants.users as e ON b.rut_employee = e.rut
             LEFT JOIN consultants.status as f ON b.id_status = f.id
-                        LEFT JOIN consultants.documents as g ON g.id_request = b.id
-                        LEFT JOIN consultants.documents_types as h ON h.id = g.id_document_type
             WHERE a.rut = '$rut'"
          );
  
