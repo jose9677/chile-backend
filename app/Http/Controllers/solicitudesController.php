@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\asignarVisitadorMailable;
+use App\Mail\confirmarCitaMailable;
+use App\Mail\reprogramarCitaMailable;
 use App\Models\solicitudes;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 class solicitudesController extends Controller
 {
@@ -186,8 +191,15 @@ class solicitudesController extends Controller
 
         if ($data) {
             $data = solicitudes::query()->where(['id' => $id])->update(['id_status' => 5]);
+
+            $user = new User();
+            
+            //ARREGLAR ESTE CORREO
+            $send = new reprogramarCitaMailable($user->names, $user->lastname, $id);
+            Mail::to('testing@angulo-group.com')->send($send);
+
             return response()->json([
-                'message' => 'Request id_request was changed to Reprogram'
+                'message' => 'Request '.$id. ' was changed to Reprogram'
             ], 200);   
        }
     }
@@ -216,10 +228,61 @@ class solicitudesController extends Controller
             solicitudes::query()->where(['id' => $id])->update(['visit_date' => $request->visit_date,
             'id_status' => 4]);
 
+            $user = new User();
+            //$user = User::findOrFail();
+
+            //ARREGLAR ESTE CORREO
+            $send = new confirmarCitaMailable($user->names, $user->lastname, $id);
+            Mail::to('testing@angulo-group.com')->send($send);
+
             return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
         }else {
             return response()->json(['error'=> 'Bad status'], 400);
         }
+    }
+
+    public function add_visitor(Request $request, $id)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $sol = solicitudes::findOrFail($id);
+
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if (!$user->count()) {
+            return response()->json(['error' => 'User does not exists into Data Base'],400);
+        }
+
+        $user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true])->first();
+        if (!$user) {
+            return response()->json(['error' => 'This user is not a employee'],400);
+        }
+        elseif ($user) {
+            $sol->rut_employee = $request->rut;
+            $sol->save();
+        }
+        $query = DB::select("SELECT * FROM users WHERE rut = '$request->rut'");
+        
+        $user = new User();
+        $user = User::findOrFail($request->rut);
+
+        //ARREGLAR ESTE CORREO
+        $send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
+        Mail::to('testing@angulo-group.com')->send($send);
+
+        return response()->json([
+            'message' => 'Visitor '.$request->rut. ' was assigned to request '.$id,
+            'data_visitor' => $query
+            ],200);
     }
 
     public function approveRequest($id)

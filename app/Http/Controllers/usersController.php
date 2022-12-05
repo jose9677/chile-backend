@@ -196,4 +196,45 @@ class usersController extends Controller
             return response()->json(['error' => 'Invalid Token'], 400);
         }   
    }
+
+   public function add_supervisor(Request $request, $rut)
+   {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [    
+            'rut' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::findOrFail($rut);
+        $user->supervisor_rut = $request->rut;
+        $user->save();
+
+        /*$user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true])->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'This user is not a employee'],400);
+        }
+        
+        $supervisor = User::query()->where(['rut' => $request->input('rut'), 'id_rol' => 3])->first();
+
+        if (!$supervisor) {
+            return response()->json(['error' => 'This user is not a supervisor'], 400);
+        }
+        elseif ($supervisor) {
+            //User::query()->where(['rut' => $request->input('rut')])->update(['supervisor_rut' => $request->supervisor_rut]);
+        }*/
+
+        return response()->json(['message' => 'This supervisor '.$request->supervisor_rut.' was assigned to user '.$request->rut], 200);        
+   }
+
+   public function detailsSupervisor($rut)
+   {
+        $query = DB::select(
+            "SELECT * FROM users WHERE supervisor_rut = '$rut'");
+
+        return response()->json(['message' => $query], 200);
+   }
 }

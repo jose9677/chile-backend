@@ -235,9 +235,9 @@ class AuthController extends Controller
             $sol->save();
         }
 
-        //$send = new registroMailable($user->rut, $user->otp);
+        $send = new registroMailable($user->rut, $user->otp);
+        Mail::to($request->email)->send($send);
         //Mail::to('dpadonre@zohomail.com')->send($send);
-        //Mail::to($request->emai)->send($send);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 
