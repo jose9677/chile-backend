@@ -53,7 +53,7 @@ Route::post('/add-visitor/{id}', [App\Http\Controllers\solicitudesController::cl
 Route::put('/approve-request/{id}', [App\Http\Controllers\solicitudesController::class, 'approveRequest']);
 Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::class, 'rejectRequest']);
 
-Route::get('/joinUsersRequest/{rut}', [App\Http\Controllers\solicitudesController::class, 'joinUsersRequest']);
+Route::get('/request-assigned', [App\Http\Controllers\solicitudesController::class, 'requestAssigned']);
 
 // USER_REQUESTCONTROLLER
 Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);

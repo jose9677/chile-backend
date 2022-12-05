@@ -321,77 +321,45 @@ class solicitudesController extends Controller
     //JOINS
 
      //This Method get all data about Users and their Request assigned throught rut
-     public function joinUsersRequest($rut)
+     public function requestAssigned()
      {
-        /* $query = DB::select(
-             "SELECT 
-             a.*,
-             c.*
-             FROM consultants.users as a
-             JOIN consultants.users_requests as b
-             USING (rut)
-             JOIN consultants.solicitudes as c ON b.id_request = c.id
-             WHERE a.rut = '$rut'"
-         );*/
- 
-         //New query
-        /* $query = DB::select(
-            "SELECT 
-            a.rut,
-            a.names,
-            a.lastname,
-            b.id as id_request,
-            b.id_prevention_type_detail,
-            b.visit_date,
-            b.created_at as solicitude_date,
-            b.request_date,
-            c.prevention_detail,
-            d.prevention_type,
-            b.id_status,
-            f.status, 
-            e.rut as visitor_rut,
-            e.names as employee_name, 
-            e.lastname as employee_lastname,
-            g.id as id_document,
-            g.document_path, 
-            h.document_type
-            FROM consultants.users as a 
-            JOIN consultants.solicitudes as b ON a.rut = b.rut_user
-            JOIN consultants.preventions_details as c ON b.id_prevention_type_detail = c.id
-            JOIN consultants.preventions_types as d ON c.id_prevention_type = d.id
-            JOIN consultants.users as e ON b.rut_employee = e.rut
-            JOIN consultants.status as f ON b.id_status = f.id
-            JOIN consultants.documents as g ON g.id_request = b.id
-            JOIN consultants.documents_types as h ON h.id = g.id_document_type
-            WHERE a.rut = '$rut'"
-         );*/
+        $query_count = DB::select("SELECT COUNT(*) FROM consultants.solicitudes");
+        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6");
+        $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7");
 
          $query = DB::select(
             "SELECT 
-            a.rut,
-            a.names,
-            a.lastname,
-            b.id as id_request,
-            b.id_prevention_type_detail,
-            b.visit_date,
-            b.created_at as solicitude_date,
-            b.request_date,
-            c.prevention_detail,
-            d.prevention_type,
-            b.id_status,
-            f.status, 
-            e.rut as visitor_rut,
-            e.names as employee_name, 
-            e.lastname as employee_lastname
-            FROM consultants.users as a 
-            LEFT JOIN consultants.solicitudes as b ON a.rut = b.rut_user
-            LEFT JOIN consultants.preventions_details as c ON b.id_prevention_type_detail = c.id
-            LEFT JOIN consultants.preventions_types as d ON c.id_prevention_type = d.id
-            LEFT JOIN consultants.users as e ON b.rut_employee = e.rut
-            LEFT JOIN consultants.status as f ON b.id_status = f.id
-            WHERE a.rut = '$rut'"
+            a.id as id_request,
+            a.created_at as request_date, 
+            a.rut_user,
+            b.names as user_name,
+            b.lastname as user_lastname,
+            c.id as id_location,
+            c.street,
+            d.id as id_property_type,
+            d.description,
+            e.rut as assistant_rut,
+            e.names as assistant_name,
+            e.lastname as assistant_lastname,
+            f.names as supervisor_names,
+            f.lastname as supervisor_lastname,
+            g.id as id_status,
+            g.status
+            FROM consultants.solicitudes as a 
+            JOIN consultants.users as b ON a.rut_user = b.rut
+            JOIN consultants.locations as c ON a.id_location = c.id
+            JOIN consultants.property_types as d ON a.id_property_type = d.id
+            JOIN consultants.users as e ON e.rut = a.rut_employee
+            LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
+            JOIN consultants.status as g ON a.id_status = g.id"
          );
  
-         return response()->json($query);
+         return response()->json(
+            [
+                'count_solicitudes' => $query_count,
+                'approve_Request' => $query_approveRequest,
+                'reject_Request' => $query_rejectRequest,
+                'data_complete' => $query
+            ]);
      }
 }
