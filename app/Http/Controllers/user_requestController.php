@@ -94,7 +94,7 @@ class user_requestController extends Controller
     {
         $query = DB::select(
             "SELECT 
-            a.id as id_request
+            a.id as id_request,
             a.rut_user,
             a.created_at as request_date,
             a.id_prevention_type_detail,

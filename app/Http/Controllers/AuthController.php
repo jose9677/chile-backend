@@ -259,7 +259,7 @@ class AuthController extends Controller
             $query = DB::update("UPDATE consultants.users SET otp = '$otp' WHERE rut = $rut");
 
             $send = new reenviarOTPMailable($user->otp);
-            Mail::to('testing@angulo-group.com')->send($send);
+            Mail::to($user->email)->send($send);
 
             return response()->json(
                 ['message' => 'OTP Updated',
