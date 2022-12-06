@@ -17,12 +17,12 @@ class cambiarclaveMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'Cambio de clave exitoso';
+    public $subject = 'Cambio de Contraseña Exitoso - Salud a Tu Alcance';
     public $rut;
 
-    public function __construct($rut)
+    public function __construct()
     {
-        $this->rut = $rut;
+
     }
 
     /**
@@ -32,6 +32,6 @@ class cambiarclaveMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.cambioClave')->with('rut', $this->rut);
+        return $this->view('emails.cambioClave');
     }
 }

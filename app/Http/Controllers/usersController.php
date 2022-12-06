@@ -186,12 +186,12 @@ class usersController extends Controller
         if ($data->count()) {
             $data = new User();
             $data->password = Hash::make($request->password);
-            $rut = DB::table('users')->where('api_token', $request->input('api_token'))->value('rut');
+            //$rut = DB::table('users')->where('api_token', $request->input('api_token'))->value('rut');
             $email = DB::table('users')->where('api_token', $request->input('api_token'))->value('email');
 
             User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
         
-            $send = new cambiarclaveMailable($rut);
+            $send = new cambiarclaveMailable();
             Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Password Changed successfull'], 200);
