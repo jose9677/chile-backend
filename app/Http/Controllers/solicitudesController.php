@@ -193,10 +193,15 @@ class solicitudesController extends Controller
             $data = solicitudes::query()->where(['id' => $id])->update(['id_status' => 5]);
 
             $user = new User();
+           /* $user = DB::table('solicitudes')
+                            ->join('users', 'users.rut', '=', 'solicitudes.rut_user')
+                            ->select('users.names', 'users.lastname')
+                            ->get();*/
+                            
             
             //ARREGLAR ESTE CORREO
             $send = new reprogramarCitaMailable($user->names, $user->lastname, $id);
-            Mail::to('testing@angulo-group.com')->send($send);
+            Mail::to('info@saludatualcance.net')->send($send);
 
             return response()->json([
                 'message' => 'Request '.$id. ' was changed to Reprogram'
@@ -233,7 +238,7 @@ class solicitudesController extends Controller
 
             //ARREGLAR ESTE CORREO
             $send = new confirmarCitaMailable($user->names, $user->lastname, $id);
-            Mail::to('testing@angulo-group.com')->send($send);
+            Mail::to('info@saludatualcance.net')->send($send);
 
             return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
         }else {
@@ -277,7 +282,7 @@ class solicitudesController extends Controller
 
         //ARREGLAR ESTE CORREO
         $send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
-        Mail::to('testing@angulo-group.com')->send($send);
+        Mail::to('info@saludatualcance.net')->send($send);
 
         return response()->json([
             'message' => 'Visitor '.$request->rut. ' was assigned to request '.$id,

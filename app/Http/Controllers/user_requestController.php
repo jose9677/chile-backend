@@ -125,11 +125,43 @@ class user_requestController extends Controller
     {
         $query = DB::select(
             "SELECT 
-            a.*,
-            b.*
-            FROM consultants.users as a
-            JOIN consultants.solicitudes as b ON a.rut = b.rut_user
-            WHERE b.id = $id"
+            a.created_at as request_date,
+            b.rut,
+            b.names,
+            b.lastname,
+            b.landline,
+            b.mobile_phone,
+            a.id_status,
+            c.status,
+            a.id_location,
+            a.way_number,
+            d.street,
+            a.id_property_type,
+            e.description,
+            a.property_number,
+            f.rut as rut_assistant,
+            f.names as names_assistant,
+            f.lastname as lastname_assistant,
+            a.visit_date,
+            a.id_prevention_type_detail,
+            g.prevention_detail,
+            h.prevention_type,
+            i.id as id_document,
+            i.id_document_type,
+            i.document_path,
+            i.document_ext,
+            j.document_type
+            FROM consultants.solicitudes as a
+            LEFT JOIN consultants.users as b ON a.rut_user = b.rut
+            LEFT JOIN consultants.status as c ON c.id = a.id_status
+            LEFT JOIN consultants.locations as d ON a.id_location = d.id
+            LEFT JOIN consultants.property_types as e ON a.id_property_type = e.id
+            LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
+            LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
+            LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
+            LEFT JOIN consultants.documents as i ON i.id_request = a.id
+            LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
+            WHERE a.id = $id"
         );
 
         return response()->json($query);
