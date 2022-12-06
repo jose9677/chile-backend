@@ -90,84 +90,29 @@ class user_requestController extends Controller
         }*/
     }
     
-    public function detailUserRequest()
+    public function detailNeightborRequest($rut_user)
     {
-            /*$query = DB::select(            
-            "SELECT 
-            b.rut,
-            b.employee_rut,
-            c.names as user_name,
-            c.lastname as user_lastname,
-            a.id as id_request,
-            a.id_prevention_type_detail,
-            g.prevention_detail,
-            h.prevention_type,
-            a.assurance,
-            a.id_location,
-            d.street,
-            a.way_number,
-            a.id_property_type,
-            f.description,
-            a.property_number,
-            a.terms_condition,
-            a.request_date, 
-            a.id_status,
-            e.status,
-            a.applicant_at_home,
-            a.prevention_is_valid,
-            a.location_is_valid,
-            a.comments,
-            a.is_active,
-            a.rut_match
-            FROM consultants.solicitudes as a 
-            JOIN consultants.users_requests as b ON a.id = b.id_request
-            JOIN consultants.users as c ON b.rut = c.rut
-            JOIN consultants.locations as d ON a.id_location = d.id
-            JOIN consultants.status as e ON a.id_status = e.id
-            JOIN consultants.property_types as f ON a.id_property_type = f.id
-            JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
-            JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id"
-        );*/
-
-        //Query Cristian
         $query = DB::select(
             "SELECT 
-            b.rut,
-            b.employee_rut,
-            i.names as asistant_name,
-            i.lastname as asistant_lastname,
-            c.names as user_name,
-            c.lastname as user_lastname,
-            a.id as id_request,
+            a.rut_user,
+            a.created_at as request_date,
             a.id_prevention_type_detail,
-            g.prevention_detail,
-            h.prevention_type,
-            a.assurance,
-            a.id_location,
-            d.street,
-            a.way_number,
-            a.id_property_type,
-            f.description,
-            a.property_number,
-            a.terms_condition,
-            a.request_date, 
+            b.prevention_detail,
+            b.id_prevention_type,
+            c.prevention_type,
+            a.visit_date,
+            d.rut,
+            d.names as assistant_names,
+            d.lastname as assistant_lastname,
             a.id_status,
-            e.status,
-            a.applicant_at_home,
-            a.prevention_is_valid,
-            a.location_is_valid,
-            a.comments,
-            a.is_active,
-            a.rut_match
+            e.status
             FROM consultants.solicitudes as a 
-            LEFT JOIN consultants.users_requests as b ON a.id = b.id_request
-            LEFT JOIN consultants.users as c ON b.rut = c.rut
-            LEFT JOIN consultants.locations as d ON a.id_location = d.id
-            LEFT JOIN consultants.status as e ON a.id_status = e.id
-            LEFT JOIN consultants.property_types as f ON a.id_property_type = f.id
-            LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
-            LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
-            LEFT JOIN consultants.users as i ON b.employee_rut = i.rut"
+            JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
+            JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
+            LEFT JOIN consultants.users as d ON a.rut_employee = d.rut
+            JOIN consultants.status as e ON a.id_status = e.id
+            WHERE a.rut_user = '$rut_user'"
+
         );
 
         return response()->json([

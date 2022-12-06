@@ -58,7 +58,7 @@ Route::get('/request-assigned', [App\Http\Controllers\solicitudesController::cla
 // USER_REQUESTCONTROLLER
 Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);
 Route::post('/add_employeeRut', [App\Http\Controllers\user_requestController::class, 'add_employeeRut']);
-Route::get('/detailUserRequest', [App\Http\Controllers\user_requestController::class, 'detailUserRequest']);
+Route::get('/detail-neightbor/{rut_user}', [App\Http\Controllers\user_requestController::class, 'detailNeightborRequest']);
 Route::get('/joinRequestUsers/{id}', [App\Http\Controllers\user_requestController::class, 'joinRequestUsers']);
 Route::get('/joinRequestEmployee/{employee_rut}', [App\Http\Controllers\user_requestController::class, 'joinRequestEmployee']);
 
