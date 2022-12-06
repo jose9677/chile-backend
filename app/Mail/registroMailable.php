@@ -17,13 +17,11 @@ class registroMailable extends Mailable
      * @return void
      */
 
-    public $subject = "Registro de Usuario";
-    public $rut;
+    public $subject = "Clave de un solo uso - Salud a Tu Alcance";
     public $otp;
 
-    public function __construct($rut, $otp)
+    public function __construct($otp)
     {
-        $this->rut = $rut;
         $this->otp = $otp;
     }
 
@@ -34,6 +32,6 @@ class registroMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.registro')->with('rut', $this->rut, 'otp', $this->otp);
+        return $this->view('emails.registro')->with('otp', $this->otp);
     }
 }

@@ -10,13 +10,16 @@
 
 <div>
     Estimado vecino,<br><br>
-    Hemos procesado exitosamente su registro en el sistema web de Salud a tu Alcance. Para validar su correo electrónico utilice la siguiente clave : <br><br> 
-    <p>Usuario Creado {{$rut}}</p> <br>
-    <p>Clave de un solo uso {{$otp}}</p>
-    <br><br>
-    Como parte del proceso de registro hemos generado automáticamente una solicitud para optar por el beneficio, por lo que debe estar  atento a su correo electrónico ya que en los próximos días le será notificada la fecha en que uno de nuestros asistentes sociales lo visitará.<br><br>
+    para continuar con el proceso de registro por favor ingrese la siguiente clave de un solo uso en la aplicación:<br><br>
+
+    Clave: <span style="color: #0eadb0;">{{$otp}}</span><br><br>
+
+    <br>
     Saludos cordiales,<br><br>
-    <span style="font-weight: bold;"> Testing Team</span>
-    </div>
+    IMPORTANTE: La clave de un solo uso tiene una validez de 10 minutos, una vez transcurrido ese tiempo si no valida su correo electrónico deberá realizar el proceso de registro nuevamente<br><br>
+    <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
+</div>
+<br><br><hr><br><br>
+
 </body>
 </html>

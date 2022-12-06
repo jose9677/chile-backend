@@ -146,9 +146,10 @@ class usersController extends Controller
             $data->api_token = $api_token;
 
             User::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
+            $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
             $send = new validarMailable($data->api_token);
-            Mail::to('testing@angulo-group.com')->send($send);
+            Mail::to($email)->send($send);
 
             return response()->json(
                 [
@@ -185,11 +186,13 @@ class usersController extends Controller
         if ($data->count()) {
             $data = new User();
             $data->password = Hash::make($request->password);
-            
-            User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
+            $rut = DB::table('users')->where('api_token', $request->input('api_token'))->value('rut');
+            $email = DB::table('users')->where('api_token', $request->input('api_token'))->value('email');
 
-            $send = new cambiarclaveMailable($data); // CORREGIR NO IMPRIME EL RUT DEL USUARIO...
-            Mail::to('testing@angulo-group.com')->send($send);
+            User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
+        
+            $send = new cambiarclaveMailable($rut);
+            Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Password Changed successfull'], 200);
         }else {

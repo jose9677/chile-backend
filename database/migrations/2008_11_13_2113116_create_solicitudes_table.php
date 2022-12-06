@@ -23,7 +23,7 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('id_location');
             $table->integer('way_number');
             $table->unsignedBigInteger('id_property_type');
-            $table->integer('property_number');
+            $table->string('property_number');
             $table->boolean('terms_condition')->nullable();
             $table->date('request_date');
             $table->unsignedBigInteger('id_status');

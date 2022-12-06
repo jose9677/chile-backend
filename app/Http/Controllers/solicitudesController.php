@@ -341,17 +341,18 @@ class solicitudesController extends Controller
             e.rut as assistant_rut,
             e.names as assistant_name,
             e.lastname as assistant_lastname,
+			f.rut as supervisor_rut,
             f.names as supervisor_names,
             f.lastname as supervisor_lastname,
             g.id as id_status,
             g.status
             FROM consultants.solicitudes as a 
-            JOIN consultants.users as b ON a.rut_user = b.rut
-            JOIN consultants.locations as c ON a.id_location = c.id
-            JOIN consultants.property_types as d ON a.id_property_type = d.id
-            JOIN consultants.users as e ON e.rut = a.rut_employee
+            LEFT JOIN consultants.users as b ON a.rut_user = b.rut
+            LEFT JOIN consultants.locations as c ON a.id_location = c.id
+            LEFT JOIN consultants.property_types as d ON a.id_property_type = d.id
+            LEFT JOIN consultants.users as e ON e.rut = a.rut_employee
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
-            JOIN consultants.status as g ON a.id_status = g.id"
+            LEFT JOIN consultants.status as g ON a.id_status = g.id"
          );
  
          return response()->json(

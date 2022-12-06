@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\claveEmpleadoMailable;
 use App\Mail\reenviarOTPMailable;
 use App\Mail\registroMailable;
+use App\Mail\registroVecinoExitoso;
 use App\Models\documents;
 use App\Models\solicitudes;
 use Illuminate\Http\Request;
@@ -26,61 +27,7 @@ use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
 use Malahierba\ChileRut\Rules\ValidChileanRut;
 
 class AuthController extends Controller
-{
-    public function register(Request $request)
-    {
-        $user = new User();
-        $solicitudes = new solicitudes();
-
-        $user = $request->only([
-            'rut',
-            'names',
-            'lastname',
-            'f_nac',
-            'email',
-            'landline',
-            'mobile_phone'
-        ]);
-
-        User::create($user);
-
-        $solicitudes = $request->only([
-            'id_location',
-            'way_number',
-            'id_property_type',
-            'property_number',
-            'id_prevention_type',
-            'assurance'
-        ]);
-
-        solicitudes::create($solicitudes);
-
-        $this->add_request();
-
-        return response()->json([
-            'user' => $user, 
-            'request' => $solicitudes
-        ], 200);
-    }
-
-    public function add_request()
-    {
-        $query = DB::insert(
-                    
-        "INSERT INTO consultants.users_requests
-        SELECT 
-        consultants.users.rut,
-        MAX(consultants.solicitudes.id),
-        consultants.users.supervisor_rut
-        FROM
-        consultants.users, consultants.solicitudes
-        GROUP BY
-        consultants.users.rut,
-        consultants.users.supervisor_rut
-        ORDER BY  consultants.users.created_at DESC LIMIT 1"
-        );
-    }
-    
+{  
     public function registerEmployee(Request $request)
     {
         Log::info($request);
@@ -127,10 +74,10 @@ class AuthController extends Controller
         ]);
 
         $send = new registroMailable($user->rut, $user->otp);
-        Mail::to('testing@angulo-group.com')->send($send);
+        Mail::to($request->email)->send($send);
 
         $send_2 = new claveEmpleadoMailable($user->rut);
-        Mail::to('testing@angulo-group.com')->send($send_2);
+        Mail::to($request->email)->send($send_2);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
@@ -235,8 +182,11 @@ class AuthController extends Controller
             $sol->save();
         }
 
-        $send = new registroMailable($user->rut, $user->otp);
+        $send = new registroMailable($user->otp);
         Mail::to($request->email)->send($send);
+
+        $send_2 = new registroVecinoExitoso();
+        Mail::to($request->email)->send($send_2);
         //Mail::to('dpadonre@zohomail.com')->send($send);
 
         $token = JWTAuth::fromUser($user);
