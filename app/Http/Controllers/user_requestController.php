@@ -173,18 +173,22 @@ class user_requestController extends Controller
         $data = User::findOrFail($rut_employee);
 
         $query = DB::select(
-           "SELECT 
+            "SELECT 
             a.id,
             a.created_at, 
             a.rut_user,
-            a.rut_employee, 
             b.names,
             b.lastname,
+            a.rut_employee, 
+            f.names as assistant_name,
+            f.lastname as assistant_lastname,
+            a.visit_date,
             a.id_location,
-		    d.street,
+            d.street,
+            a.way_number,
             a.id_property_type,
             c.description,
-	        a.property_number,
+            a.property_number,
             a.id_status,
             e.status
             FROM consultants.solicitudes as a 
@@ -192,6 +196,7 @@ class user_requestController extends Controller
             JOIN consultants.property_types as c ON c.id = a.id_property_type
             JOIN consultants.locations as d ON d.id = a.id_location
             JOIN consultants.status as e ON e.id = a.id_status
+            JOIN consultants.users as f ON f.rut = a.rut_employee
             WHERE a.rut_employee = '$rut_employee'"
         );
 
