@@ -156,21 +156,21 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Neightbor has confirmed his date'], 200);
     }
 
-    public function programDate(Request $request, $id)
+    public function programDate($id)
     {
-        Log::info($request);
+        /*Log::info($request);
         $validator = Validator::make($request->all(), [
             'request_date' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
-        }
+        }*/
 
         $data = new solicitudes();
         $data = solicitudes::findOrFail($id);
 
-        $data->request_date = $request->request_date;
+        $data->request_date = date('Y-m-d');
         $data->id_status = 3;
 
         try {
@@ -180,7 +180,7 @@ class solicitudesController extends Controller
         }
         
         return response()->json([
-            'message' => 'Request '.$id. ' assigned for the date '.$request->request_date
+            'message' => 'Request '.$id. ' assigned for the date '.$data->request_date
         ], 200);
     }
 
@@ -273,6 +273,7 @@ class solicitudesController extends Controller
         }
         elseif ($user) {
             $sol->rut_employee = $request->rut;
+            $sol->id_status = 2;
             $sol->save();
         }
         $query = DB::select("SELECT * FROM users WHERE rut = '$request->rut'");
