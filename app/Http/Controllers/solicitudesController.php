@@ -291,19 +291,70 @@ class solicitudesController extends Controller
             ],200);
     }
 
-    public function approveRequest($id)
+    //This method get every data about a visitor assigned to any request
+    public function detailsVisitor(Request $request)
     {
-        $data = new solicitudes();
-        $data = solicitudes::findOrFail($id);
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut_employee' => 'required'
+        ]);
 
-        $data->id_status = 6;
-
-        try {
-            $data->save();
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Bad Request'], 400);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $data = new solicitudes();
+        $data->rut_employee = $request->rut_employee;
+
+        $query = DB::select(
+            "SELECT 
+            a.id as id_request,
+            b.*
+            from consultants.solicitudes as a 
+            JOIN consultants.users as b ON a.rut_employee = b.rut
+            WHERE a.rut_employee = '$data->rut_employee'"
+        );
+
+        return response()->json($query);
+    }
+
+    public function approveRequest(Request $request, $id)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'applicant_at_home' => 'required',
+            'prevention_is_valid' => 'required',
+            'location_is_valid' => 'required',
+            'rut_match' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = new solicitudes();
+        $dataFound = solicitudes::findOrFail($id);
+
+        $dataFound->applicant_at_home = $request->applicant_at_home;
+        $dataFound->prevention_is_valid = $request->prevention_is_valid;
+        $dataFound->location_is_valid = $request->prevention_is_valid;
+        $dataFound->rut_match = $request->rut_match;
+
+        $dataFound->save();
+
+        $response = solicitudes::query()->where(['id' => $id, 
+        'applicant_at_home' => true, 
+        'prevention_is_valid' => true,
+        'location_is_valid' => true,
+        'rut_match' => true
+    ])->first();
+
+        if (!$response) {
+            solicitudes::query()->where(['id' => $id])->update(['id_status' => 7]);
+            return response()->json(['error' => 'Date has been rejected'], 400);
+        }
+
+        solicitudes::query()->where(['id' => $id])->update(['id_status' => 6]);
         return response()->json(['message' => 'Date has been approved'], 200);
     }
 

@@ -30,6 +30,7 @@ Route::get('/employees', [App\Http\Controllers\usersController::class, 'employee
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
 Route::get('/detailsSupervisor/{rut}', [App\Http\Controllers\usersController::class, 'detailsSupervisor']);
 
+
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
 Route::put('/refresh-otp/{rut}', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
@@ -48,7 +49,7 @@ Route::put('/programDate/{id}', [App\Http\Controllers\solicitudesController::cla
 Route::put('/reprogramDate/{id}', [App\Http\Controllers\solicitudesController::class, 'reprogramDate']);
 Route::put('/programVisitDate/{id}', [App\Http\Controllers\solicitudesController::class, 'programVisitDate']);
 Route::post('/add-visitor/{id}', [App\Http\Controllers\solicitudesController::class, 'add_visitor']);
-
+Route::get('/detailsVisitor', [App\Http\Controllers\solicitudesController::class, 'detailsVisitor']);
 
 Route::put('/approve-request/{id}', [App\Http\Controllers\solicitudesController::class, 'approveRequest']);
 Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::class, 'rejectRequest']);
