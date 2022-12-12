@@ -33,7 +33,7 @@ Route::get('/detailsSupervisor/{rut}', [App\Http\Controllers\usersController::cl
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
-Route::put('/refresh-otp/{rut}', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
+Route::put('/refresh-otp', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);
 Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
