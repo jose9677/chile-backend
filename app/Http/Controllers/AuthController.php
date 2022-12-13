@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Mail;
 use Malahierba\ChileRut\ChileRut;
 use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
 use Malahierba\ChileRut\Rules\ValidChileanRut;
+use Symfony\Component\Console\Input\Input;
 
 class AuthController extends Controller
 {  
@@ -185,10 +186,6 @@ class AuthController extends Controller
         $send = new registroMailable($user->otp);
         Mail::to($request->email)->send($send);
 
-        $send_2 = new registroVecinoExitoso();
-        Mail::to($request->email)->send($send_2);
-        //Mail::to('dpadonre@zohomail.com')->send($send);
-
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 
     }
@@ -300,7 +297,11 @@ class AuthController extends Controller
         ])->get();
 
         if ($data->count()) {
+            $email = DB::table('users')->where('otp', $request->input('otp'))->value('email');
             User::query()->where('otp', $request->input('otp'))->update(['otp' => null, 'email_active' => true]);
+            
+            $send = new registroVecinoExitoso();
+            Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Email validated succesfull'], 200);
         }else {

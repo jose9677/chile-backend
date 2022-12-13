@@ -176,7 +176,7 @@ class solicitudesController extends Controller
         try {
             $data->save();
         } catch (\Throwable $th) {
-            return response()->json(['erro' => 'Bad Requets'], 400);
+            return response()->json(['error' => 'Bad Requets'], 400);
         }
         
         return response()->json([
@@ -281,9 +281,11 @@ class solicitudesController extends Controller
         $user = new User();
         $user = User::findOrFail($request->rut);
 
+        $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
+
         //ARREGLAR ESTE CORREO
         $send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
-        Mail::to('info@saludatualcance.net')->send($send);
+        Mail::to($email)->send($send);
 
         return response()->json([
             'message' => 'Visitor '.$request->rut. ' was assigned to request '.$id,

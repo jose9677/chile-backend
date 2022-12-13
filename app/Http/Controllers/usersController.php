@@ -233,10 +233,10 @@ class usersController extends Controller
         return response()->json(['message' => 'This supervisor '.$request->supervisor_rut.' was assigned to user '.$request->rut], 200);        
    }
 
-   public function detailsSupervisor($rut)
+   public function detailsSupervisor()
    {
         $query = DB::select(
-            "SELECT * FROM users WHERE supervisor_rut = '$rut'");
+            "SELECT * FROM users WHERE id_rol = 3");
 
         return response()->json(['message' => $query], 200);
    }
