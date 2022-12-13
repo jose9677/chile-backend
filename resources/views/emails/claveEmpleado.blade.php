@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-<p>Estimado empleado favor generar su clave de acceso para poder ingresar al sistema</p><br>
+<p>Favor generar su clave de acceso para poder ingresar al sistema</p><br>
 <p>Usuario Empleado :  {{$rut}} </p>
 </body>
 </html>

@@ -9,8 +9,7 @@
 <body>
 
 <div>
-    Estimado vecino,<br><br>
-    le notificamos que su cambio de contraseña se realizó de forma exitosa. Si usted no solicitó un cambio de contraseña por favor comuníquese con el área de soporte<br><br>
+    Le notificamos que su cambio de contraseña se realizó de forma exitosa. Si usted no solicitó un cambio de contraseña por favor comuníquese con el área de soporte<br><br>
     Saludos cordiales,<br><br>
     <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
 </div>

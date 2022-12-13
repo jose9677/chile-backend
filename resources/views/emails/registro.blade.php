@@ -9,8 +9,7 @@
 <body>
 
 <div>
-    Estimado vecino,<br><br>
-    para continuar con el proceso de registro por favor ingrese la siguiente clave de un solo uso en la aplicación:<br><br>
+    Para continuar con el proceso de registro por favor ingrese la siguiente clave de un solo uso en la aplicación:<br><br>
 
     Clave: <span style="color: #0eadb0;">{{$otp}}</span><br><br>
 

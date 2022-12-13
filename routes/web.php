@@ -63,6 +63,9 @@ Route::get('/detail-neightbor/{rut_user}', [App\Http\Controllers\user_requestCon
 Route::get('/joinRequestUsers/{id}', [App\Http\Controllers\user_requestController::class, 'joinRequestUsers']);
 Route::get('/joinRequestEmployee/{employee_rut}', [App\Http\Controllers\user_requestController::class, 'joinRequestEmployee']);
 
+//ROLES
+Route::get('/details-roles', [App\Http\Controllers\rolesController::class, 'detailsRoles']);
+
 //DOCUMENTS
 Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
 Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);

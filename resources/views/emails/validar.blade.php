@@ -9,8 +9,7 @@
 <body>
 
 <div>
-    Estimado vecino,<br><br>
-    para configurar una nueva contraseña por favor ingrese al siguiente enlace:<br><br>
+    Para configurar una nueva contraseña por favor ingrese al siguiente enlace:<br><br>
 
     <span style="color: #0eadb0;"><a href="{{$api_token}}">http://localhost:4200/auth/cambiar-contrasena?api_token={{$api_token}}</a></span><br><br>
 
