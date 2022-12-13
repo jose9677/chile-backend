@@ -327,7 +327,9 @@ class solicitudesController extends Controller
             'applicant_at_home' => 'required',
             'prevention_is_valid' => 'required',
             'location_is_valid' => 'required',
+            'comments' => 'required',
             'rut_match' => 'required'
+
         ]);
 
         if ($validator->fails()) {
@@ -340,6 +342,7 @@ class solicitudesController extends Controller
         $dataFound->applicant_at_home = $request->applicant_at_home;
         $dataFound->prevention_is_valid = $request->prevention_is_valid;
         $dataFound->location_is_valid = $request->prevention_is_valid;
+        $dataFound->comments = $request->comments;
         $dataFound->rut_match = $request->rut_match;
 
         $dataFound->save();
