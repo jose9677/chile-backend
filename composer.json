@@ -11,8 +11,9 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "tymon/jwt-auth": "^1.0",
-        "malahierba-lab/chile-rut": "5.1.*"
+        "lcobucci/jwt": "^4.0",
+        "malahierba-lab/chile-rut": "5.1.*",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

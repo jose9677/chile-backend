@@ -176,7 +176,7 @@ class solicitudesController extends Controller
         try {
             $data->save();
         } catch (\Throwable $th) {
-            return response()->json(['erro' => 'Bad Requets'], 400);
+            return response()->json(['error' => 'Bad Requets'], 400);
         }
         
         return response()->json([
@@ -281,9 +281,11 @@ class solicitudesController extends Controller
         $user = new User();
         $user = User::findOrFail($request->rut);
 
+        $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
+
         //ARREGLAR ESTE CORREO
         $send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
-        Mail::to('info@saludatualcance.net')->send($send);
+        Mail::to($email)->send($send);
 
         return response()->json([
             'message' => 'Visitor '.$request->rut. ' was assigned to request '.$id,
@@ -325,7 +327,9 @@ class solicitudesController extends Controller
             'applicant_at_home' => 'required',
             'prevention_is_valid' => 'required',
             'location_is_valid' => 'required',
+            'comments' => 'required',
             'rut_match' => 'required'
+
         ]);
 
         if ($validator->fails()) {
@@ -338,6 +342,7 @@ class solicitudesController extends Controller
         $dataFound->applicant_at_home = $request->applicant_at_home;
         $dataFound->prevention_is_valid = $request->prevention_is_valid;
         $dataFound->location_is_valid = $request->prevention_is_valid;
+        $dataFound->comments = $request->comments;
         $dataFound->rut_match = $request->rut_match;
 
         $dataFound->save();

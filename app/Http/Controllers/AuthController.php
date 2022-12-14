@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Mail;
 use Malahierba\ChileRut\ChileRut;
 use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
 use Malahierba\ChileRut\Rules\ValidChileanRut;
+use Symfony\Component\Console\Input\Input;
 
 class AuthController extends Controller
 {  
@@ -185,10 +186,6 @@ class AuthController extends Controller
         $send = new registroMailable($user->otp);
         Mail::to($request->email)->send($send);
 
-        $send_2 = new registroVecinoExitoso();
-        Mail::to($request->email)->send($send_2);
-        //Mail::to('dpadonre@zohomail.com')->send($send);
-
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 
     }
@@ -244,26 +241,40 @@ class AuthController extends Controller
         return $randomString;
     }
 
-    public function refreshOtp($rut)
+    public function refreshOtp(Request $request)
     {
-        $user = User::find($rut);
-        
-        if (!$user) {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+    
+        if (!$user->count()) {
             return response()->json(['error' => 'User does not exists in Data Base'], 400);
         }
 
-        if (!empty($user->otp)) {
-            $otp = $this->generateCodOtp();
-            $user->otp = $otp;
+        $otp = DB::table('users')->where('rut', $request->input('rut'))->value('otp');
 
-            $query = DB::update("UPDATE consultants.users SET otp = '$otp' WHERE rut = $rut");
+        if (!empty($otp)) {
+            $new_otp = $this->generateCodOtp();
 
-            $send = new reenviarOTPMailable($user->otp);
-            Mail::to($user->email)->send($send);
+            $query = DB::update("UPDATE consultants.users SET otp = '$new_otp' WHERE rut = '$request->rut'");
+            $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
+
+            $send = new reenviarOTPMailable($new_otp);
+            Mail::to($email)->send($send);
 
             return response()->json(
                 ['message' => 'OTP Updated',
-                 'user_rut' => $user->rut
+                 'new_otp' => $new_otp,
+                 'user_rut' => $request->rut
                 ], 200);
         }else {
             return response()->json(['error' => 'This user does not need a OTP'], 400);
@@ -286,7 +297,11 @@ class AuthController extends Controller
         ])->get();
 
         if ($data->count()) {
+            $email = DB::table('users')->where('otp', $request->input('otp'))->value('email');
             User::query()->where('otp', $request->input('otp'))->update(['otp' => null, 'email_active' => true]);
+            
+            $send = new registroVecinoExitoso();
+            Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Email validated succesfull'], 200);
         }else {

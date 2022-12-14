@@ -29,11 +29,11 @@ Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'val
 Route::get('/employees', [App\Http\Controllers\usersController::class, 'employees']);
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
 Route::get('/detailsSupervisor/{rut}', [App\Http\Controllers\usersController::class, 'detailsSupervisor']);
-
+Route::delete('/restartUser', [App\Http\Controllers\usersController::class, 'restartUser']);
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
-Route::put('/refresh-otp/{rut}', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
+Route::put('/refresh-otp', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);
 Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
@@ -62,6 +62,9 @@ Route::post('/add_employeeRut', [App\Http\Controllers\user_requestController::cl
 Route::get('/detail-neightbor/{rut_user}', [App\Http\Controllers\user_requestController::class, 'detailNeightborRequest']);
 Route::get('/joinRequestUsers/{id}', [App\Http\Controllers\user_requestController::class, 'joinRequestUsers']);
 Route::get('/joinRequestEmployee/{employee_rut}', [App\Http\Controllers\user_requestController::class, 'joinRequestEmployee']);
+
+//ROLES
+Route::get('/details-roles', [App\Http\Controllers\rolesController::class, 'detailsRoles']);
 
 //DOCUMENTS
 Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);

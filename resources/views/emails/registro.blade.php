@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 </head>
 <body>
 
 <div>
-    Estimado vecino,<br><br>
-    para continuar con el proceso de registro por favor ingrese la siguiente clave de un solo uso en la aplicación:<br><br>
+    Para continuar con el proceso de registro por favor ingrese la siguiente clave de un solo uso en la aplicación:<br><br>
 
     Clave: <span style="color: #0eadb0;">{{$otp}}</span><br><br>
 
