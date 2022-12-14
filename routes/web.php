@@ -28,7 +28,8 @@ Route::put('/change-password', [App\Http\Controllers\usersController::class, 'ch
 Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'validateUser']);
 Route::get('/employees', [App\Http\Controllers\usersController::class, 'employees']);
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
-Route::get('/detailsSupervisor/{rut}', [App\Http\Controllers\usersController::class, 'detailsSupervisor']);
+Route::get('/detailsAssistant/{rut}', [App\Http\Controllers\usersController::class, 'detailsAssistant']);
+Route::get('/detailsSupervisor', [App\Http\Controllers\usersController::class, 'detailsSupersisor']);
 Route::delete('/restartUser', [App\Http\Controllers\usersController::class, 'restartUser']);
 
 //AUTHCONTROLLER

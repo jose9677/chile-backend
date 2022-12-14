@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 
 use App\Mail\ContactanosMailable;
 use App\Mail\validarMailable;
+use App\Models\solicitudes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -234,7 +235,7 @@ class usersController extends Controller
         return response()->json(['message' => 'This supervisor '.$request->supervisor_rut.' was assigned to user '.$request->rut], 200);        
    }
 
-   public function detailsSupervisor($rut)
+   public function detailsAssistant($rut)
    {
         $query = DB::select(
             "SELECT * FROM users WHERE supervisor_rut = '$rut'");
@@ -242,22 +243,30 @@ class usersController extends Controller
         return response()->json(['message' => $query], 200);
    }
 
+   public function detailsSupersisor()
+   {
+        $user = User::all()->where('id_rol', 3);
+        return response()->json($user);
+   }
+
    public function restartUser(Request $request)
    {
         Log::info($request);
         $validator = Validator::make($request->all(), [    
-            'id_request' => 'required',
             'rut' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
+
+        $id_request = solicitudes::max('id');
+
         $i = 0; 
         while ($i < 3) {
             switch ($i) {
                 case '0':
-                    $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $request->id_request");
+                    $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $id_request");
                     break;
                 
                 case '1':

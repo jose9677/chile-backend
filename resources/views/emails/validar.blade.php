@@ -10,7 +10,7 @@
 <div>
     Para configurar una nueva contraseña por favor ingrese al siguiente enlace:<br><br>
 
-    <span style="color: #0eadb0;"><a href="{{$api_token}}">http://localhost:4200/auth/cambiar-contrasena?api_token={{$api_token}}</a></span><br><br>
+    <span style="color: #0eadb0;"><a href="{{$api_token}}">{{APP_URL}}auth/cambiar-contrasena?api_token={{$api_token}}</a></span><br><br>
 
     Saludos cordiales,<br><br>
     IMPORTANTE: Si usted no solicitó un cambio de contraseña por favor ignore este mensaje<br><br>
