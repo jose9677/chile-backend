@@ -146,11 +146,12 @@ class usersController extends Controller
 
             $api_token = $this->getNewToken();
             $data->api_token = $api_token;
+            $app_url = env('APP_URL');
 
             User::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-            $send = new validarMailable($data->api_token);
+            $send = new validarMailable($data->api_token, $app_url);
             Mail::to($email)->send($send);
 
             return response()->json(
@@ -245,7 +246,7 @@ class usersController extends Controller
 
    public function detailsSupersisor()
    {
-        $user = User::all()->where('id_rol', 3);
+        $user = User::where('id_rol', 3)->get();
         return response()->json($user);
    }
 
