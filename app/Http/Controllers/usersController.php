@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\cambiarclaveMailable;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\documents;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -239,5 +240,39 @@ class usersController extends Controller
             "SELECT * FROM users WHERE supervisor_rut = '$rut'");
 
         return response()->json(['message' => $query], 200);
+   }
+
+   public function restartUser(Request $request)
+   {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [    
+            'id_request' => 'required',
+            'rut' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $i = 0; 
+        while ($i < 3) {
+            switch ($i) {
+                case '0':
+                    $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $request->id_request");
+                    break;
+                
+                case '1':
+                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$request->rut'");
+                    break;
+                
+                case '2':
+                    $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut'");
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+            ++$i;
+        }
+        return response()->json(['message' => 'Restart successfull']);
    }
 }

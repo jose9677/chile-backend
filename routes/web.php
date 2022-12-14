@@ -29,6 +29,7 @@ Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'val
 Route::get('/employees', [App\Http\Controllers\usersController::class, 'employees']);
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
 Route::get('/detailsSupervisor/{rut}', [App\Http\Controllers\usersController::class, 'detailsSupervisor']);
+Route::delete('/restartUser', [App\Http\Controllers\usersController::class, 'restartUser']);
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
