@@ -214,26 +214,24 @@ class usersController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::findOrFail($rut);
-        $user->supervisor_rut = $request->rut;
-        $user->save();
+        $assistant = User::findOrFail($rut);
 
-        /*$user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true])->first();
+        $assistant = User::query()->where(['rut' => $rut, 'employee' => true ,'id_rol' => 2])->first();
+
+        if (!$assistant) {
+            return response()->json(['error' => 'This employee is not a Social Assistant'], 400);
+        }
+
+        $user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true, 'id_rol' => 3])->first();
 
         if (!$user) {
-            return response()->json(['error' => 'This user is not a employee'],400);
+            return response()->json(['error' => 'This user is not a Supervisor'],400);
         }
-        
-        $supervisor = User::query()->where(['rut' => $request->input('rut'), 'id_rol' => 3])->first();
 
-        if (!$supervisor) {
-            return response()->json(['error' => 'This user is not a supervisor'], 400);
-        }
-        elseif ($supervisor) {
-            //User::query()->where(['rut' => $request->input('rut')])->update(['supervisor_rut' => $request->supervisor_rut]);
-        }*/
+        $assistant->supervisor_rut = $request->rut;
+        $assistant->save();
 
-        return response()->json(['message' => 'This supervisor '.$request->supervisor_rut.' was assigned to user '.$request->rut], 200);        
+        return response()->json(['message' => 'This supervisor '.$request->rut.' was assigned to user '.$rut], 200);        
    }
 
    public function detailsAssistant($rut)
