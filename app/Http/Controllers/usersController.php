@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 
 use App\Mail\ContactanosMailable;
 use App\Mail\validarMailable;
+use App\Models\solicitudes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -145,11 +146,12 @@ class usersController extends Controller
 
             $api_token = $this->getNewToken();
             $data->api_token = $api_token;
+            $app_url = env('APP_URL');
 
             User::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-            $send = new validarMailable($data->api_token);
+            $send = new validarMailable($data->api_token, $app_url);
             Mail::to($email)->send($send);
 
             return response()->json(
@@ -212,29 +214,27 @@ class usersController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::findOrFail($rut);
-        $user->supervisor_rut = $request->rut;
-        $user->save();
+        $assistant = User::findOrFail($rut);
 
-        /*$user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true])->first();
+        $assistant = User::query()->where(['rut' => $rut, 'employee' => true ,'id_rol' => 2])->first();
+
+        if (!$assistant) {
+            return response()->json(['error' => 'This employee is not a Social Assistant'], 400);
+        }
+
+        $user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true, 'id_rol' => 3])->first();
 
         if (!$user) {
-            return response()->json(['error' => 'This user is not a employee'],400);
+            return response()->json(['error' => 'This user is not a Supervisor'],400);
         }
-        
-        $supervisor = User::query()->where(['rut' => $request->input('rut'), 'id_rol' => 3])->first();
 
-        if (!$supervisor) {
-            return response()->json(['error' => 'This user is not a supervisor'], 400);
-        }
-        elseif ($supervisor) {
-            //User::query()->where(['rut' => $request->input('rut')])->update(['supervisor_rut' => $request->supervisor_rut]);
-        }*/
+        $assistant->supervisor_rut = $request->rut;
+        $assistant->save();
 
-        return response()->json(['message' => 'This supervisor '.$request->supervisor_rut.' was assigned to user '.$request->rut], 200);        
+        return response()->json(['message' => 'This supervisor '.$request->rut.' was assigned to user '.$rut], 200);        
    }
 
-   public function detailsSupervisor($rut)
+   public function detailsAssistant($rut)
    {
         $query = DB::select(
             "SELECT * FROM users WHERE supervisor_rut = '$rut'");
@@ -242,30 +242,38 @@ class usersController extends Controller
         return response()->json(['message' => $query], 200);
    }
 
-   public function restartUser(Request $request)
+   public function detailsSupersisor()
    {
-        Log::info($request);
+        $user = User::where('id_rol', 3)->get();
+        return response()->json($user);
+   }
+
+   public function restartUser(Request $request, $rut)
+   {
+        /*Log::info($request);
         $validator = Validator::make($request->all(), [    
-            'id_request' => 'required',
             'rut' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
-        }
+        }*/
+
+        $id_request = solicitudes::max('id');
+
         $i = 0; 
         while ($i < 3) {
             switch ($i) {
                 case '0':
-                    $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $request->id_request");
+                    $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $id_request");
                     break;
                 
                 case '1':
-                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$request->rut'");
+                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$rut'");
                     break;
                 
                 case '2':
-                    $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut'");
+                    $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$rut'");
                     break;
                 default:
                     # code...

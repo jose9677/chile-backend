@@ -19,10 +19,12 @@ class validarMailable extends Mailable
 
     public $subject = " Recuperar Contraseña - Salud a Tu Alcance";
     public $api_token; 
+    public $app_url;
 
-    public function __construct($api_token)
+    public function __construct($api_token, $app_url)
     {
         $this->api_token = $api_token;
+        $this->app_url = $app_url;
     }
 
     /**
@@ -32,6 +34,6 @@ class validarMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.validar')->with('api_token', $this->api_token);
+        return $this->view('emails.validar')->with('api_token', $this->api_token, 'app_url', $this->app_url);
     }
 }

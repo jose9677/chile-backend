@@ -10,7 +10,7 @@
 <div>
     Para configurar una nueva contraseña por favor ingrese al siguiente enlace:<br><br>
 
-    <span style="color: #0eadb0;"><a href="http://54.218.3.146/auth/cambiar-contrasena?api_token={{$api_token}}">http://54.218.3.146/auth/cambiar-contrasena?api_token={{$api_token}}</a></span><br><br>
+    <span style="color: #0eadb0;"><a href="{{$app_url}}/auth/cambiar-contrasena?api_token={{$api_token}}">{{$app_url}}/auth/cambiar-contrasena?api_token={{$api_token}}</a></span><br><br>
 
     Saludos cordiales,<br><br>
     IMPORTANTE: Si usted no solicitó un cambio de contraseña por favor ignore este mensaje<br><br>
