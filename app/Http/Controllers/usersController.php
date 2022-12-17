@@ -261,7 +261,7 @@ class usersController extends Controller
 
         //$id_request = solicitudes::max('id');
 
-        $id_request = DB::select("SELECT max(id) FROM consultants.solicitudes WHERE rut_user = $rut");
+        $id_request = DB::select("SELECT max(id) FROM consultants.solicitudes WHERE rut_user = '$rut'");
 
         $i = 0; 
         while ($i < 3) {
