@@ -259,7 +259,9 @@ class usersController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }*/
 
-        $id_request = solicitudes::max('id');
+        //$id_request = solicitudes::max('id');
+
+        $id_request = DB::select("SELECT max(id) FROM consultants.solicitudes WHERE rut_user = $rut");
 
         $i = 0; 
         while ($i < 3) {
@@ -269,7 +271,7 @@ class usersController extends Controller
                     break;
                 
                 case '1':
-                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$rut'");
+                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE id = $id_request AND rut_user = '$rut'");
                     break;
                 
                 case '2':

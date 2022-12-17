@@ -294,9 +294,9 @@ class solicitudesController extends Controller
     }
 
     //This method get every data about a visitor assigned to any request
-    public function detailsVisitor(Request $request)
+    public function detailsVisitor(Request $request, $rut_employee)
     {
-        Log::info($request);
+        /*Log::info($request);
         $validator = Validator::make($request->all(), [
             'rut_employee' => 'required'
         ]);
@@ -306,7 +306,7 @@ class solicitudesController extends Controller
         }
 
         $data = new solicitudes();
-        $data->rut_employee = $request->rut_employee;
+        $data->rut_employee = $request->rut_employee;*/
 
         $query = DB::select(
             "SELECT 
@@ -314,7 +314,7 @@ class solicitudesController extends Controller
             b.*
             from consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_employee = b.rut
-            WHERE a.rut_employee = '$data->rut_employee'"
+            WHERE a.rut_employee = '$rut_employee'"
         );
 
         return response()->json($query);
