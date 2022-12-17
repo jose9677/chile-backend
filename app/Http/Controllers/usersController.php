@@ -269,7 +269,7 @@ class usersController extends Controller
                     break;
                 
                 case '1':
-                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$rut'");
+                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE id = $id_request AND rut_user = '$rut'");
                     break;
                 
                 case '2':
