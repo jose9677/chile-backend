@@ -50,7 +50,6 @@ class documentsController extends Controller
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
             
-            //$comPic = env('APP_URL').'/'.env('REDIS_HOST').'/'.env('REDIS_PORT').'/'.str_replace(' ', '_', $fileNameOnly).'-'.rand() .time().'.'.$extension;
             $comPic = env('REDIS_HOST').'/'.env('REDIS_PORT').'/'.str_replace(' ', '_', $fileNameOnly).'-'.rand() .time().'.'.$extension;
             
             $path = $request->file('document_path')->storeAs('public/posts', $comPic);

@@ -30,7 +30,7 @@ Route::get('/employees', [App\Http\Controllers\usersController::class, 'employee
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
 Route::get('/detailsAssistant/{rut}', [App\Http\Controllers\usersController::class, 'detailsAssistant']);
 Route::get('/detailsSupervisor', [App\Http\Controllers\usersController::class, 'detailsSupersisor']);
-Route::delete('/restartUser', [App\Http\Controllers\usersController::class, 'restartUser']);
+Route::delete('/restartUser/{rut}', [App\Http\Controllers\usersController::class, 'restartUser']);
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);

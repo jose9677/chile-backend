@@ -248,16 +248,16 @@ class usersController extends Controller
         return response()->json($user);
    }
 
-   public function restartUser(Request $request)
+   public function restartUser(Request $request, $rut)
    {
-        Log::info($request);
+        /*Log::info($request);
         $validator = Validator::make($request->all(), [    
             'rut' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
-        }
+        }*/
 
         $id_request = solicitudes::max('id');
 
@@ -269,11 +269,11 @@ class usersController extends Controller
                     break;
                 
                 case '1':
-                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$request->rut'");
+                    $query = DB::delete("DELETE FROM consultants.solicitudes WHERE rut_user = '$rut'");
                     break;
                 
                 case '2':
-                    $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut'");
+                    $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$rut'");
                     break;
                 default:
                     # code...
