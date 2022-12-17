@@ -259,7 +259,9 @@ class usersController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }*/
 
-        $id_request = solicitudes::max('id');
+        //$id_request = solicitudes::max('id');
+
+        $id_request = DB::select("SELECT max(id) FROM consultants.solicitudes WHERE rut_user = $rut");
 
         $i = 0; 
         while ($i < 3) {
