@@ -258,12 +258,14 @@ class usersController extends Controller
             switch ($i) {
                 case '0':
                     $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $id_request");
+                    $query = DB::select("SELECT setval('consultants.documents_id_seq', (SELECT max(id) FROM consultants.documents), true)");
                     break;
                 case '1':
                     $query = DB::delete("DELETE FROM consultants.solicitudes_status WHERE id_request = $id_request");
                     break;
                 case '2':
                     $query = DB::delete("DELETE FROM consultants.solicitudes WHERE id = $id_request AND rut_user = '$rut'");
+                    $query = DB::select("SELECT setval('consultants.solicitudes_id_seq', (SELECT max(id) FROM consultants.solicitudes), true)");
                     break;
                 
                 case '3':
