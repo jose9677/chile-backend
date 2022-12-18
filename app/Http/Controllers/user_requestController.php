@@ -149,6 +149,7 @@ class user_requestController extends Controller
             i.id as id_document,
             i.id_document_type,
             i.document_path,
+            'http://54.189.74.47/storage/posts/'||i.document_path as doc_srv_path,
             i.document_ext,
             j.document_type
             FROM consultants.solicitudes as a

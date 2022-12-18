@@ -250,32 +250,23 @@ class usersController extends Controller
 
    public function restartUser(Request $request, $rut)
    {
-        /*Log::info($request);
-        $validator = Validator::make($request->all(), [    
-            'rut' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }*/
-
-        //$id_request = solicitudes::max('id');
-
-        //$id_request = DB::select("SELECT max(id) FROM consultants.solicitudes WHERE rut_user = '$rut'");
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
 
         $i = 0; 
-        while ($i < 3) {
+        
+        while ($i < 4) {
             switch ($i) {
                 case '0':
                     $query = DB::delete("DELETE FROM consultants.documents WHERE id_request = $id_request");
                     break;
-                
                 case '1':
+                    $query = DB::delete("DELETE FROM consultants.solicitudes_status WHERE id_request = $id_request");
+                    break;
+                case '2':
                     $query = DB::delete("DELETE FROM consultants.solicitudes WHERE id = $id_request AND rut_user = '$rut'");
                     break;
                 
-                case '2':
+                case '3':
                     $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$rut'");
                     break;
                 default:
