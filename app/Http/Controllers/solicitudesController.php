@@ -327,7 +327,7 @@ class solicitudesController extends Controller
             'applicant_at_home' => 'required',
             'prevention_is_valid' => 'required',
             'location_is_valid' => 'required',
-            'comments' => 'required'
+            'rut_match' => 'required'
 
         ]);
 
