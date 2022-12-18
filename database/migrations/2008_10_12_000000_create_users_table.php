@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->boolean('email_active');
             $table->string('profile_pic')->nullable();
             $table->unsignedBigInteger('id_rol');
+            $table->string('api_token')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
