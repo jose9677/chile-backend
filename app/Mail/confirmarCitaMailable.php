@@ -17,7 +17,7 @@ class confirmarCitaMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'CITA CONFIRMADA';
+    public $subject = 'Cita confirmada - Solicitud Nro. {{$id}} - Salud a Tu Alcance';
     public $names;
     public $lastname;
     public $id;

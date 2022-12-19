@@ -17,7 +17,7 @@ class reenviarOTPMailable extends Mailable
      * @return void
      */
 
-    public $subjet = "Reenvio de OTP";
+    public $subjet = "Clave de un solo uso - Salud a Tu Alcance";
     public $otp; 
 
     public function __construct($otp)

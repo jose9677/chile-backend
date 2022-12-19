@@ -17,7 +17,7 @@ class reprogramarCitaMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'REPROGRAMACIÓN';
+    public $subject = 'Petición de Reprogramación - Solicitud Nro. {{$id}} - Salud a Tu Alcance';
     public $names;
     public $lastname;
     public $id;

@@ -17,7 +17,7 @@ class asignarVisitadorMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'SOLICITUD ASIGNADA';
+    public $subject = 'Se te ha asignado la solicitud Nro. {{$id}} - Salud a Tu Alcance';
     public $names;
     public $lastname;
     public $id;
