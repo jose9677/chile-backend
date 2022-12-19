@@ -27,6 +27,8 @@ use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
 use Malahierba\ChileRut\Rules\ValidChileanRut;
 use Symfony\Component\Console\Input\Input;
 
+use Illuminate\Support\Str;
+
 class AuthController extends Controller
 {  
     public function registerEmployee(Request $request)
@@ -71,13 +73,17 @@ class AuthController extends Controller
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'profile_pic' => $request->get('profile_pic'),
-            'id_rol' => $request->get('id_rol')
+            'id_rol' => $request->get('id_rol'), 
+            'api_token' => Str::random(50)
         ]);
-
+        
         $send = new registroMailable($user->rut, $user->otp);
         Mail::to($request->email)->send($send);
+        
+        $api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
+        $app_url = env('APP_URL');
 
-        $send_2 = new claveEmpleadoMailable($user->rut);
+        $send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
         Mail::to($request->email)->send($send_2);
 
         $token = JWTAuth::fromUser($user);

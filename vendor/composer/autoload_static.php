@@ -568,6 +568,7 @@ class ComposerStaticInit98e1d30eb33ec6435309704ba982f509
         'App\\Mail\\validarMailable' => __DIR__ . '/../..' . '/app/Mail/validarMailable.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\documents' => __DIR__ . '/../..' . '/app/Models/documents.php',
+        'App\\Models\\documents_types' => __DIR__ . '/../..' . '/app/Models/documents_types.php',
         'App\\Models\\locations' => __DIR__ . '/../..' . '/app/Models/locations.php',
         'App\\Models\\preventions_details' => __DIR__ . '/../..' . '/app/Models/preventions_details.php',
         'App\\Models\\preventions_types' => __DIR__ . '/../..' . '/app/Models/preventions_types.php',

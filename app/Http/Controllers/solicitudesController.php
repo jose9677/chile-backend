@@ -184,27 +184,29 @@ class solicitudesController extends Controller
         ], 200);
     }
 
-    public function reprogramDate(Request $request, $id)
+    public function reprogramDate(Request $request, $rut)
     {
         $data = new solicitudes();
-        $data = solicitudes::findOrFail($id);
+        //$data = solicitudes::findOrFail($id);
+        $data = solicitudes::findOrFail($rut);
 
         if ($data) {
-            $data = solicitudes::query()->where(['id' => $id])->update(['id_status' => 5]);
+            $data = solicitudes::query()->where(['rut_user' => $rut])->update(['id_status' => 5]);
 
             $user = new User();
-           /* $user = DB::table('solicitudes')
+            $var = DB::table('solicitudes')
                             ->join('users', 'users.rut', '=', 'solicitudes.rut_user')
-                            ->select('users.names', 'users.lastname')
-                            ->get();*/
+                            ->select('users.names', 'users.lastname', 'users.email')
+                            ->get();
+            dd($var);
                             
             
             //ARREGLAR ESTE CORREO
-            $send = new reprogramarCitaMailable($user->names, $user->lastname, $id);
-            Mail::to('info@saludatualcance.net')->send($send);
+            //$send = new reprogramarCitaMailable($user->names, $user->lastname, $id);
+            //Mail::to('info@saludatualcance.net')->send($send);
 
             return response()->json([
-                'message' => 'Request '.$id. ' was changed to Reprogram'
+                'message' => 'Request '.$rut. ' was changed to Reprogram'
             ], 200);   
        }
     }

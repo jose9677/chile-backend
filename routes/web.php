@@ -47,7 +47,7 @@ Route::put('/update-request/{id}', [App\Http\Controllers\solicitudesController::
 Route::delete('/delete-request/{id}', [App\Http\Controllers\solicitudesController::class, 'deleteRequest']);
 Route::put('/confirmNeightbor/{id}', [App\Http\Controllers\solicitudesController::class, 'confirmNeightbor']);
 Route::put('/programDate/{id}', [App\Http\Controllers\solicitudesController::class, 'programDate']);
-Route::put('/reprogramDate/{id}', [App\Http\Controllers\solicitudesController::class, 'reprogramDate']);
+Route::put('/reprogramDate/{rut}', [App\Http\Controllers\solicitudesController::class, 'reprogramDate']);
 Route::put('/programVisitDate/{id}', [App\Http\Controllers\solicitudesController::class, 'programVisitDate']);
 Route::post('/add-visitor/{id}', [App\Http\Controllers\solicitudesController::class, 'add_visitor']);
 Route::get('/detailsVisitor/{rut_employee}', [App\Http\Controllers\solicitudesController::class, 'detailsVisitor']);

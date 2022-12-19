@@ -38,6 +38,7 @@ return array(
     'App\\Mail\\validarMailable' => $baseDir . '/app/Mail/validarMailable.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\documents' => $baseDir . '/app/Models/documents.php',
+    'App\\Models\\documents_types' => $baseDir . '/app/Models/documents_types.php',
     'App\\Models\\locations' => $baseDir . '/app/Models/locations.php',
     'App\\Models\\preventions_details' => $baseDir . '/app/Models/preventions_details.php',
     'App\\Models\\preventions_types' => $baseDir . '/app/Models/preventions_types.php',

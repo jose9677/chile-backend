@@ -19,10 +19,14 @@ class claveEmpleadoMailable extends Mailable
 
     public $subject = 'Contraseña Empleado';
     public $rut; 
+    public $api_token;
+    public $app_url;
 
-    public function __construct($rut)
+    public function __construct($rut, $api_token, $app_url)
     {
         $this->rut = $rut;
+        $this->api_token = $api_token;
+        $this->app_url = $app_url;
     }
 
     /**
@@ -32,6 +36,6 @@ class claveEmpleadoMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.claveEmpleado')->with('rut', $this->rut);
+        return $this->view('emails.claveEmpleado')->with('rut', $this->rut, 'api_token', $this->api_token, 'app_url', $this->app_url);
     }
 }
