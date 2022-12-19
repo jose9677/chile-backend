@@ -17,7 +17,7 @@ class validarMailable extends Mailable
      * @return void
      */
 
-    public $subject = " Recuperar Contraseña - Salud a Tu Alcance";
+    public $subject = "Recuperar Contraseña - Salud a Tu Alcance";
     public $api_token; 
     public $app_url;
 

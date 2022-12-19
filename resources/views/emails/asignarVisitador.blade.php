@@ -7,8 +7,6 @@
         <link href="css/style.css" rel="stylesheet">
     </head>
     <body>
-    <h5>Asunto: {{$names}} {{$lastname}} te ha asignado la solicitud Nro. {{$id}}</h5>
-
     <div>
         Hola {{$names}} {{$lastname}},<br><br>
         Te informamos que la solicitud identificada con el Nro. {{$id}} te fue asignada para realizar el proceso de verificación y aprobación.<br><br>
@@ -16,6 +14,7 @@
 
         Saludos cordiales.
         <br><br>
+        <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
     </div>
     </body>
 </html>

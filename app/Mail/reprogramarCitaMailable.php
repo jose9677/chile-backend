@@ -17,7 +17,7 @@ class reprogramarCitaMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'REPROGRAMACIÓN';
+    public $subject;
     public $names;
     public $lastname;
     public $id;
@@ -27,6 +27,7 @@ class reprogramarCitaMailable extends Mailable
         $this->names = $names;
         $this->lastname = $lastname;
         $this->id = $id;
+        $this->subject = 'Petición de Reprogramación - Solicitud Nro.'.$id.'- Salud a Tu Alcance';
     }
 
     /**
