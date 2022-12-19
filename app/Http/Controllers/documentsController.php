@@ -42,8 +42,11 @@ class documentsController extends Controller
         $data = new documents();
         
         $query = solicitudes::max('id');
+        $id_doc = documents::max('id') + 1;
         $data->id_request = $query;
         $data->id_document_type = $id_document_type;
+
+        $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
 
         if ($request->hasFile('document_path')) {
             $completeFilename = $request->file('document_path')->getClientOriginalName();
@@ -52,10 +55,11 @@ class documentsController extends Controller
             
             //$comPic = str_replace(' ', '_', $fileNameOnly).'-'.rand() .time().'.'.$extension;
 
-            $comPic = str_replace(' ', '_', $data->id_document_type, $query).'-'.rand() .time().'.'.$extension;
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$extension;
  
             $path = $request->file('document_path')->storeAs('public/posts', $comPic);
             $data->document_path = $comPic;
+            $data->document_ext = $extension;
         }
         if ($data->save()) {
             return response()->json(['message' => 'Document uploaded successfull'],200);
