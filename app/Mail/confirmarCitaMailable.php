@@ -17,7 +17,7 @@ class confirmarCitaMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'CITA CONFIRMADA';
+    public $subject;
     public $names;
     public $lastname;
     public $id;
@@ -27,6 +27,7 @@ class confirmarCitaMailable extends Mailable
         $this->names = $names;
         $this->lastname = $lastname;
         $this->id = $id;
+        $this->subject = 'Cita confirmada - Solicitud Nro.'.$id.'- Salud a Tu Alcance';
     }
 
     /**

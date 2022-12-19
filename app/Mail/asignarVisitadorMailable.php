@@ -17,8 +17,8 @@ class asignarVisitadorMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'SOLICITUD ASIGNADA';
-    public $names;
+    public $subject;
+    public $names ;
     public $lastname;
     public $id;
 
@@ -27,6 +27,7 @@ class asignarVisitadorMailable extends Mailable
         $this->names = $names;
         $this->lastname = $lastname;
         $this->id = $id;
+        $this->subject = 'Se te ha asignado la solicitud Nro.'.$id.'- Salud a Tu Alcance';
     }
 
     /**

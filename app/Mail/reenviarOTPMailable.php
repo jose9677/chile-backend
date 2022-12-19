@@ -17,12 +17,13 @@ class reenviarOTPMailable extends Mailable
      * @return void
      */
 
-    public $subjet = "Reenvio de OTP";
+    public $subjet;
     public $otp; 
 
     public function __construct($otp)
     {
         $this->otp = $otp;
+        $this->subject =  "Clave de un solo uso'.$otp.'- Salud a Tu Alcance";
     }
 
     /**
