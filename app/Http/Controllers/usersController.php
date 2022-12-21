@@ -242,6 +242,13 @@ class usersController extends Controller
         return response()->json(['message' => $query], 200);
    }
 
+   //This method make a consult about all data of Assistants and Supervisors
+   public function detailsAssistant_Supervisor()
+   {
+        $query = DB::select("SELECT * FROM consultants.users WHERE employee = true AND id_rol = 2 OR id_rol = 3 order by id_rol");
+        return response()->json($query);
+   }
+
    public function detailsSupersisor()
    {
         $user = User::where('id_rol', 3)->get();
