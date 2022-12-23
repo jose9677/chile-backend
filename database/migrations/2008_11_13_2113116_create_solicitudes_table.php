@@ -27,7 +27,7 @@ class CreateSolicitudesTable extends Migration
             $table->boolean('terms_condition')->nullable();
             $table->date('request_date');
             $table->unsignedBigInteger('id_status');
-            $table->string('rut_employee');
+            $table->string('rut_employee')->nullable();
             $table->date('visit_date');
             $table->boolean('applicant_at_home')->nullable();
             $table->boolean('prevention_is_valid')->nullable();

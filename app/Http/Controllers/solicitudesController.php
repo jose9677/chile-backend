@@ -189,18 +189,15 @@ class solicitudesController extends Controller
         $data = new solicitudes();
         //$data = solicitudes::findOrFail($id);
         $data = solicitudes::findOrFail($rut);
+        dd($data);
 
         if ($data) {
             $data = solicitudes::query()->where(['rut_user' => $rut])->update(['id_status' => 5]);
 
-            $user = new User();
-            $var = DB::table('solicitudes')
-                            ->join('users', 'users.rut', '=', 'solicitudes.rut_user')
-                            ->select('users.names', 'users.lastname', 'users.email')
-                            ->get();
-            dd($var);
-                            
-            
+            /*$user = new User();
+            $var = solicitudes::join('users', 'users.rut', '=', 'solicitudes.rut_user')
+                                ->get(['users.email']);*/
+                                
             //ARREGLAR ESTE CORREO
             //$send = new reprogramarCitaMailable($user->names, $user->lastname, $id);
             //Mail::to('info@saludatualcance.net')->send($send);

@@ -50,7 +50,7 @@ class AuthController extends Controller
             
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'supervisor_rut' => 'required',
+            //'supervisor_rut' => 'required',
             'profile_pic' => 'required',
             'id_rol' => 'required'
         ]);
