@@ -32,6 +32,8 @@ Route::get('/detailsAssistant/{rut}', [App\Http\Controllers\usersController::cla
 Route::get('/details-assistants-and-supervisors', [App\Http\Controllers\usersController::class, 'detailsAssistant_Supervisor']);
 Route::get('/detailsSupervisor', [App\Http\Controllers\usersController::class, 'detailsSupersisor']);
 Route::delete('/restartUser/{rut}', [App\Http\Controllers\usersController::class, 'restartUser']);
+Route::put('/active-user/{rut}', [App\Http\Controllers\usersController::class, 'activeUser']);
+Route::put('/desactive-user/{rut}', [App\Http\Controllers\usersController::class, 'desactiveUser']);
 
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);

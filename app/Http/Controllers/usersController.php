@@ -165,6 +165,28 @@ class usersController extends Controller
         }
    }
 
+   public function activeUser($rut)
+   {
+        $data = User::findOrFail($rut);
+
+        if (!$data) {
+            return response()->json(['error' => 'User does not exists'], 400);
+        }
+        User::query()->where('rut', $rut)->update(['active' => true]);
+        return response()->json(['message' => 'User '.$rut.' was actived successfull'], 200);
+    }
+
+   public function desactiveUser($rut)
+   {
+    $data = User::findOrFail($rut);
+
+    if (!$data) {
+        return response()->json(['error' => 'User does not exists'], 400);
+    }
+    User::query()->where('rut', $rut)->update(['active' => false]);
+    return response()->json(['message' => 'User '.$rut.' was desactived successfull'], 200);
+   }
+
    public function changePassword(Request $request)
    {
         Log::info($request);

@@ -25,10 +25,10 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('id_property_type');
             $table->string('property_number');
             $table->boolean('terms_condition')->nullable();
-            $table->date('request_date');
+            $table->timestamp('request_date')->nullable();
             $table->unsignedBigInteger('id_status');
             $table->string('rut_employee')->nullable();
-            $table->date('visit_date');
+            $table->timestamp('visit_date')->nullable();
             $table->boolean('applicant_at_home')->nullable();
             $table->boolean('prevention_is_valid')->nullable();
             $table->boolean('location_is_valid')->nullable();
