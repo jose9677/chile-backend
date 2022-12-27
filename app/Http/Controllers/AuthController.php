@@ -40,14 +40,6 @@ class AuthController extends Controller
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
-            
-            /*'password' => ['required',
-                Password::min(8)
-                ->letters() //al menos una letra
-                ->mixedCase() //al menos una letra minuscula y una mayuscula
-                ->numbers() //al menos un caracter numerico
-            ],*/
-            
             'landline' => 'required',
             'mobile_phone' => 'required',
             //'supervisor_rut' => 'required',
@@ -74,7 +66,8 @@ class AuthController extends Controller
             'email_active' => false,
             'profile_pic' => $request->get('profile_pic'),
             'id_rol' => $request->get('id_rol'), 
-            'api_token' => Str::random(50)
+            'api_token' => Str::random(50),
+            'active' => true
         ]);
         
         $send = new registroMailable($user->rut, $user->otp);
@@ -147,24 +140,6 @@ class AuthController extends Controller
             'id_rol' => 1
         ]);
 
-       /* $solicitudes = solicitudes::create([
-            'rut_user' => $request->rut,
-            'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
-            'assurance' => $request->get('assurance'),
-            'id_location' => $request->get('id_location'),
-            'way_number' => $request->get('way_number'),
-            'id_property_type' => $request->get('id_property_type'),
-            'property_number' => $request->get('property_number'),
-            'terms_condition' => $request->get('terms_condition'),
-            'id_status' => 1,
-            'applicant_at_home' => false,
-            'prevention_is_valid' => false,
-            'location_is_valid' => false,
-            'comments' => $request->get('comments'),
-            'is_active' => false,
-            'rut_match' => false
-        ]); */
-
         $sol = new solicitudes();
         $sol->rut_user = $request->rut;
         $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
@@ -202,7 +177,16 @@ class AuthController extends Controller
         $data = User::query()->where(['rut' => $request->input('rut')])->first();
 
         if (!$data) {
-            return response()->json(['message' => 'User does not exists in Data Base'], 400);
+            return response()->json(['error' => 'User does not exists in Data Base'], 400);
+        }
+
+        //this validation ask if the user is a employee, in that case the method must to ask if
+        //that employee is active or not.
+        if ($data->employee == true) {
+            $data = User::query()->where(['rut' => $request->input('rut'), 'active' => true])->first();
+                if (!$data) {
+                    return response()->json(['error' => 'This employee is not actived'], 400);
+                }
         }
         
         $credentials = $request->only(['rut', 'password']);
