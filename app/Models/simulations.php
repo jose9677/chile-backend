@@ -9,7 +9,7 @@ class simulations extends Model
 {
     use HasFactory;
 
-    protected $table = 'simlations';
+    protected $table = 'simulations';
     protected $primaryKey = 'id';
 
     protected $fillable = [

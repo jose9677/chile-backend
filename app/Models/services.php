@@ -11,6 +11,7 @@ class services extends Model
 
     protected $table = 'services';
     protected $primaryKey = 'id';
+    public $incrementing = true;
 
     protected $fillable = [
         'id_category'

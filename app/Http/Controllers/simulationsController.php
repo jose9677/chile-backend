@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\simulations;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,6 +22,28 @@ class simulationsController extends Controller
         $dataFound = $data;
 
         return response()->json($dataFound);
+    }
+
+    //This method get data about the user and his simulation.
+    public function Users_Simulations($rut)
+    {
+        $query = DB::select("SELECT 
+        a.id as id_simulation,
+        a.created_at as emition_date,
+        a.expiration_date,
+        a.id_status,
+        d.status,
+        b.id as id_request,
+        b.rut_user,
+        c.names,
+        c.lastname
+        FROM consultants.simulations as a
+        JOIN consultants.solicitudes as b ON a.id_request = b.id
+        JOIN consultants.users as c ON b.rut_user = c.rut
+        JOIN consultants.status as d ON a.id_status = d.id
+        WHERE b.rut_user = '$rut'");
+
+        return response()->json($query, 200);
     }
 
     public function addSimulation(Request $request)
@@ -46,7 +69,7 @@ class simulationsController extends Controller
         $data->calc_cobert_prevention = $request->calc_cobert_prevention;
         $data->expiration_date = $request->expiration_date;
         $data->amount_payable = $request->amount_payable;
-
+        
         try {
             $data->save();
         } catch (\Throwable $th) {

@@ -75,3 +75,23 @@ Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
 Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 
 Route::post('/file/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
+
+//SIMULATIONS_CONTROLLER
+Route::get('/details-simulations', [App\Http\Controllers\simulationsController::class, 'detailsSimulation']);
+Route::get('/search-simulations/{id}', [App\Http\Controllers\simulationsController::class, 'searchSimulation']);
+Route::get('/users-simulations/{rut}', [App\Http\Controllers\simulationsController::class, 'Users_Simulations']);
+Route::post('/add-simulation', [App\Http\Controllers\simulationsController::class, 'addSimulation']);
+Route::put('/update-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'updateSimulation']);
+Route::delete('/delete-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'deleteSimulation']);
+
+//SIMULATIONS_SERVICES_CONTROLLER
+Route::get('/details-simulations-services', [App\Http\Controllers\simulations_servicesController::class, 'details_simulationService']);
+Route::post('/add-simulations-services', [App\Http\Controllers\simulations_servicesController::class, 'add_simulationService']);
+
+//SERVICES_CONTROLLER
+Route::get('/details-services', [App\Http\Controllers\servicesController::class, 'detailsServices']);
+Route::get('/search-services/{id}', [App\Http\Controllers\servicesController::class, 'searchServices']);
+Route::post('/add-services', [App\Http\Controllers\servicesController::class, 'add_services']);
+Route::put('/update-services/{id}', [App\Http\Controllers\servicesController::class, 'updateServices']);
+Route::delete('/delete-services/{id}', [App\Http\Controllers\servicesController::class, 'deleteServices']);
+
