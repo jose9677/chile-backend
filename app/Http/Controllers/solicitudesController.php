@@ -90,7 +90,11 @@ class solicitudesController extends Controller
             'prevention_is_valid' => 'required',
             'location_is_valid' => 'required',
             'comments' => 'required',
-            'id_active' => 'required'
+            'is_active' => 'required',
+            'carer' => 'required',
+            'motive' => 'required',
+            'dedication' => 'required',
+            'remuneration' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -113,6 +117,11 @@ class solicitudesController extends Controller
         $data->location_is_valid = $request->location_is_valid;
         $data->comments = $request->comments;
         $data->is_active = $request->is_active;
+        $data->rut_match = $request->rut_match;
+        $data->carer = $request->carer;
+        $data->motive = $request->motive;
+        $data->dedication = $request->dedication;
+        $data->remuneration = $request->remuneration;
 
         try {
             $data->save();
@@ -184,23 +193,20 @@ class solicitudesController extends Controller
         ], 200);
     }
 
-    public function reprogramDate(Request $request, $rut)
+    public function reprogramDate(Request $request, $id)
     {
-        $data = new solicitudes();
-        //$data = solicitudes::findOrFail($id);
-        $data = solicitudes::findOrFail($rut);
-        dd($data);
-
+        $data = solicitudes::findOrFail($id);
+        
         if ($data) {
-            $data = solicitudes::query()->where(['rut_user' => $rut])->update(['id_status' => 5]);
+            $data = solicitudes::query()->where(['id' => $id])->update(['id_status' => 5]);
 
-            /*$user = new User();
-            $var = solicitudes::join('users', 'users.rut', '=', 'solicitudes.rut_user')
-                                ->get(['users.email']);*/
-                                
-            //ARREGLAR ESTE CORREO
-            //$send = new reprogramarCitaMailable($user->names, $user->lastname, $id);
-            //Mail::to('info@saludatualcance.net')->send($send);
+            $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+            $names = DB::table('users')->where('rut', $rut)->value('names');
+            $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
+            $email = DB::table('users')->where('rut', $rut)->value('email');
+
+            $send = new reprogramarCitaMailable($names, $lastname, $id);
+            Mail::to($email)->send($send);
 
             return response()->json([
                 'message' => 'Request '.$rut. ' was changed to Reprogram'
@@ -232,12 +238,13 @@ class solicitudesController extends Controller
             solicitudes::query()->where(['id' => $id])->update(['visit_date' => $request->visit_date,
             'id_status' => 4]);
 
-            $user = new User();
-            //$user = User::findOrFail();
+            $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+            $names = DB::table('users')->where('rut', $rut)->value('names');
+            $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
+            $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            //ARREGLAR ESTE CORREO
-            $send = new confirmarCitaMailable($user->names, $user->lastname, $id);
-            Mail::to('info@saludatualcance.net')->send($send);
+            $send = new confirmarCitaMailable($names, $lastname, $id);
+            Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
         }else {

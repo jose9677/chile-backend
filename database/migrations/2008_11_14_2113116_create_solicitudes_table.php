@@ -35,6 +35,10 @@ class CreateSolicitudesTable extends Migration
             $table->string('comments')->nullable();
             $table->boolean('is_active');
             $table->boolean('rut_match');
+            $table->boolean('carer')->nullable();
+            $table->unsignedBigInteger('id_motive')->nullable();
+            $table->unsignedBigInteger('id_dedication')->nullable();
+            $table->unsignedBigInteger('id_remuneration')->nullable();
 
             $table->timestamps();
 
@@ -44,6 +48,9 @@ class CreateSolicitudesTable extends Migration
             $table->foreign('id_location')->references('id')->on('locations')->onUpdate('cascade');
             $table->foreign('id_status')->references('id')->on('status')->onUpdate('cascade');
             $table->foreign('id_prevention_type_detail')->references('id')->on('preventions_details')->onUpdate('cascade');
+            $table->foreign('id_motive')->references('id_motive')->on('motives')->onUpdate('cascade');
+            $table->foreign('id_dedication')->references('id_dedication')->on('dedications')->onUpdate('cascade');
+            $table->foreign('id_remuneration')->references('id_remuneration')->on('remunerations')->onUpdate('cascade');
         });
     }
 

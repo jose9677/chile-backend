@@ -29,7 +29,11 @@ class solicitudes extends Model
         'location_is_valid',
         'comments',
         'is_active',
-        'rut_match'
+        'rut_match',
+        'carer',
+        'id_motive',
+        'id_dedication',
+        'id_remuneration'
     ];
 
     protected $hidden = [

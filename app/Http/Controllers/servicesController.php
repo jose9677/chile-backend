@@ -27,7 +27,8 @@ class servicesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'id_category' => 'required'
+            'id_category' => 'required',
+            'description' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -50,7 +51,8 @@ class servicesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'id_category' => 'required'
+            'id_category' => 'required',
+            'description' => 'required'
         ]);
         
         if ($validator->fails()) {

@@ -14,7 +14,8 @@ class services extends Model
     public $incrementing = true;
 
     protected $fillable = [
-        'id_category'
+        'id_category',
+        'description'
     ];
 }
 

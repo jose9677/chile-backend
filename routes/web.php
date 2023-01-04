@@ -23,6 +23,7 @@ Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 
 Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detailsUser']);
 Route::get('/search-user/{rut}', [App\Http\Controllers\usersController::class, 'search']);
 Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, 'update']);
+Route::put('/update-employee/{rut}', [App\Http\Controllers\usersController::class, 'updateEmployee']);
 Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);
 Route::put('/change-password', [App\Http\Controllers\usersController::class, 'changePassword']);
 Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'validateUser']);
@@ -50,7 +51,7 @@ Route::put('/update-request/{id}', [App\Http\Controllers\solicitudesController::
 Route::delete('/delete-request/{id}', [App\Http\Controllers\solicitudesController::class, 'deleteRequest']);
 Route::put('/confirmNeightbor/{id}', [App\Http\Controllers\solicitudesController::class, 'confirmNeightbor']);
 Route::put('/programDate/{id}', [App\Http\Controllers\solicitudesController::class, 'programDate']);
-Route::put('/reprogramDate/{rut}', [App\Http\Controllers\solicitudesController::class, 'reprogramDate']);
+Route::put('/reprogramDate/{id}', [App\Http\Controllers\solicitudesController::class, 'reprogramDate']);
 Route::put('/programVisitDate/{id}', [App\Http\Controllers\solicitudesController::class, 'programVisitDate']);
 Route::post('/add-visitor/{id}', [App\Http\Controllers\solicitudesController::class, 'add_visitor']);
 Route::get('/detailsVisitor/{rut_employee}', [App\Http\Controllers\solicitudesController::class, 'detailsVisitor']);

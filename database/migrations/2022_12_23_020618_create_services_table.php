@@ -15,6 +15,7 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->text('description');
             $table->unsignedBigInteger('id_category');
             $table->timestamps();
 

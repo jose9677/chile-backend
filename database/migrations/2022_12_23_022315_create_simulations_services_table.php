@@ -22,7 +22,7 @@ class CreateSimulationsServicesTable extends Migration
             $table->foreign('id_simulation')->references('id')->on('simulations')->onUpdate('cascade');
             $table->foreign('id_service')->references('id')->on('services')->onUpdate('cascade');
 
-            $table->primary(['id_simulation', 'id_service', 'quantity']);
+            $table->primary(['id_simulation', 'id_service']);
         });
     }
 

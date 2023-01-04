@@ -119,6 +119,10 @@ class AuthController extends Controller
             
             'landline' => 'required',
             'mobile_phone' => 'required',
+            'carer' => 'required',
+            'id_motive' => 'required',
+            'id_dedication' => 'required',
+            'id_remuneration' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -156,6 +160,10 @@ class AuthController extends Controller
         $sol->comments = $request->get('comments');
         $sol->is_active = false;
         $sol->rut_match = false;
+        $sol->carer = $request->get('carer');
+        $sol->id_motive = $request->get('id_motive');
+        $sol->id_dedication = $request->get('id_dedication');
+        $sol->id_remuneration = $request->get('id_remuneration');
 
         if ($request->terms_condition == false) {
             return response()->json(['error' => 'User must to accept terms condition'], 400);

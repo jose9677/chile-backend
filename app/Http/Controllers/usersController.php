@@ -67,8 +67,6 @@ class usersController extends Controller
         'email' => 'required|string|email|max:255|unique:users',
         'landline' => 'required',
         'mobile_phone' => 'required',
-        'employee' => 'required',
-        'supervisor_rut' => 'required',
         'profile_pic' => 'required'
 
     ]);
@@ -77,8 +75,12 @@ class usersController extends Controller
         return response()->json($validator->errors()->toJson(), 400);
     }
 
-    $data = new User();
     $data = User::findOrFail($rut);
+    $data = User::query()->where(['rut' => $request->input('rut'),'employee' => false])->first();
+
+    if (!$data) {
+        return response()->json(['error' => 'This user is not a Neightbor'], 400);
+    }
 
     $data->rut = $request->rut;
     $data->names = $request->names;
@@ -87,8 +89,6 @@ class usersController extends Controller
     $data->email = $request->email;
     $data->landline = $request->landline;
     $data->mobile_phone = $request->mobile_phone;
-    $data->employee = $request->employee;
-    $data->supervisor_rut = $request->supervisor_rut;
     $data->profile_pic = $request->profile_pic;
 
     try {
@@ -97,10 +97,58 @@ class usersController extends Controller
         return response()->json(['error' => 'Update Failed'], 400);
     }
 
-    return response()->json([
-        'message' => 'User Updated successfull',
-        'data_user' => $data->rut
-    ], 200);
+        return response()->json([
+            'message' => 'User Updated successfull',
+            'data_user' => $data->rut
+        ], 200);
+   }
+
+   public function updateEmployee(Request $request, $rut)
+   {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => 'required',
+            'names'  => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'f_nac' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            'landline' => 'required',
+            'mobile_phone' => 'required',
+            'profile_pic' => 'required',
+            'id_rol' => 'required'
+
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = User::findOrFail($rut);
+        $data = User::query()->where(['rut' => $request->input('rut'),'employee' => true])->first();
+
+        if (!$data) {
+            return response()->json(['error' => 'This user is not a Employee'], 400);
+        }
+
+        $data->rut = $request->rut;
+        $data->names = $request->names;
+        $data->lastname = $request->lastname;
+        $data->f_nac = $request->f_nac;
+        $data->email = $request->email;
+        $data->landline = $request->landline;
+        $data->mobile_phone = $request->mobile_phone;
+        $data->profile_pic = $request->profile_pic;
+        $data->id_rol = $request->id_rol;
+    
+        try {
+            $data->save();
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Update Failed'], 400);
+        }
+            return response()->json([
+                'message' => 'User Updated successfull',
+                'data_user' => $data->rut
+            ], 200);
    }
 
    public function delete($rut)
