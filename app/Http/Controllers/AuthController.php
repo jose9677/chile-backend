@@ -119,10 +119,7 @@ class AuthController extends Controller
             
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'carer' => 'required',
-            'id_motive' => 'required',
-            'id_dedication' => 'required',
-            'id_remuneration' => 'required'
+            'carer' => 'required'
         ]);
         
         if ($validator->fails()) {

@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class roles extends Model
 {
     use HasFactory;
+
+    protected $table = 'roles';
+    protected $primaryKey = 'id';
+    public $incremneting = 'id';
+
+    protected $fillable = [
+        'name', 
+        'active'
+    ];
 }

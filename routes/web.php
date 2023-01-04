@@ -70,6 +70,9 @@ Route::get('/joinRequestEmployee/{employee_rut}', [App\Http\Controllers\user_req
 
 //ROLES
 Route::get('/details-roles', [App\Http\Controllers\rolesController::class, 'detailsRoles']);
+Route::get('/details-roles-active', [App\Http\Controllers\rolesController::class, 'detailsActiveRoles']);
+Route::put('/active-rol/{id}', [App\Http\Controllers\rolesController::class, 'activeRol']);
+Route::put('/desactive-rol/{id}', [App\Http\Controllers\rolesController::class, 'desactiveRol']);
 
 //DOCUMENTS
 Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
