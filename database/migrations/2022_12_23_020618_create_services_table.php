@@ -15,11 +15,14 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->integer('cod');
             $table->text('description');
             $table->unsignedBigInteger('id_category');
+            $table->unsignedBigInteger('id_provider');
             $table->timestamps();
 
             $table->foreign('id_category')->references('id')->on('categories')->onUpdate('cascade');
+            $table->foreign('id_provider')->references('id_provider')->on('providers')->onUpdate('cascade');
         });
     }
 

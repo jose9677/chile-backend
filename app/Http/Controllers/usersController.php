@@ -111,7 +111,6 @@ class usersController extends Controller
             'names'  => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
             'landline' => 'required',
             'mobile_phone' => 'required',
             'profile_pic' => 'required',
@@ -355,5 +354,32 @@ class usersController extends Controller
             ++$i;
         }
         return response()->json(['message' => 'Restart successfull']);
+   }
+
+   //THIS METHOD CONSULTS EVERY DATA BELONGING TO A USER WHITH HIS SOLICITUD, ID_PREVENTION_TYPE AND
+   //IT DESCRIPTION, AND GET THE PROVIDER BELOONGING TO THIS USER.
+   public function providerUser($rut)
+   {
+        $query = DB::select(
+        "SELECT 
+        a.rut,
+        a.names,
+        a.lastname,
+        c.id_prevention_type,
+        d.prevention_type,
+        b.id_prevention_type_detail,
+        c.prevention_detail,
+        h.description as provider_description
+        FROM consultants.users as a 
+        JOIN consultants.solicitudes as b ON a.rut = b.rut_user
+        JOIN consultants.preventions_details as c ON b.id_prevention_type_detail = c.id
+        JOIN consultants.preventions_types as d ON c.id_prevention_type = d.id
+        JOIN consultants.simulations as e ON e.id_request = b.id
+        JOIN consultants.simulations_services as f ON f.id_simulation = e.id
+        JOIN consultants.services as g ON g.id = f.id_service
+        JOIN consultants.providers as h USING (id_provider)
+        WHERE a.rut = '$rut'");
+
+        return response()->json($query, 200);
    }
 }

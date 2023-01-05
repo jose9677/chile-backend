@@ -36,6 +36,8 @@ Route::delete('/restartUser/{rut}', [App\Http\Controllers\usersController::class
 Route::put('/active-user/{rut}', [App\Http\Controllers\usersController::class, 'activeUser']);
 Route::put('/desactive-user/{rut}', [App\Http\Controllers\usersController::class, 'desactiveUser']);
 
+Route::get('/provider-user/{rut}', [App\Http\Controllers\usersController::class, 'providerUser']);
+
 //AUTHCONTROLLER
 Route::post('/validate-email', [App\Http\Controllers\AuthController::class, 'validateEmail']);
 Route::put('/refresh-otp', [App\Http\Controllers\AuthController::class, 'refreshOtp']);
