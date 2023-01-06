@@ -30,6 +30,7 @@ Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class
 Route::put('/change-password', [App\Http\Controllers\usersController::class, 'changePassword']);
 Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'validateUser']);
 Route::get('/employees', [App\Http\Controllers\usersController::class, 'employees']);
+Route::get('/assistant-list/{rut}', [App\Http\Controllers\usersController::class, 'assistantList']);
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
 Route::get('/detailsAssistant/{rut}', [App\Http\Controllers\usersController::class, 'detailsAssistant']);
 Route::get('/details-assistants-and-supervisors', [App\Http\Controllers\usersController::class, 'detailsAssistant_Supervisor']);

@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 
 use App\Mail\ContactanosMailable;
 use App\Mail\validarMailable;
+use App\Models\providers;
 use App\Models\solicitudes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -324,6 +325,27 @@ class usersController extends Controller
         return response()->json($user);
    }
 
+   //THIS METHOD GET A LIST ABOUT EVERY SOCIAL ASSISTANT BELONGING TO A ESPECIFIC SUPERVISOR
+   public function assistantList($rut)
+   {
+        $data = User::findOrFail($rut);
+
+        $data = User::query()->where(['rut' => $rut, 'id_rol' => 3])->first();
+        
+        if (!$data) {
+            return response()->json(['error' => 'This user is not a Supervisor'], 400);
+        }
+
+        $query = DB::select(
+            "SELECT 
+            a.*
+            FROM consultants.users as a 
+            WHERE a.supervisor_rut = '$rut'"
+        );
+
+        return response()->json($query, 200);
+   }
+
    public function restartUser(Request $request, $rut)
    {
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
@@ -360,7 +382,8 @@ class usersController extends Controller
    //IT DESCRIPTION, AND GET THE PROVIDER BELOONGING TO THIS USER.
    public function providerUser($rut)
    {
-        $query = DB::select(
+    //OLD QUERY    
+    /*$query = DB::select(
         "SELECT 
         a.rut,
         a.names,
@@ -378,8 +401,29 @@ class usersController extends Controller
         JOIN consultants.simulations_services as f ON f.id_simulation = e.id
         JOIN consultants.services as g ON g.id = f.id_service
         JOIN consultants.providers as h USING (id_provider)
-        WHERE a.rut = '$rut'");
+        WHERE a.rut = '$rut'");*/
 
-        return response()->json($query, 200);
+        $query = DB::select(
+            "SELECT 
+            a.rut,
+            a.names,
+            a.lastname,
+            b.assurance,
+            c.id_prevention_type,
+            d.prevention_type,
+            b.id_prevention_type_detail,
+            c.prevention_detail
+            FROM consultants.users as a 
+            JOIN consultants.solicitudes as b ON a.rut = b.rut_user
+            JOIN consultants.preventions_details as c ON b.id_prevention_type_detail = c.id
+            JOIN consultants.preventions_types as d ON c.id_prevention_type = d.id
+            WHERE a.rut = '$rut'");
+
+            $provider = providers::all();
+
+            return response()->json([
+                'data_user' => $query,
+                'providers' => $provider
+            ],200);
    }
 }
