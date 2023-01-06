@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\categories;
 use App\Models\dedications;
 use App\Models\locations;
 use App\Models\motives;
@@ -10,6 +11,7 @@ use App\Models\preventions_details;
 use App\Models\preventions_types;
 use App\Models\property_types;
 use App\Models\remunerations;
+use App\Models\services;
 use App\Models\status;
 use Illuminate\Http\Request;
 
@@ -36,6 +38,17 @@ class decriptionsController extends Controller
             'motives' => $motives,
             'dedications' => $dedications,
             'remunerations' => $remunerations
+        ]);
+    }
+
+    public function Categories_Services()
+    {
+        $services = services::all();
+        $categories = categories::all();
+
+        return response()->json([
+            'services' => $services,
+            'categories' => $categories
         ]);
     }
 }
