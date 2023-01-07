@@ -129,4 +129,10 @@ class simulationsController extends Controller
 
         return response()->json(['message' => 'Simulation '.$id.' was deleted successfull'], 200);
     }
+
+    //SINCE THIS POINT WE START TO WORK WIHT COPAGO CALCAS...
+    public function calc()
+    {   
+        
+    }
 }

@@ -46,7 +46,7 @@ class simulations_servicesController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(),[
             'id_simulation' => 'required',
-            'id_service' => 'required',
+            'id_service' => [],
             'quantity' => []
         ]);
 
@@ -54,13 +54,14 @@ class simulations_servicesController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $id_service = $request->id_service;
         $quantity = $request->quantity;
         
-        for ($i = 0; $i < count($quantity) ; $i++) { 
+        for ($i = 0; $i < count($id_service) ; $i++) { 
             $data = new simulations_services();
 
             $data->id_simulation = $request->id_simulation;
-            $data->id_service = $request->id_service;
+            $data->id_service = $id_service[$i];
             $data->quantity = $quantity[$i];
 
             $data->save();

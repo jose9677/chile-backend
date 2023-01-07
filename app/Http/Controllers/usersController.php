@@ -65,7 +65,6 @@ class usersController extends Controller
         'names'  => 'required|string|max:255',
         'lastname' => 'required|string|max:255',
         'f_nac' => 'required',
-        'email' => 'required|string|email|max:255|unique:users',
         'landline' => 'required',
         'mobile_phone' => 'required',
         'profile_pic' => 'required'
@@ -87,7 +86,6 @@ class usersController extends Controller
     $data->names = $request->names;
     $data->lastname = $request->lastname;
     $data->f_nac = $request->f_nac;
-    $data->email = $request->email;
     $data->landline = $request->landline;
     $data->mobile_phone = $request->mobile_phone;
     $data->profile_pic = $request->profile_pic;
@@ -134,7 +132,6 @@ class usersController extends Controller
         $data->names = $request->names;
         $data->lastname = $request->lastname;
         $data->f_nac = $request->f_nac;
-        $data->email = $request->email;
         $data->landline = $request->landline;
         $data->mobile_phone = $request->mobile_phone;
         $data->profile_pic = $request->profile_pic;

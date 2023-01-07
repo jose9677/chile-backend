@@ -96,6 +96,7 @@ Route::delete('/delete-simulation/{id}', [App\Http\Controllers\simulationsContro
 //SIMULATIONS_SERVICES_CONTROLLER
 Route::get('/details-simulations-services', [App\Http\Controllers\simulations_servicesController::class, 'details_simulationService']);
 Route::post('/add-simulations-services', [App\Http\Controllers\simulations_servicesController::class, 'add_simulationService']);
+Route::post('/create-simulations-services', [App\Http\Controllers\simulations_servicesController::class, 'create_simulationService']);
 
 //SERVICES_CONTROLLER
 Route::get('/details-services', [App\Http\Controllers\servicesController::class, 'detailsServices']);
