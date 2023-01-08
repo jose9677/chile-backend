@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\simulations;
+use App\Models\solicitudes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -131,8 +132,20 @@ class simulationsController extends Controller
     }
 
     //SINCE THIS POINT WE START TO WORK WIHT COPAGO CALCAS...
-    public function calc()
+    public function calcCopago($rut)
     {   
-        
+        $data = solicitudes::findOrFail($rut);
+
+        $id_prevention_detail = DB::table('solicitudes')->where('rut_user', $rut)->value('id_prevention_detail');
+
+        switch ($data) {
+            case 'value':
+                # code...
+                break;
+            
+            default:
+                # code...
+                break;
+        }
     }
 }
