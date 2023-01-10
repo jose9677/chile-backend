@@ -20,6 +20,7 @@ class simulations extends Model
         'expiration_date',
         'amount_payable',
         'percent_prevition',
-        'percent_sec_comp'
+        'percent_sec_comp',
+        'sub_total'
     ];
 }

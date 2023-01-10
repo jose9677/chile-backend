@@ -195,6 +195,7 @@ class simulationsController extends Controller
                 if ($prevention_detail == 'A' and $assurance == true) {
                         $data->calc_secure_comp = ($cost * $request->percent_sec_comp)/100;
                         $sub_total = $cost - $data->calc_secure_comp;
+                        $data->sub_total = $sub_total;
                         $fonasa_desc = ($sub_total * $request->percent_prevition)/100;
                         $copago_total = $sub_total - $fonasa_desc;
                         $data->amount_payable = $copago_total;
@@ -205,6 +206,7 @@ class simulationsController extends Controller
                 if ($prevention_detail == 'A' and $assurance == false) {
                         $data->calc_secure_comp = ($cost * $request->percent_sec_comp);
                         $sub_total = $cost - $data->calc_secure_comp;
+                        $data->sub_total = $sub_total;
                         $fonasa_desc = ($sub_total * $request->percent_prevition)/100;
                         $copago_total = $sub_total - $fonasa_desc;
                         $data->amount_payable = $copago_total;
@@ -215,6 +217,7 @@ class simulationsController extends Controller
                 if ($prevention_detail != 'A' and $assurance == true and $aps == false) {
                         $data->calc_secure_comp = ($contribution * $request->percent_sec_comp)/100;
                         $sub_total = $contribution - $data->calc_secure_comp;
+                        $data->sub_total = $sub_total;
                         $fonasa_desc = ($sub_total * $request->percent_prevition)/100;
                         $copago_total = $sub_total - $fonasa_desc;
                         $data->amount_payable = $copago_total;
@@ -227,6 +230,7 @@ class simulationsController extends Controller
                         if ($age < 65) {
                             $data->calc_secure_comp = ($contribution * $request->percent_sec_comp)/100;
                             $sub_total = $contribution - $data->calc_secure_comp;
+                            $data->sub_total = $sub_total;
                             $fonasa_desc = ($sub_total * $request->percent_prevition)/100;
                             $copago_total = $sub_total - $fonasa_desc;
                             $data->amount_payable = $copago_total;
@@ -236,6 +240,7 @@ class simulationsController extends Controller
                         elseif ($age >= 65) {
                             $data->calc_secure_comp = ($contribution * $request->percent_sec_comp)/100;
                             $sub_total = $contribution - $data->calc_secure_comp;
+                            $data->sub_total = $sub_total;
                             $fonasa_desc = ($sub_total * $request->percent_prevition)/100;
                             $copago_total = $sub_total - $fonasa_desc;
                             $data->amount_payable = $copago_total;
@@ -252,6 +257,7 @@ class simulationsController extends Controller
                             $sub_total_prevention = ($cost - $data->calc_cobert_prevention);
                             $sub_total_secure_comp = ($sub_total_prevention * 30)/100;
                             $sub_total = ($cost - $sub_total_secure_comp);
+                            $data->sub_total = $sub_total;
                             $desc = ($sub_total * 20 )/100;
                             $copago_total = $sub_total - $desc; 
                             $data->amount_payable = $copago_total;
@@ -272,7 +278,11 @@ class simulationsController extends Controller
                 break;
         }
 
-            $id_simulation = simulations::max('id');
+            $id_simulation = DB::table('simulations')
+            ->join('solicitudes', 'solicitudes.id', '=', 'simulations.id_request')
+            ->where('solicitudes.rut_user', $rut)
+            ->value('simulations.id');
+
             $sim_serv = new simulations_services();
 
             $sim_serv->id_simulation = $id_simulation;
@@ -284,6 +294,7 @@ class simulationsController extends Controller
         return response()->json([
             'message' => 'simulation loaded successfull',
             'SubTotal' => $sub_total,
+            'Cobert_Prevition' => $data->calc_cobert_prevention,
             'Secure_Comp' => $data->calc_secure_comp,
             'Copago' => $copago_total
         ], 200);

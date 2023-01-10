@@ -23,6 +23,7 @@ class CreateSimulationsTable extends Migration
             $table->integer('amount_payable');
             $table->integer('percent_prevition');
             $table->integer('percent_sec_comp');
+            $table->float('sub_total');
             $table->timestamps();
 
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');
