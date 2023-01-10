@@ -139,8 +139,6 @@ class simulationsController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(), [
             'id_status' => 'required',
-            'calc_cobert_prevention' => 'required',
-            'expiration_date' => 'required',
             'percent_prevition' => 'required',
             'percent_sec_comp' => 'required'
         ]);
@@ -149,12 +147,12 @@ class simulationsController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $id_prevention_type_detail = DB::table('solicitudes')->where('rut_user', $rut)->value('id_prevention_type_detail');
+        /*$id_prevention_type_detail = DB::table('solicitudes')->where('rut_user', $rut)->value('id_prevention_type_detail');
+        $id_service = DB::table('services')->where('cod', $cod)->value('id');*/
         
         $aps = DB::table('users')->where('rut', $rut)->value('aps');
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
         $assurance = DB::table('solicitudes')->where('rut_user', $rut)->value('assurance');
-        $id_service = DB::table('services')->where('cod', $cod)->value('id');
 
         $cost = DB::table('costs')
         ->select('total_value')
@@ -183,10 +181,10 @@ class simulationsController extends Controller
 
         $data = new simulations();
 
+        //$data->calc_cobert_prevention = $request->calc_cobert_prevention;
+        //$data->expiration_date = $request->expiration_date;
         $data->id_request = $id_request;
         $data->id_status = $request->id_status;
-        $data->calc_cobert_prevention = $request->calc_cobert_prevention;
-        $data->expiration_date = $request->expiration_date;
         $data->percent_prevition = $request->percent_prevition;
         $data->percent_sec_comp = $request->percent_sec_comp;
 
@@ -205,8 +203,8 @@ class simulationsController extends Controller
 
                 if ($prevention_detail == 'A' and $assurance == false) {
                         $data->calc_secure_comp = ($cost * $request->percent_sec_comp);
-                        $sub_total = $cost;
-                        $fonasa_desc = ($sub_total * $request->precent_prevition)/100;
+                        $sub_total = $cost - $data->calc_secure_comp;
+                        $fonasa_desc = ($sub_total * $request->percent_prevition)/100;
                         $copago_total = $sub_total - $fonasa_desc;
                         $data->amount_payable = $copago_total;
 
@@ -247,32 +245,31 @@ class simulationsController extends Controller
                 break;
 
                 case $prevention_type != 'FONASA':
-                        if ($assurance == true) {
-                        $desc = ($cost * $request->calc_cobert_prevention)/100; //5184...
-                        $sub_total = $cost - $desc;  // 7776...
-                        $data->calc_secure_comp = ($sub_total * $request->percent_sec_comp)/100;// 2333
-                        $cobert_sec_comp = $data->calc_secure_comp; // 2333
-                        $sub_total_comp = $cost - $cobert_sec_comp; // 10627
-                        $prevention_desc = ($sub_total_comp * 20)/100; // 2125
-                        $copago_total = $sub_total_comp - $prevention_desc;
-
-                        $data->save();
+                        if ($assurance == true and $aps == false) {
+                            $data->calc_cobert_prevention = ($cost * $request->percent_prevition)/100;
+                            $data->calc_secure_comp = ($contribution * $request->percent_sec_comp)/100;
+                            $sub_total_prevention = ($cost - $data->calc_cobert_prevention);
+                            $sub_total_secure_comp = ($sub_total_prevention * 30)/100;
+                            $sub_total = ($cost - $sub_total_secure_comp);
+                            $desc = ($sub_total * 20 )/100;
+                            $copago_total = $sub_total - $desc; 
+                            $data->amount_payable = $copago_total;
+                            $data->save();
                         }
                         
                     break;
             
             default:
-                # code...
+                    $data->calc_secure_comp = ($contribution * $request->percent_sec_comp)/100;
+                    $sub_total = $contribution - $data->calc_secure_comp;
+                    $desc = ($sub_total * $request->percent_prevition)/100;
+                    $desc_prevition = ($cost * 20)/100;
+                    $copago_total = $cost - $desc_prevition;
+                    $data->amount_payable = $copago_total;
+
+                    $data->save();
                 break;
         }
-
-        $id_simulation = simulations::max('id');
-        $sim_serv = new simulations_services();
-        $sim_serv->id_simulation = $id_simulation;
-        $sim_serv->id_service = $id_service;
-        $sim_serv->quantity = $request->get('quantity');
-
-        $sim_serv->save();
 
         return response()->json([
             'message' => 'simulation loaded successfull',
@@ -280,6 +277,32 @@ class simulationsController extends Controller
             'Secure_Comp' => $data->calc_secure_comp,
             'Copago' => $copago_total
         ], 200);
+    }
+
+    public function simulation_services($rut, $cod)
+    {
+            $id_simulation = DB::table('simulations')
+                    ->join('solicitudes', 'solicitudes.id', '=', 'simulations.id_request')
+                    ->where('solicitudes.rut_user', $rut)
+                    ->max('simulations.id');
+        
+            $id_service = DB::table('services')->where('cod', $cod)->value('id');
+    
+            $quantity = DB::table('simulations')
+                    ->join('solicitudes', 'solicitudes.id', '=', 'simulations.id_request')
+                    ->where('solicitudes.rut_user', $rut)
+                    ->get()
+                    ->count();
+
+            $data = new simulations_services();
+
+            $data->id_simulation = $id_simulation;
+            $data->id_service = $id_service;
+            $data->quantity = $quantity;
+            
+            $data->save();
+
+            return response()->json($data, 200);
     }
 
 }
