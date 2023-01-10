@@ -18,6 +18,8 @@ class simulations extends Model
         'calc_secure_comp',
         'calc_cobert_prevention',
         'expiration_date',
-        'amount_payable'
+        'amount_payable',
+        'percent_prevition',
+        'percent_sec_comp'
     ];
 }

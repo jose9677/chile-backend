@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('/calc-copago/{rut}/{cod}', [App\Http\Controllers\simulationsController::class, 'calcCopago']);
+
 //DESCIPTIONCONTROLLER
 Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 'dropdownInfo']);
 Route::get('/services-categories', [App\Http\Controllers\decriptionsController::class, 'Categories_Services']);

@@ -21,6 +21,8 @@ class CreateSimulationsTable extends Migration
             $table->integer('calc_cobert_prevention');
             $table->date('expiration_date');
             $table->integer('amount_payable');
+            $table->integer('percent_prevition');
+            $table->integer('percent_sec_comp');
             $table->timestamps();
 
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');
