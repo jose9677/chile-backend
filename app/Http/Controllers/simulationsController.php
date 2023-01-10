@@ -279,7 +279,7 @@ class simulationsController extends Controller
         ], 200);
     }
 
-    public function simulation_services($rut, $cod)
+    public function simulation_services($rut, $cod, $quantity)
     {
             $id_simulation = DB::table('simulations')
                     ->join('solicitudes', 'solicitudes.id', '=', 'simulations.id_request')
@@ -288,11 +288,11 @@ class simulationsController extends Controller
         
             $id_service = DB::table('services')->where('cod', $cod)->value('id');
     
-            $quantity = DB::table('simulations')
+            /*$quantity = DB::table('simulations')
                     ->join('solicitudes', 'solicitudes.id', '=', 'simulations.id_request')
                     ->where('solicitudes.rut_user', $rut)
                     ->get()
-                    ->count();
+                    ->count();*/
 
             $data = new simulations_services();
 

@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::post('/calc-copago/{rut}/{cod}', [App\Http\Controllers\simulationsController::class, 'calcCopago']);
-Route::post('/sim-serv/{rut}/{cod}', [App\Http\Controllers\simulationsController::class, 'simulation_services']);
+Route::post('/sim-serv/{rut}/{cod}/{quantity}', [App\Http\Controllers\simulationsController::class, 'simulation_services']);
 
 
 //DESCIPTIONCONTROLLER
