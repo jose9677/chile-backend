@@ -138,7 +138,7 @@ class simulationsController extends Controller
     {   
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'id_status' => 'required',
+            //'id_status' => 'required',
             'percent_prevition' => 'required',
             'percent_sec_comp' => 'required',
             'quantity' => 'required'
@@ -185,7 +185,7 @@ class simulationsController extends Controller
         //$data->calc_cobert_prevention = $request->calc_cobert_prevention;
         //$data->expiration_date = $request->expiration_date;
         $data->id_request = $id_request;
-        $data->id_status = $request->id_status;
+        $data->id_status = 8;
         $data->percent_prevition = $request->percent_prevition;
         $data->percent_sec_comp = $request->percent_sec_comp;
 
