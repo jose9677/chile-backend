@@ -140,15 +140,16 @@ class simulationsController extends Controller
         $validator = Validator::make($request->all(), [
             'id_status' => 'required',
             'percent_prevition' => 'required',
-            'percent_sec_comp' => 'required'
+            'percent_sec_comp' => 'required',
+            'quantity' => 'required'
         ]);
         
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        /*$id_prevention_type_detail = DB::table('solicitudes')->where('rut_user', $rut)->value('id_prevention_type_detail');
-        $id_service = DB::table('services')->where('cod', $cod)->value('id');*/
+        //$id_prevention_type_detail = DB::table('solicitudes')->where('rut_user', $rut)->value('id_prevention_type_detail');
+        $id_service = DB::table('services')->where('cod', $cod)->value('id');
         
         $aps = DB::table('users')->where('rut', $rut)->value('aps');
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
@@ -271,6 +272,15 @@ class simulationsController extends Controller
                 break;
         }
 
+            $id_simulation = simulations::max('id');
+            $sim_serv = new simulations_services();
+
+            $sim_serv->id_simulation = $id_simulation;
+            $sim_serv->id_service = $id_service;
+            $sim_serv->quantity = $request->quantity;
+            
+            $sim_serv->save();
+
         return response()->json([
             'message' => 'simulation loaded successfull',
             'SubTotal' => $sub_total,
@@ -303,6 +313,11 @@ class simulationsController extends Controller
             $data->save();
 
             return response()->json($data, 200);
+    }
+
+    public function detailsCopago()
+    {
+
     }
 
 }
