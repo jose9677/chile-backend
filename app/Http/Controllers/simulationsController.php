@@ -155,6 +155,8 @@ class simulationsController extends Controller
         f.cod as services_cod,
         h.description as category_description,
         f.description as service_description,
+        i.total_value,
+        i.contribution,
         e.quantity,
         a.amount_payable
         FROM consultants.simulations as a 
@@ -165,6 +167,7 @@ class simulationsController extends Controller
         JOIN consultants.services as f ON e.id_service = f.id
         JOIN consultants.providers as g ON f.id_provider = g.id_provider
         JOIN consultants.categories as h ON f.id_category = h.id
+        JOIN consultants.costs as i ON i.id_service = f.id
         WHERE a.id = $id");
 
         return response()->json($query, 200);
