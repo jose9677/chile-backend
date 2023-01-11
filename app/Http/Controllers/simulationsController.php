@@ -155,7 +155,8 @@ class simulationsController extends Controller
         f.cod as services_cod,
         h.description as category_description,
         f.description as service_description,
-        e.quantity
+        e.quantity,
+        a.amount_payable
         FROM consultants.simulations as a 
         JOIN consultants.solicitudes as b ON a.id_request = b.id
         JOIN consultants.users as c ON b.rut_user = c.rut
