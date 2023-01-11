@@ -62,7 +62,7 @@ class simulationsController extends Controller
         }
 
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
-
+        
         $data = new simulations();
         
         $data->id_request = $id_request;
@@ -75,8 +75,13 @@ class simulationsController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Bad Request'], 400);
         }
+        
+        $id_simulation = DB::table('simulations')->where('id_request', $id_request)->value('id');
 
-        return response()->json(['message' => 'Simulation created successfull'], 200);
+        return response()->json([
+            'message' => 'Simulation created successfull',
+            'id_simulation' => $id_simulation
+        ], 200);
     }
 
     public function updateSimulation(Request $request, $id)
@@ -135,7 +140,6 @@ class simulationsController extends Controller
     {   
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            //'id_status' => 'required',
             'percent_prevition' => 'required',
             'percent_sec_comp' => 'required',
             'quantity' => 'required'
