@@ -190,9 +190,24 @@ class simulationsController extends Controller
         JOIN consultants.simulations_services as d ON a.id = d.id_simulation
         JOIN consultants.services as e ON e.id = d.id_service
         JOIN consultants.providers as f ON e.id_provider = f.id_provider
-        WHERE b.rut_user = '$rut'");
+        WHERE b.rut_user = '$rut'
+        GROUP BY
+        a.id,
+        a.created_at,
+        a.expiration_date,
+        a.id_status,
+        c.status,
+        f.id_provider,
+        f.description,
+        a.amount_payable
+        order by a.id");
 
         return response()->json($query, 200);
+    }
+
+    public function calc($id)
+    {
+
     }
 
     public function calcCopago($rut)
