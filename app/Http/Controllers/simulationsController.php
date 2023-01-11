@@ -49,29 +49,26 @@ class simulationsController extends Controller
         return response()->json($query, 200);
     }
 
-    public function addSimulation(Request $request)
+    public function addSimulation(Request $request, $rut)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'id_request' => 'required',
-            'id_status' => 'required',
-            'calc_secure_comp' => 'required',
-            'calc_cobert_prevention' => 'required',
-            'expiration_date' => 'required',
-            'amount_payable' => 'required'
+            'percent_prevition' => 'required',
+            'percent_sec_comp' => 'required',
         ]);
         
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
+
         $data = new simulations();
-        $data->id_request = $request->id_request;
-        $data->id_status = $request->id_status;
-        $data->calc_secure_comp = $request->calc_secure_comp;
-        $data->calc_cobert_prevention = $request->calc_cobert_prevention;
-        $data->expiration_date = $request->expiration_date;
-        $data->amount_payable = $request->amount_payable;
+        
+        $data->id_request = $id_request;
+        $data->id_status = 8;
+        $data->percent_prevition = $request->percent_prevition;
+        $data->percent_sec_comp = $request->percent_sec_comp;
         
         try {
             $data->save();
@@ -325,10 +322,4 @@ class simulationsController extends Controller
 
             return response()->json($data, 200);
     }
-
-    public function detailsCopago()
-    {
-
-    }
-
 }

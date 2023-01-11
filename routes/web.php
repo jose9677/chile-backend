@@ -93,7 +93,7 @@ Route::post('/file/{id_document_type}', [App\Http\Controllers\documentsControlle
 Route::get('/details-simulations', [App\Http\Controllers\simulationsController::class, 'detailsSimulation']);
 Route::get('/search-simulations/{id}', [App\Http\Controllers\simulationsController::class, 'searchSimulation']);
 Route::get('/users-simulations/{rut}', [App\Http\Controllers\simulationsController::class, 'Users_Simulations']);
-Route::post('/add-simulation', [App\Http\Controllers\simulationsController::class, 'addSimulation']);
+Route::post('/add-simulation/{rut}', [App\Http\Controllers\simulationsController::class, 'addSimulation']);
 Route::put('/update-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'updateSimulation']);
 Route::delete('/delete-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'deleteSimulation']);
 

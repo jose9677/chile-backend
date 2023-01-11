@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\simulations;
 use Illuminate\Http\Request;
 use App\Models\simulations_services;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +20,6 @@ class simulations_servicesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'id_simulation' => 'required',
             'id_service' => 'required',
             'quantity' => 'required'
         ]);
@@ -28,9 +28,10 @@ class simulations_servicesController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $id_simulation = simulations::max('id');
         $data = new simulations_services();
-
-        $data->id_simulation = $request->id_simulation;
+        
+        $data->id_simulation = $id_simulation;
         $data->id_service = $request->id_service;
         $data->quantity = $request->quantity;
 
