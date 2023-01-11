@@ -76,7 +76,7 @@ class simulationsController extends Controller
             return response()->json(['error' => 'Bad Request'], 400);
         }
         
-        $id_simulation = DB::table('simulations')->where('id_request', $id_request)->value('id');
+        $id_simulation = DB::table('simulations')->where('id_request', $id_request)->max('id');
 
         return response()->json([
             'message' => 'Simulation created successfull',
