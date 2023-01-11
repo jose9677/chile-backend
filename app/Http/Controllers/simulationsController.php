@@ -136,6 +136,39 @@ class simulationsController extends Controller
     }
 
     //SINCE THIS POINT WE START TO WORK WIHT COPAGO CALCS...
+    public function detailsCopago($id)
+    {
+        $query = DB::select("SELECT 
+        a.id as id_simulation,
+        a.created_at as emition_date,
+        a.expiration_date,
+        b.rut_user,
+        c.names,
+        c.lastname,
+        a.id_status,
+        d.status,
+        a.percent_prevition,
+        a.percent_sec_comp,
+        g.id_provider,
+        g.description as provider_description,
+        f.id as id_service,
+        f.cod as services_cod,
+        h.description as category_description,
+        f.description as service_description,
+        e.quantity
+        FROM consultants.simulations as a 
+        JOIN consultants.solicitudes as b ON a.id_request = b.id
+        JOIN consultants.users as c ON b.rut_user = c.rut
+        JOIN consultants.status as d ON a.id_status = d.id
+        JOIN consultants.simulations_services as e ON a.id = e.id_simulation
+        JOIN consultants.services as f ON e.id_service = f.id
+        JOIN consultants.providers as g ON f.id_provider = g.id_provider
+        JOIN consultants.categories as h ON f.id_category = h.id
+        WHERE a.id = $id");
+
+        return response()->json($query, 200);
+    }
+
     public function calcCopago($rut)
     {   
         $aps = DB::table('users')->where('rut', $rut)->value('aps');
