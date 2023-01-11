@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\simulations;
 use Illuminate\Http\Request;
 use App\Models\simulations_services;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +21,7 @@ class simulations_servicesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'id_service' => 'required',
+            'cod' => 'required',
             'quantity' => 'required'
         ]);
 
@@ -29,10 +30,12 @@ class simulations_servicesController extends Controller
         }
 
         $id_simulation = simulations::max('id');
+        $id_service = DB::table('services')->where('cod', $request->cod)->value('id');
+        
         $data = new simulations_services();
         
         $data->id_simulation = $id_simulation;
-        $data->id_service = $request->id_service;
+        $data->id_service = $id_service;
         $data->quantity = $request->quantity;
 
         $data->save();
