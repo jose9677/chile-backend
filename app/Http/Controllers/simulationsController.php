@@ -173,6 +173,28 @@ class simulationsController extends Controller
         return response()->json($query, 200);
     }
 
+    public function detailsCerticate($rut)
+    {
+        $query = DB::select("SELECT 
+        a.id as id_simulation,
+        a.created_at as emition_date,
+        a.expiration_date,
+        a.id_status,
+        c.status,
+        f.id_provider,
+        f.description as provider_description,
+        a.amount_payable as copago_value
+        FROM consultants.simulations as a 
+        JOIN consultants.solicitudes as b ON a.id_request = b.id
+        JOIN consultants.status as c ON a.id_status = c.id
+        JOIN consultants.simulations_services as d ON a.id = d.id_simulation
+        JOIN consultants.services as e ON e.id = d.id_service
+        JOIN consultants.providers as f ON e.id_provider = f.id_provider
+        WHERE b.rut_user = '$rut'");
+
+        return response()->json($query, 200);
+    }
+
     public function calcCopago($rut)
     {   
         $aps = DB::table('users')->where('rut', $rut)->value('aps');
