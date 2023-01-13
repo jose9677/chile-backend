@@ -16,7 +16,9 @@ class simulations_services extends Model
     protected $fillable = [
         'id_simulation',
         'id_service',
-        'quantity'
+        'quantity',
+        'balance',
+        'sub_total'
     ];
 
     protected $hidden = [

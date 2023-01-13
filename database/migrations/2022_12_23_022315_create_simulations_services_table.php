@@ -17,6 +17,8 @@ class CreateSimulationsServicesTable extends Migration
             $table->unsignedBigInteger('id_simulation');
             $table->unsignedBigInteger('id_service');
             $table->integer('quantity');
+            $table->float('balance');
+            $table->float('sub_total');
             $table->timestamps();
 
             $table->foreign('id_simulation')->references('id')->on('simulations')->onUpdate('cascade');

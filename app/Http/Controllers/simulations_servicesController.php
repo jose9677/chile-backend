@@ -40,6 +40,25 @@ class simulations_servicesController extends Controller
 
         $data->save();
 
+        $cost = DB::table('costs')->where('id', $id_service)->value('total_value');
+        $contribution = DB::table('costs')->where('id', $id_service)->value('contribution');
+
+        $prevention_type = DB::table('preventions_types')
+        ->select('prevention_type')
+        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->join('simulations', 'simulations.id_request', '=', 'solicitudes.id')
+        ->where('simulations.id', $request->id_simulation)
+        ->value('prevention_type');
+        
+        if ($prevention_type != 'FONASA') {
+            $data->sub_total = DB::update("UPDATE consultants.simulations_services SET sub_total = $cost * $request->quantity WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");
+        }
+        else{
+            $data->balance = DB::update("UPDATE consultants.simulations_services SET balance = ($cost - $contribution) * $request->quantity WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");
+            $data->sub_total = DB::update("UPDATE consultants.simulations_services SET sub_total = ($cost * $request->quantity) - balance WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");
+        }
+        
         return response()->json($data, 200);
 
     }
@@ -73,4 +92,5 @@ class simulations_servicesController extends Controller
 
         return response()->json($data, 200);
     }
+
 }
