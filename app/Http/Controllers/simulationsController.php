@@ -205,7 +205,7 @@ class simulationsController extends Controller
         return response()->json($query, 200);
     }
 
-    public function calcCoapgo($id_simulation)
+    public function calcCopago($id_simulation)
     {
         $sum = DB::table('simulations_services')->where('id_simulation', $id_simulation)->sum('sub_total');
         $calc = DB::update("UPDATE consultants.simulations SET sub_total = $sum WHERE id = $id_simulation");
