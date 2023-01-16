@@ -7,6 +7,7 @@ use App\Models\simulations;
 use App\Models\simulations_services;
 use App\Models\solicitudes;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -53,8 +54,8 @@ class simulationsController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'percent_prevition' => 'required',
-            'percent_sec_comp' => 'required',
+            //'percent_prevition' => 'required',
+            //'percent_sec_comp' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -236,79 +237,92 @@ class simulationsController extends Controller
         $percent_sec_comp = DB::table('simulations')->where('id', $id_simulation)->value('percent_sec_comp');
         $percent_prevition = DB::table('simulations')->where('id', $id_simulation)->value('percent_prevition');
 
+        //CALC-COPAGO
         switch ($prevention_type) {
             case 'FONASA':
                     if ($prevention_detail == 'A' AND $assurance == true) {
-                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                        $calc_secure_comp = ($sub_total * 30)/100;
+                        $calc_cobert_prevention = ($sub_total * 50)/100;
                         $balance_2 = $sub_total - $calc_secure_comp;
-                        $desc_corporation = ($balance_2 * $percent_prevition)/100;
+                        $desc_corporation = ($balance_2 * 50)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
                         $data = DB::update(
                             "UPDATE consultants.simulations 
                             SET 
                             calc_secure_comp = $calc_secure_comp,
+                            calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
                             sub_total = $sub_total
                             WHERE id = $id_simulation");
                     }
 
                     if ($prevention_detail == 'A' AND $assurance == false) {
-                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                        $calc_secure_comp = ($sub_total * 0)/100;
+                        $calc_cobert_prevention = ($sub_total * 50)/100;
                         $balance_2 = $sub_total;
-                        $desc_corporation = ($balance_2 * $percent_prevition)/100;
+                        $desc_corporation = ($balance_2 * 50)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
                         $data = DB::update(
                             "UPDATE consultants.simulations 
                             SET 
                             calc_secure_comp = $calc_secure_comp,
+                            calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
                             sub_total = $sub_total
                             WHERE id = $id_simulation");
                     }
 
                     if ($prevention_detail != 'A' and $assurance == true and $aps == false) {
-                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                        $calc_secure_comp = ($sub_total * 30)/100;
+                        $calc_cobert_prevention = ($sub_total * 20)/100;
                         $balance_2 = $sub_total - $calc_secure_comp;
-                        $desc_corporation = ($balance_2 * $percent_prevition)/100;
+                        $desc_corporation = ($balance_2 * 20)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
                         $data = DB::update(
                             "UPDATE consultants.simulations 
                             SET 
                             calc_secure_comp = $calc_secure_comp,
+                            calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
                             sub_total = $sub_total
                             WHERE id = $id_simulation");
                     }
 
                     if ($prevention_detail != 'A' and $assurance == true and $aps == true) {
-                        $age = DB::select("SELECT date_part('year',age(f_nac)) FROM consultants.users WHERE rut = '$rut'");
+                        $f_nac = DB::table('users')->where('rut', $rut)->value('f_nac');
+                        $age = Carbon::parse($f_nac)->age;
+            
                             if ($age < 65) {
-                            $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                            $calc_secure_comp = ($sub_total * 30)/100;
+                            $calc_cobert_prevention = ($sub_total * 30)/100;
                             $balance_2 = $sub_total - $calc_secure_comp;
-                            $desc_corporation = ($balance_2 * $percent_prevition)/100;
+                            $desc_corporation = ($balance_2 * 30)/100;
                             $total_copago = $balance_2 - $desc_corporation;
                                 
                             $data = DB::update(
                                     "UPDATE consultants.simulations 
                                     SET 
                                     calc_secure_comp = $calc_secure_comp,
+                                    calc_cobert_prevention = $calc_cobert_prevention,
                                     amount_payable = $total_copago,
                                     sub_total = $sub_total
                                     WHERE id = $id_simulation");
                             }
                             elseif ($age >= 65) {
-                            $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                            $calc_secure_comp = ($sub_total * 30)/100;
+                            $calc_cobert_prevention = ($sub_total * 40)/100;
                             $balance_2 = $sub_total - $calc_secure_comp;
-                            $desc_corporation = ($balance_2 * $percent_prevition)/100;
+                            $desc_corporation = ($balance_2 * 40)/100;
                             $total_copago = $balance_2 - $desc_corporation;
                                 
                             $data = DB::update(
                                     "UPDATE consultants.simulations 
                                     SET 
                                     calc_secure_comp = $calc_secure_comp,
+                                    calc_cobert_prevention = $calc_cobert_prevention,
                                     amount_payable = $total_copago,
                                     sub_total = $sub_total
                                     WHERE id = $id_simulation");
@@ -329,6 +343,7 @@ class simulationsController extends Controller
                                 "UPDATE consultants.simulations 
                                 SET 
                                 calc_secure_comp = $calc_secure_comp,
+                                calc_cobert_prevention = $calc_cobert_prevention,
                                 amount_payable = $total_copago,
                                 sub_total = $sub_total
                                 WHERE id = $id_simulation");
@@ -337,6 +352,7 @@ class simulationsController extends Controller
             
             default:
                 $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                $calc_cobert_prevention = ($sub_total * $percent_prevition)/100;
                 $desc_corporation = ($sub_total * $percent_prevition)/100;
                 $total_copago = $sub_total - $desc_corporation;
                         
@@ -344,6 +360,7 @@ class simulationsController extends Controller
                     "UPDATE consultants.simulations 
                     SET 
                     calc_secure_comp = $calc_secure_comp,
+                    calc_cobert_prevention = $calc_cobert_prevention,
                     amount_payable = $total_copago,
                     sub_total = $sub_total
                     WHERE id = $id_simulation");
@@ -359,197 +376,28 @@ class simulationsController extends Controller
         ], 200);
     }
 
-    /*public function calcCopago_FIRTS_VERSION($rut)
-    {   
-        $aps = DB::table('users')->where('rut', $rut)->value('aps');
-        $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
-        $assurance = DB::table('solicitudes')->where('rut_user', $rut)->value('assurance');
+    public function generateSimulation($id)
+    {
+        $data = simulations::findOrFail($id);
 
-        $id_simulation = DB::table('simulations')
-            ->join('solicitudes', 'solicitudes.id', '=', 'simulations.id_request')
-            ->where('solicitudes.rut_user', $rut)
-            ->max('simulations.id');
-        
-        $id_service = DB::table('simulations_services')
-                        ->join('simulations', 'simulations.id', '=', 'simulations_services.id_simulation')
-                        ->where('simulations.id', $id_simulation)
-                        ->value('simulations_services.id_service');
-
-        $cost = DB::table('costs')
-        ->select('total_value')
-        ->join('services', 'services.id', '=', 'costs.id_service')
-        ->where('services.id', $id_service)
-        ->value('costs.total_value');
-
-        $contribution = DB::table('costs')
-        ->select('contribution')
-        ->join('services', 'services.id', '=', 'costs.id_service')
-        ->where('services.cod', $id_service)
-        ->value('costs.contribution');
-
-        $prevention_detail = DB::table('preventions_details')
-        ->select('prevention_detail')
-        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
-        ->where('solicitudes.rut_user', $rut)
-        ->value('prevention_detail');   
-
-        $prevention_type = DB::table('preventions_types')
-        ->select('prevention_type')
-        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
-        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
-        ->where('solicitudes.rut_user', $rut)
-        ->value('prevention_type');
-
-        $data = new simulations();
-
-        $percent_sec_comp = DB::table('simulations')->where('id', $id_simulation)->value('percent_sec_comp');
-        $percent_prevition = DB::table('simulations')->where('id', $id_simulation)->value('percent_prevition');
-
-        switch ($prevention_type) {
-            case 'FONASA':
-                    
-                if ($prevention_detail == 'A' and $assurance == true) {
-                        $calc_secure_comp = ($cost * $percent_sec_comp)/100;
-                        $sub_total = $cost - $calc_secure_comp;
-                        //$data->sub_total = $sub_total;
-                        $fonasa_desc = ($sub_total * $percent_prevition)/100;
-                        $copago_total = $sub_total - $fonasa_desc;
-                        $amount_payable = $copago_total;
-
-                        //$data->save();
-                        $data = DB::update(
-                            "UPDATE consultants.simulations 
-                            SET 
-                            calc_secure_comp = $calc_secure_comp,
-                            amount_payable = $amount_payable,
-                            sub_total = $sub_total
-                            WHERE id = $id_simulation");
-                    }
-
-                if ($prevention_detail == 'A' and $assurance == false) {
-                        $calc_secure_comp = ($cost * $percent_sec_comp);
-                        $sub_total = $cost - $calc_secure_comp;
-                        //$data->sub_total = $sub_total;
-                        $fonasa_desc = ($sub_total * $percent_prevition)/100;
-                        $copago_total = $sub_total - $fonasa_desc;
-                        $amount_payable = $copago_total;
-
-                        //$data->save();
-                        $data = DB::update(
-                            "UPDATE consultants.simulations 
-                            SET 
-                            calc_secure_comp = $calc_secure_comp,
-                            amount_payable = $amount_payable,
-                            sub_total = $sub_total
-                            WHERE id = $id_simulation");
-                }
-
-                if ($prevention_detail != 'A' and $assurance == true and $aps == false) {
-                        $calc_secure_comp = ($contribution * $percent_sec_comp)/100;
-                        $sub_total = $contribution - $calc_secure_comp;
-                        //$data->sub_total = $sub_total;
-                        $fonasa_desc = ($sub_total * $percent_prevition)/100;
-                        $copago_total = $sub_total - $fonasa_desc;
-                        $amount_payable = $copago_total;
-
-                        //$data->save();
-                        $data = DB::update(
-                            "UPDATE consultants.simulations 
-                            SET 
-                            calc_secure_comp = $calc_secure_comp,
-                            amount_payable = $amount_payable,
-                            sub_total = $sub_total
-                            WHERE id = $id_simulation");
-                }
-
-                if ($prevention_detail != 'A' and $assurance == true and $aps == true) {
-                    $age = DB::select("SELECT date_part('year',age(f_nac)) FROM consultants.users WHERE rut = '$rut'");
-                        if ($age < 65) {
-                            $calc_secure_comp = ($contribution * $percent_sec_comp)/100;
-                            $sub_total = $contribution - $calc_secure_comp;
-                            //$data->sub_total = $sub_total;
-                            $fonasa_desc = ($sub_total * $percent_prevition)/100;
-                            $copago_total = $sub_total - $fonasa_desc;
-                            $amount_payable = $copago_total;
-
-                            //$data->save();
-                            $data = DB::update(
-                                "UPDATE consultants.simulations 
-                                SET 
-                                calc_secure_comp = $calc_secure_comp,
-                                amount_payable = $amount_payable,
-                                sub_total = $sub_total
-                                WHERE id = $id_simulation");
-                        }
-                        elseif ($age >= 65) {
-                            $calc_secure_comp = ($contribution * $percent_sec_comp)/100;
-                            $sub_total = $contribution - $calc_secure_comp;
-                            //$data->sub_total = $sub_total;
-                            $fonasa_desc = ($sub_total * $percent_prevition)/100;
-                            $copago_total = $sub_total - $fonasa_desc;
-                            $amount_payable = $copago_total;
-
-                            //$data->save();
-                            $data = DB::update(
-                                "UPDATE consultants.simulations 
-                                SET 
-                                calc_secure_comp = $calc_secure_comp,
-                                amount_payable = $amount_payable,
-                                sub_total = $sub_total
-                                WHERE id = $id_simulation");
-                        }
-                }
-                break;
-
-                case $prevention_type != 'FONASA':
-                        if ($assurance == true and $aps == false) {
-                            $calc_cobert_prevention = ($cost * $percent_prevition)/100;
-                            $calc_secure_comp = ($contribution * $percent_sec_comp)/100;
-                            $sub_total_prevention = ($cost - $calc_cobert_prevention);
-                            $sub_total_secure_comp = ($sub_total_prevention * 30)/100;
-                            $sub_total = ($cost - $sub_total_secure_comp);
-                            //$data->sub_total = $sub_total;
-                            $desc = ($sub_total * 20 )/100;
-                            $copago_total = $sub_total - $desc; 
-                            $amount_payable = $copago_total;
-                            //$data->save();
-                            $data = DB::update(
-                                "UPDATE consultants.simulations 
-                                SET 
-                                calc_secure_comp = $calc_secure_comp,
-                                calc_cobert_prevention = $calc_cobert_prevention,
-                                amount_payable = $amount_payable,
-                                sub_total = $sub_total
-                                WHERE id = $id_simulation");
-                        }
-                        
-                    break;
-            
-            default:
-                    $calc_secure_comp = ($contribution * $percent_sec_comp)/100;
-                    $sub_total = $contribution - $calc_secure_comp;
-                    $desc = ($sub_total * $percent_prevition)/100;
-                    $desc_prevition = ($cost * 20)/100;
-                    $copago_total = $cost - $desc_prevition;
-                    $amount_payable = $copago_total;
-
-                    //$data->save();
-                    $data = DB::update(
-                        "UPDATE consultants.simulations 
-                        SET 
-                        calc_secure_comp = $calc_secure_comp,
-                        amount_payable = $amount_payable,
-                        sub_total = $sub_total
-                        WHERE id = $id_simulation");
-                break;
+        if (!$data) {
+            return response()->json(['error' => 'Simulation '.$id.' does not exists'], 400);
         }
 
-        return response()->json([
-            'message' => 'simulation loaded successfull',
-            'SubTotal' => $sub_total,
-            'Cobert_Prevition' => $calc_cobert_prevention,
-            'Secure_Comp' => $calc_secure_comp,
-            'Copago' => $copago_total
-        ], 200);
-    }*/
+        simulations::query()->where(['id' => $id, 'id_status' => 8])->update(['id_status' => 10]);
+        return response()->json(['message' => 'Simulation '.$id.' was generated'], 200);
+    }
+
+    public function cancelSimulation($id)
+    {
+        $data = simulations::findOrFail($id);
+
+        if (!$data) {
+            return response()->json(['error' => 'Simulation '.$id.' does not exists'], 400);
+        }
+
+        simulations::query()->where(['id' => $id, 'id_status' => 8])->update(['id_status' => 9]);
+        return response()->json(['message' => 'Simulation '.$id.' was canceled'], 200);
+    }
 }
+

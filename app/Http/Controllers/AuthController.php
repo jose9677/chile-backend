@@ -119,7 +119,8 @@ class AuthController extends Controller
             
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'carer' => 'required'
+            'carer' => 'required',
+            'aps' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -138,7 +139,8 @@ class AuthController extends Controller
             'employee' => false,
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
-            'id_rol' => 1
+            'id_rol' => 1,
+            'aps' => $request->get('aps')
         ]);
 
         $sol = new solicitudes();

@@ -97,6 +97,8 @@ Route::get('/users-simulations/{rut}', [App\Http\Controllers\simulationsControll
 Route::post('/add-simulation/{rut}', [App\Http\Controllers\simulationsController::class, 'addSimulation']);
 Route::put('/update-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'updateSimulation']);
 Route::delete('/delete-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'deleteSimulation']);
+Route::put('/generate-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'generateSimulation']);
+Route::put('/cancel-simulation/{id}', [App\Http\Controllers\simulationsController::class, 'cancelSimulation']);
 
 //SIMULATIONS_SERVICES_CONTROLLER
 Route::get('/details-simulations-services', [App\Http\Controllers\simulations_servicesController::class, 'details_simulationService']);
