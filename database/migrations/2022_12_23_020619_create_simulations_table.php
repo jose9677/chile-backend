@@ -24,10 +24,12 @@ class CreateSimulationsTable extends Migration
             $table->integer('percent_prevition');
             $table->integer('percent_sec_comp');
             $table->float('sub_total');
+            $table->unsignedBigInteger('id_motive');
             $table->timestamps();
 
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');
             $table->foreign('id_status')->references('id')->on('status')->onUpdate('cascade');
+            $table->foreign('id_motive')->references('id_motive')->on('cancel_motives')->onUpdate('cascade');
         });
     }
 

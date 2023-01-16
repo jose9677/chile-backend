@@ -21,6 +21,7 @@ class simulations extends Model
         'amount_payable',
         'percent_prevition',
         'percent_sec_comp',
-        'sub_total'
+        'sub_total',
+        'id_motive'
     ];
 }

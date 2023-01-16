@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\cancel_motives;
 use App\Models\categories;
 use App\Models\dedications;
 use App\Models\locations;
@@ -28,6 +29,7 @@ class decriptionsController extends Controller
         $motives = motives::all();
         $dedications = dedications::all();
         $remunerations = remunerations::all();
+        $cancel_motives = cancel_motives::all();
 
         return response()->json([
             'status' => $status,
@@ -37,7 +39,8 @@ class decriptionsController extends Controller
             'locations' => $locations,
             'motives' => $motives,
             'dedications' => $dedications,
-            'remunerations' => $remunerations
+            'remunerations' => $remunerations,
+            'cancel_motives' => $cancel_motives
         ]);
     }
 

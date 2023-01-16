@@ -388,7 +388,7 @@ class simulationsController extends Controller
         return response()->json(['message' => 'Simulation '.$id.' was generated'], 200);
     }
 
-    public function cancelSimulation($id)
+    public function cancelSimulation($id, $id_motive)
     {
         $data = simulations::findOrFail($id);
 
@@ -396,7 +396,7 @@ class simulationsController extends Controller
             return response()->json(['error' => 'Simulation '.$id.' does not exists'], 400);
         }
 
-        simulations::query()->where(['id' => $id, 'id_status' => 8])->update(['id_status' => 9]);
+        simulations::query()->where(['id' => $id, 'id_status' => 8])->update(['id_status' => 9, 'id_motive' => $id_motive]);
         return response()->json(['message' => 'Simulation '.$id.' was canceled'], 200);
     }
 }
