@@ -289,7 +289,6 @@ class solicitudesController extends Controller
 
         $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-        //ARREGLAR ESTE CORREO
         $send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
         Mail::to($email)->send($send);
 

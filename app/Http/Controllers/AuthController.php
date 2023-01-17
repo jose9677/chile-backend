@@ -117,6 +117,7 @@ class AuthController extends Controller
                 ->numbers() //al menos un caracter numerico
             ],
             'mobile_phone' => 'required',
+            'id_prevention_type_detail' => 'required',
             'carer' => 'required',
         ]);
         
