@@ -137,6 +137,7 @@ class AuthController extends Controller
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'id_rol' => 1,
+            'active' => true,
             'aps' => false
         ]);
 
