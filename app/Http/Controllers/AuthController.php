@@ -116,11 +116,8 @@ class AuthController extends Controller
                 ->mixedCase() //al menos una letra minuscula y una mayuscula
                 ->numbers() //al menos un caracter numerico
             ],
-            
-            'landline' => 'required',
             'mobile_phone' => 'required',
             'carer' => 'required',
-            'aps' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -140,7 +137,7 @@ class AuthController extends Controller
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'id_rol' => 1,
-            'aps' => $request->get('aps')
+            'aps' => false
         ]);
 
         $sol = new solicitudes();

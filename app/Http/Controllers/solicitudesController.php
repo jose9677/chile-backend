@@ -364,7 +364,7 @@ class solicitudesController extends Controller
             return response()->json(['error' => 'Date has been rejected'], 400);
         }
 
-        solicitudes::query()->where(['id' => $id])->update(['id_status' => 6]);
+        solicitudes::query()->where(['id' => $id])->update(['id_status' => 6, 'id_active' => true]);
         return response()->json(['message' => 'Date has been approved'], 200);
     }
 
