@@ -349,8 +349,9 @@ class simulationsController extends Controller
                                 WHERE id = $id_simulation");
                         }
                     break;
-
-                    case $prevention_type = null:
+                    
+                    //ARREGALAR ESTA CASE DEL SWITCH...
+                    /*case $prevention_type = 'NINGUNO':
                         if ($assurance == false AND $aps == false) {
                         $calc_secure_comp = ($sub_total * 0)/100;
                         $calc_cobert_prevention = ($sub_total * 0)/100;
@@ -367,7 +368,7 @@ class simulationsController extends Controller
                             WHERE id = $id_simulation");         
                         }
             
-                        break;
+                        break;*/
             
             default:
                 
