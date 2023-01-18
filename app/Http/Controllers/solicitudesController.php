@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Mail\aprobarSolicitud;
+use App\Mail\aprobarSolicitudMailable;
 use App\Mail\asignarSolicitudMailable;
 use App\Mail\asignarVisitadorMailable;
 use App\Mail\confirmarCitaMailable;
+use App\Mail\rechazarSolicitudMailable;
 use App\Mail\reprogramarCitaMailable;
 use App\Models\solicitudes;
 use App\Models\User;
@@ -234,9 +236,12 @@ class solicitudesController extends Controller
             'id_status' => 3]);
 
             $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+            $rut_employee = DB::table('solicitudes')->where('id', $id)->value('rut_employee');
+            $names = DB::table('users')->where('rut', $rut_employee)->value('names');
+            $lastname = DB::table('users')->where('rut', $rut_employee)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $send = new asignarSolicitudMailable();
+            $send = new asignarSolicitudMailable($id, $names, $lastname, $request->visit_date);
             Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
@@ -367,19 +372,26 @@ class solicitudesController extends Controller
     ])->first();
 
         if (!$response) {
-            solicitudes::query()->where(['id' => $id])->update(['id_status' => 7]);
-            return response()->json(['error' => 'Date has been rejected'], 400);
+            solicitudes::query()->where(['id' => $id])->update(['id_status' => 7, 'is_active' => false]);
+    
+            $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+            $email = DB::table('users')->where('rut', $rut)->value('email');
+
+            $send = new rechazarSolicitudMailable($id);
+            Mail::to($email)->send($send);
+
+            return response()->json(['error' => 'Date '.$id.' has been rejected'], 400);
         }
 
-        solicitudes::query()->where(['id' => $id])->update(['id_status' => 6, 'is_active' => true]);
+        solicitudes::query()->where(['id' => $id])->update(['id_status' => 6]);
 
         $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
         $email = DB::table('users')->where('rut', $rut)->value('email');
 
-        $send = new aprobarSolicitud();
+        $send = new aprobarSolicitudMailable($id);
         Mail::to($email)->send($send);
 
-        return response()->json(['message' => 'Date has been approved'], 200);
+        return response()->json(['message' => 'Date '.$id. ' has been approved'], 200);
     }
 
     public function rejectRequest($id)

@@ -17,11 +17,19 @@ class asignarSolicitudMailable extends Mailable
      * @return void
      */
 
-    public $subject = 'Solicitud Asignada - Salud a Tu Alcance';
+     public $subject;
+     public $id;
+     public $names;
+     public $lastname;
+     public $visit_date;
 
-    public function __construct()
+    public function __construct($id, $names, $lastname, $visit_date)
     {
-        //
+        $this->id = $id;
+        $this->names = $names;
+        $this->lastname = $lastname;
+        $this->visit_date = $visit_date;
+        $this->subject = 'Cita Asignada - Solicitud Nro. '.$id;
     }
 
     /**
@@ -31,6 +39,6 @@ class asignarSolicitudMailable extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.asignarSolicitud');
+        return $this->view('emails.asignarSolicitud')->with('id', $this->id, 'names', $this->names, 'lastname', $this->lastname, 'visit_date', $this->visit_date);
     }
 }

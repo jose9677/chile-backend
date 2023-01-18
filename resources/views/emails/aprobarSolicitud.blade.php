@@ -8,8 +8,9 @@
 <body>
 
 <div>
-    Le notificamos que su solicitud fue aprobada de forma de forma exitosa.<br><br>
-    Saludos cordiales.<br><br>
+Tenemos el agrado de informarle que una vez realizada la comprobación de los documentos, su solicitud identificada con el Nro. {{$id}} ha sido Aprobada.<br><br>
+Agradecemos su confianza, esperamos pueda sacar el máximo provecho de nuestro programa salud a tu alcance.<br><br>
+Saludos cordiales.<br><br>
     <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
 </div>
 </body>

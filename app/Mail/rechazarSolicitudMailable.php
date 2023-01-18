@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class aprobarSolicitud extends Mailable
+class rechazarSolicitudMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -17,11 +17,13 @@ class aprobarSolicitud extends Mailable
      * @return void
      */
 
-    public $subject = 'Solicitud Aprobada - Salud a Tu Alcance';
-
-    public function __construct()
+     public $subject;
+     public $id;
+    
+    public function __construct($id)
     {
-        //
+        $this->id = $id;
+        $this->subject = 'Su solicitud Nro. '.$id.' ha sido Rechazada';
     }
 
     /**
@@ -31,6 +33,6 @@ class aprobarSolicitud extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.aprobarSolicitud');
+        return $this->view('emails.rechazarSolicitud')->with('id', $this->id);
     }
 }

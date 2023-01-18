@@ -156,7 +156,7 @@ class AuthController extends Controller
         $sol->prevention_is_valid = false;
         $sol->location_is_valid = false;
         $sol->comments = $request->get('comments');
-        $sol->is_active = false;
+        $sol->is_active = true;
         $sol->rut_match = false;
         $sol->carer = $request->get('carer');
         $sol->id_motive = $request->get('id_motive');
