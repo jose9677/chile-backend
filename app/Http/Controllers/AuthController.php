@@ -43,7 +43,7 @@ class AuthController extends Controller
             'landline' => 'required',
             'mobile_phone' => 'required',
             //'supervisor_rut' => 'required',
-            'profile_pic' => 'required',
+            //'profile_pic' => 'required',
             'id_rol' => 'required'
         ]);
         
@@ -64,11 +64,16 @@ class AuthController extends Controller
             'supervisor_rut' => $request->get('supervisor_rut'),
             'otp' => $this->generateCodOtp(),
             'email_active' => false,
-            'profile_pic' => $request->get('profile_pic'),
+            //'profile_pic' => $request->get('profile_pic'),
             'id_rol' => $request->get('id_rol'), 
             'api_token' => Str::random(50),
             'active' => true
         ]);
+
+       /* if (empty($request->profile_pic)) {
+            $user->profile_pic = 'profile_pic';
+            $user->save();
+        }*/
         
         $send = new registroMailable($user->rut, $user->otp);
         Mail::to($request->email)->send($send);
@@ -81,6 +86,23 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
+    }
+
+    public function profilePic(Request $request, $rut)
+    {
+        if ($request->hasFile('profile_pic')) {
+            $completeFilename = $request->file('profile_pic')->getClientOriginalName();
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $extension = $request->file('profile_pic')->getClientOriginalExtension();
+
+            $comPic = str_replace(' ', '_', $request->rut).'_'.'USER'.$request->rut.'.'.$extension;
+
+            $path = $request->file('profile_pic')->storeAs('public/profile_pic', $comPic);
+            $pic = User::query()->where('rut', $rut)->update(['profile_pic' => $comPic]);            
+        }        
+
+        return response()->json(['message' => 'Pic uploaded successfull'],200);
+        
     }
 
     public function employeePassword()

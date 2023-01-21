@@ -52,7 +52,7 @@ Route::put('/refresh-otp', [App\Http\Controllers\AuthController::class, 'refresh
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);
 Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
-
+Route::post('/profile-pic/{rut}', [App\Http\Controllers\AuthController::class, 'profilePic']);
 //SOLICITUDESCONTROLLER
 Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
 Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
