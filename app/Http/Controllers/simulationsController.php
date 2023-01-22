@@ -330,7 +330,7 @@ class simulationsController extends Controller
                     }
                 break;
 
-                case $prevention_type != 'FONASA':
+                case 'ISAPRE':
                         if ($assurance == true AND $aps == false) {
                             $calc_cobert_prevention = ($sub_total * $percent_prevition)/100;
                             $balance_1 = $sub_total - $calc_cobert_prevention;
@@ -349,12 +349,34 @@ class simulationsController extends Controller
                                 WHERE id = $id_simulation");
                         }
                     break;
+
+                    case 'OTRO':
+                        if ($assurance == true AND $aps == false) {
+                            $calc_cobert_prevention = ($sub_total * $percent_prevition)/100;
+                            $balance_1 = $sub_total - $calc_cobert_prevention;
+                            $calc_secure_comp = ($balance_1 * $percent_sec_comp)/100;
+                            $balance_2 = $balance_1 - $calc_secure_comp;
+                            $desc_corporation = ($balance_2 * 20)/100;
+                            $total_copago = $balance_2 - $desc_corporation;
+
+                            $data = DB::update(
+                                "UPDATE consultants.simulations 
+                                SET 
+                                calc_secure_comp = $calc_secure_comp,
+                                calc_cobert_prevention = $calc_cobert_prevention,
+                                amount_payable = $total_copago,
+                                sub_total = $sub_total
+                                WHERE id = $id_simulation");
+                        }
+                        break;
+
+                    //AGREGA UN CASE NUEVO PARA EL CASO OTRO...
+                    //NO OLVIDES ACTIVAR EL ENVIO DE CORREOS EN LOS METODOS DE REGISTRO...
                     
-                    //ARREGALAR ESTA CASE DEL SWITCH...
-                    /*case $prevention_type = 'NINGUNO':
+                    case 'NINGUNO':
                         if ($assurance == false AND $aps == false) {
-                        $calc_secure_comp = ($sub_total * 0)/100;
                         $calc_cobert_prevention = ($sub_total * 0)/100;
+                        $calc_secure_comp = ($sub_total * 0)/100;
                         $desc_corporation = ($sub_total * 20)/100;
                         $total_copago = $sub_total - $desc_corporation;
                                 
@@ -368,7 +390,7 @@ class simulationsController extends Controller
                             WHERE id = $id_simulation");         
                         }
             
-                        break;*/
+                        break;
             
             default:
                 
