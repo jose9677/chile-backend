@@ -75,14 +75,14 @@ class AuthController extends Controller
             $user->save();
         }*/
         
-        //$send = new registroMailable($user->rut, $user->otp);
-        //Mail::to($request->email)->send($send);
+        $send = new registroMailable($user->rut, $user->otp);
+        Mail::to($request->email)->send($send);
         
         $api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
         $app_url = env('APP_URL');
 
-        //$send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
-        //Mail::to($request->email)->send($send_2);
+        $send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
+        Mail::to($request->email)->send($send_2);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
@@ -90,26 +90,27 @@ class AuthController extends Controller
 
     public function profilePic(Request $request, $rut)
     {
-        $employee = DB::table('users')->where('rut', $rut)->value('employee');
+        /*$employee = DB::table('users')->where('rut', $rut)->value('employee');
 
         if ($employee == false) {
             return response()->json(['This user is not a employee'],400);
         }
         elseif ($employee == true) {
-            if ($request->hasFile('profile_pic')) {
-                $completeFilename = $request->file('profile_pic')->getClientOriginalName();
-                $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
-                $extension = $request->file('profile_pic')->getClientOriginalExtension();
-    
-                $comPic = str_replace(' ', '_', $request->rut).'.'.$extension;
-    
-                $path = $request->file('profile_pic')->storeAs('public/profile_pic', $comPic);
-                $pic = User::query()->where('rut', $rut)->update(['profile_pic' => $comPic]);            
-            }        
-    
-            return response()->json(['message' => 'Pic uploaded successfull'],200);
+        
+        }*/
 
-        }        
+        if ($request->hasFile('profile_pic')) {
+            $completeFilename = $request->file('profile_pic')->getClientOriginalName();
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $extension = $request->file('profile_pic')->getClientOriginalExtension();
+
+            $comPic = str_replace(' ', '_', $request->rut).'.'.$extension;
+
+            $path = $request->file('profile_pic')->storeAs('public/profile_pic', $comPic);
+            $pic = User::query()->where('rut', $rut)->update(['profile_pic' => $comPic]);
+        }       
+
+        return response()->json(['message' => 'Pic uploaded successfull'],200);
     }
 
     public function employeePassword()
@@ -199,8 +200,8 @@ class AuthController extends Controller
             $sol->save();
         }
 
-        //$send = new registroMailable($user->otp);
-        //Mail::to($request->email)->send($send);
+        $send = new registroMailable($user->otp);
+        Mail::to($request->email)->send($send);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 
