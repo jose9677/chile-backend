@@ -98,14 +98,13 @@ class AuthController extends Controller
         elseif ($employee == true) {
         
         }*/
-
         if ($request->hasFile('profile_pic')) {
             $completeFilename = $request->file('profile_pic')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('profile_pic')->getClientOriginalExtension();
 
             $comPic = str_replace(' ', '_', $request->rut).'.'.$extension;
-
+        
             $path = $request->file('profile_pic')->storeAs('public/profile_pic', $comPic);
             $pic = User::query()->where('rut', $rut)->update(['profile_pic' => $comPic]);
         }       
