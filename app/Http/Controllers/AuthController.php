@@ -75,8 +75,8 @@ class AuthController extends Controller
             $user->save();
         }*/
         
-        $send = new registroMailable($user->rut, $user->otp);
-        Mail::to($request->email)->send($send);
+        //$send = new registroMailable($user->rut, $user->otp);
+        //Mail::to($request->email)->send($send);
         
         $api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
         $app_url = env('APP_URL');
@@ -199,8 +199,8 @@ class AuthController extends Controller
             $sol->save();
         }
 
-        $send = new registroMailable($user->otp);
-        Mail::to($request->email)->send($send);
+        //$send = new registroMailable($user->otp);
+        //Mail::to($request->email)->send($send);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 
@@ -293,8 +293,8 @@ class AuthController extends Controller
             $query = DB::update("UPDATE consultants.users SET otp = '$new_otp' WHERE rut = '$request->rut'");
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-            $send = new reenviarOTPMailable($new_otp);
-            Mail::to($email)->send($send);
+            //$send = new reenviarOTPMailable($new_otp);
+            //Mail::to($email)->send($send);
 
             return response()->json(
                 ['message' => 'OTP Updated',
