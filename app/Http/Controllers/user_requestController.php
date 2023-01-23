@@ -142,8 +142,6 @@ class user_requestController extends Controller
             f.rut as rut_assistant,
             f.names as names_assistant,
             f.lastname as lastname_assistant,
-            f.profile_pic,
-            'http://54.189.74.47/storage/profile_pic/'||f.profile_pic as profile_pic_srv_path,
             a.visit_date,
             a.id_prevention_type_detail,
             g.prevention_detail,

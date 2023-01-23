@@ -42,10 +42,18 @@ class usersController extends Controller
 
    public function search($rut)
    {
-        $data = new User();
+        /*$data = new User();
         $datafound = $data->findOrFail($rut);
 
-        return response()->json([$datafound], 200);
+        return response()->json([$datafound], 200);*/
+
+        $query = DB::select(
+            "SELECT
+             * ,
+             'http://54.189.74.47/storage/profile_pic/'||consultants.users.profile_pic as profile_pic_srv_path
+             FROM consultants.users WHERE rut = '$rut'");
+
+        return response()->json($query, 200);
    }
 
    public function employees()
