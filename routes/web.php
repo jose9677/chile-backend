@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\OauthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,4 +113,11 @@ Route::get('/search-services/{id}', [App\Http\Controllers\servicesController::cl
 Route::post('/add-services', [App\Http\Controllers\servicesController::class, 'add_services']);
 Route::put('/update-services/{id}', [App\Http\Controllers\servicesController::class, 'updateServices']);
 Route::delete('/delete-services/{id}', [App\Http\Controllers\servicesController::class, 'deleteServices']);
+
+Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('generate.token');
+    Route::get('/oauth/token', [OauthController::class, 'doSuccessToken'])->name('token.success');
+    Route::post('/oauth/renew-token', [OauthController::class, 'doRefreshAccessToken'])->name('generate.new-token');
+
+    Route::post('/email/test', [MailController::class, 'doSendEmail'])->name('send.email');
+    Route::get('/email/oauth', [OauthController::class, 'index']);
 

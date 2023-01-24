@@ -325,8 +325,8 @@ class AuthController extends Controller
             $email = DB::table('users')->where('otp', $request->input('otp'))->value('email');
             User::query()->where('otp', $request->input('otp'))->update(['otp' => null, 'email_active' => true]);
             
-            $send = new registroVecinoExitoso();
-            Mail::to($email)->send($send);
+            //$send = new registroVecinoExitoso();
+            //Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Email validated succesfull'], 200);
         }else {
