@@ -90,14 +90,6 @@ class AuthController extends Controller
 
     public function profilePic(Request $request, $rut)
     {
-        /*$employee = DB::table('users')->where('rut', $rut)->value('employee');
-
-        if ($employee == false) {
-            return response()->json(['This user is not a employee'],400);
-        }
-        elseif ($employee == true) {
-        
-        }*/
         if ($request->hasFile('profile_pic')) {
             $completeFilename = $request->file('profile_pic')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
@@ -214,7 +206,11 @@ class AuthController extends Controller
         if (!$data) {
             return response()->json(['error' => 'User does not exists in Data Base'], 400);
         }
-
+        
+        if ($data->email_active == false) {
+            return response()->json(['error' => 'Inactive Email'], 400);
+        }
+        
         //this validation ask if the user is a employee, in that case the method must to ask if
         //that employee is active or not.
         if ($data->employee == true) {
@@ -223,6 +219,7 @@ class AuthController extends Controller
                     return response()->json(['error' => 'This employee is not actived'], 400);
                 }
         }
+
         
         $credentials = $request->only(['rut', 'password']);
 
