@@ -209,8 +209,8 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $send = new reprogramarCitaMailable($names, $lastname, $id);
-            Mail::to($email)->send($send);
+            //$send = new reprogramarCitaMailable($names, $lastname, $id);
+            //Mail::to($email)->send($send);
 
             return response()->json([
                 'message' => 'Request '.$id. ' was changed to Reprogram'
@@ -241,8 +241,8 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut_employee)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $send = new asignarSolicitudMailable($id, $names, $lastname, $request->visit_date);
-            Mail::to($email)->send($send);
+            //$send = new asignarSolicitudMailable($id, $names, $lastname, $request->visit_date);
+            //Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
         }
@@ -256,8 +256,8 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $send = new confirmarCitaMailable($names, $lastname, $id);
-            Mail::to($email)->send($send);
+            //$send = new confirmarCitaMailable($names, $lastname, $id);
+            //Mail::to($email)->send($send);
 
             return response()->json(['message' => 'Request '.$id. ' was assigned'], 200);
         }else {
@@ -302,8 +302,8 @@ class solicitudesController extends Controller
 
         $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-        $send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
-        Mail::to($email)->send($send);
+        //$send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
+        //Mail::to($email)->send($send);
 
         return response()->json([
             'message' => 'Visitor '.$request->rut. ' was assigned to request '.$id,
@@ -377,8 +377,8 @@ class solicitudesController extends Controller
             $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $send = new rechazarSolicitudMailable($id);
-            Mail::to($email)->send($send);
+            //$send = new rechazarSolicitudMailable($id);
+            //Mail::to($email)->send($send);
 
             return response()->json(['error' => 'Date '.$id.' has been rejected'], 400);
         }
@@ -388,8 +388,8 @@ class solicitudesController extends Controller
         $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
         $email = DB::table('users')->where('rut', $rut)->value('email');
 
-        $send = new aprobarSolicitudMailable($id);
-        Mail::to($email)->send($send);
+        //$send = new aprobarSolicitudMailable($id);
+        //Mail::to($email)->send($send);
 
         return response()->json(['message' => 'Date '.$id. ' has been approved'], 200);
     }

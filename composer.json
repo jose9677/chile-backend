@@ -14,7 +14,8 @@
         "lcobucci/jwt": "^4.0",
         "malahierba-lab/chile-rut": "5.1.*",
         "tymon/jwt-auth": "^1.0",
-        "league/oauth2-google": "^4.0"
+        "league/oauth2-google": "^4.0",
+        "phpmailer/phpmailer": "6.7.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -81,8 +81,8 @@ class AuthController extends Controller
         $api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
         $app_url = env('APP_URL');
 
-        $send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
-        Mail::to($request->email)->send($send_2);
+        //$send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
+        //Mail::to($request->email)->send($send_2);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   

@@ -43,12 +43,12 @@ class OauthController extends Controller
             $ct = $o->getFullTokens();
             $ret = $o->getNewAccessToken($ct['apigee_refresh_token']);
                 
-            return redirect('/settings/email/oauth')->with('success-renew', 'El token ha sido renovado satisfactoriamente');
+            return redirect('email/oauth')->with('success-renew', 'El token ha sido renovado satisfactoriamente');
 
         } catch(IdentityProviderException $e) {
-            return redirect('/settings/email/oauth')->with('error', 'Error: ' . $e->getMessage());
+            return redirect('email/oauth')->with('error', 'Error: ' . $e->getMessage());
         } catch(Exception $e) {
-            return redirect('/settings/email/oauth')->with('error', 'Error: ' . $e->getMessage());
+            return redirect('email/oauth')->with('error', 'Error: ' . $e->getMessage());
         }
 
     }

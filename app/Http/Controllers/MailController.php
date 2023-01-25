@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\OauthHelper;
 use Illuminate\Http\Request;
 use League\OAuth2\Client\Provider\Google;
 use PHPMailer\PHPMailer\Exception;
@@ -10,7 +11,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use App\Http\Controllers\OAuthController;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-
 
 /**
  * @see https://github.com/qalbit/laravel-phpmailer-google-oauth
@@ -31,8 +31,8 @@ class MailController extends Controller
      */
     public function __construct()
     {
-        $this->email            = 'ricardo@juegopegamax.com'; 
-        $this->name             = 'Ricardo - Soporte Pegamax';
+        $this->email            = 'josedarkrai@gmail.com'; 
+        $this->name             = 'la reina';
         $this->client_id        = env('GMAIL_API_CLIENT_ID');
         $this->client_secret    = env('GMAIL_API_CLIENT_SECRET');
         $this->provider         = new Google(
@@ -50,13 +50,15 @@ class MailController extends Controller
     public function doSendEmail(Request $request)
     {
 
-        $o = new OAuthController;
+        $o = new OauthHelper;
         $token = $o->getFullTokens();
-        if($token['apigee_token_expired'])
-            $token = $o->getNewAccessToken($token['apigee_refresh_token']);
-
-        //$this->token = $request->get('oauth_token');
-        $this->token = $token['apigee_refresh_token'];
+        if($token['apigee_token_expired']){
+            $otoken = $o->getNewAccessToken($token['apigee_refresh_token']);
+            $token = $otoken->getToken();
+        }else {
+            //$this->token = $request->get('oauth_token');
+            $token = $token['apigee_refresh_token'];
+        }
 
         $mail = new PHPMailer(true);
         try {
@@ -73,7 +75,7 @@ class MailController extends Controller
                         'provider'          => $this->provider,
                         'clientId'          => $this->client_id,
                         'clientSecret'      => $this->client_secret,
-                        'refreshToken'      => $this->token,
+                        'refreshToken'      => $token,
                         'userName'          => $this->email
                     ]
                 )
