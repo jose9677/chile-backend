@@ -72,8 +72,8 @@ class OauthHelper
     {
         $config = google_tokens::find(1)->toArray();
         
-        $config['apigee_token_expired'] = (time() > $config['apigee_token_expires']);
-        $config['apigee_refresh_token_expired'] = (time() > $config['apigee_refresh_token_expires']);
+        $config['apigee_token_expired'] = (time() > ($config['apigee_token_expires'] ?? 0));
+        $config['apigee_refresh_token_expired'] = (time() > ($config['apigee_refresh_token_expires'] ?? 0));
 
         return $config;
     }

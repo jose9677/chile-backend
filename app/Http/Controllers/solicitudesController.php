@@ -209,6 +209,19 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
+            $mc = new MailController;
+
+            $params = [
+                'names' => $names,
+                'lastname' => $lastname,
+                'id' => $id
+            ];
+    
+            $ret = $mc->reprogramRequestDate($email, $id, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
             //$send = new reprogramarCitaMailable($names, $lastname, $id);
             //Mail::to($email)->send($send);
 
@@ -241,6 +254,20 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut_employee)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
+            $mc = new MailController;
+
+            $params = [
+                'id' => $id,
+                'names' => $names,
+                'lastname' => $lastname,
+                'visit_date' => $request->visit_date
+            ];
+    
+            $ret = $mc->visitDate($email, $id, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
             //$send = new asignarSolicitudMailable($id, $names, $lastname, $request->visit_date);
             //Mail::to($email)->send($send);
 
@@ -255,6 +282,19 @@ class solicitudesController extends Controller
             $names = DB::table('users')->where('rut', $rut)->value('names');
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
+
+            $mc = new MailController;
+
+            $params = [
+                'id' => $id,
+                'names' => $names,
+                'lastname' => $lastname
+            ];
+    
+            $ret = $mc->confirmVisit($email, $id, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
 
             //$send = new confirmarCitaMailable($names, $lastname, $id);
             //Mail::to($email)->send($send);
@@ -301,6 +341,19 @@ class solicitudesController extends Controller
         $user = User::findOrFail($request->rut);
 
         $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
+
+        $mc = new MailController;
+
+            $params = [
+                'id' => $id,
+                'names' => $user->names,
+                'lastname' => $user->lastname
+            ];
+    
+            $ret = $mc->addVisitor($email, $id, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
 
         //$send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
         //Mail::to($email)->send($send);
@@ -377,6 +430,17 @@ class solicitudesController extends Controller
             $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
+            $mc = new MailController;
+
+            $params = [
+                'id' => $id
+            ];
+    
+            $ret = $mc->rejectRequest($email, $id, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
             //$send = new rechazarSolicitudMailable($id);
             //Mail::to($email)->send($send);
 
@@ -387,6 +451,17 @@ class solicitudesController extends Controller
 
         $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
         $email = DB::table('users')->where('rut', $rut)->value('email');
+
+        $mc = new MailController;
+
+            $params = [
+                'id' => $id
+            ];
+    
+            $ret = $mc->approve_Request($email, $id, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
 
         //$send = new aprobarSolicitudMailable($id);
         //Mail::to($email)->send($send);
@@ -416,7 +491,7 @@ class solicitudesController extends Controller
      //This Method get all data about Users and their Request assigned throught rut
      public function requestAssigned()
      {
-        $query_count = DB::select("SELECT COUNT(*) FROM consultants.solicitudes");
+        $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes");
         $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6");
         $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7");
 

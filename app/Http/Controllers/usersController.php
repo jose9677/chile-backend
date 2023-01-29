@@ -201,10 +201,23 @@ class usersController extends Controller
 
             $api_token = $this->getNewToken();
             $data->api_token = $api_token;
-            $app_url = env('APP_URL');
-
+            
             User::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
+            
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
+            $app_url = env('APP_URL');
+            
+            $mc = new MailController;
+
+            $params = [
+                'api_token' => $data->api_token,
+                'app_url' => $app_url
+            ];
+    
+            $ret = $mc->validate_User($email, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
 
             //$send = new validarMailable($data->api_token, $app_url);
             //Mail::to($email)->send($send);
@@ -270,7 +283,14 @@ class usersController extends Controller
             $email = DB::table('users')->where('api_token', $request->input('api_token'))->value('email');
 
             User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
-        
+            
+            $mc = new MailController;
+    
+            $ret = $mc->newPassword($email);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
             //$send = new cambiarclaveMailable();
             //Mail::to($email)->send($send);
 

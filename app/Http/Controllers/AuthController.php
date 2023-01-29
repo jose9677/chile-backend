@@ -42,6 +42,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'landline' => 'required',
             'mobile_phone' => 'required',
+            'sex' => 'required',
             //'supervisor_rut' => 'required',
             //'profile_pic' => 'required',
             'id_rol' => 'required'
@@ -67,12 +68,19 @@ class AuthController extends Controller
             //'profile_pic' => $request->get('profile_pic'),
             'id_rol' => $request->get('id_rol'), 
             'api_token' => Str::random(50),
-            'active' => true
+            'active' => true,
+            'sex' => $request->get('sex')
         ]);
 
-       /* if (empty($request->profile_pic)) {
-            $user->profile_pic = 'profile_pic';
-            $user->save();
+        /*$mc = new MailController;
+        $params = [
+            'otp' => $user->otp,
+            'url' => env('APP_URL')
+        ];
+
+        $ret = $mc->register($request->get('email'), $params);
+        if($ret !== true){
+            abort(500, $ret);
         }*/
         
         //$send = new registroMailable($user->rut, $user->otp);
@@ -81,9 +89,21 @@ class AuthController extends Controller
         $api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
         $app_url = env('APP_URL');
 
+        $mc = new MailController;
+        $params = [
+            'rut' => $user->rut,
+            'api_token' => $api_token,
+            'app_url' => $app_url,
+        ];
+
+        $ret = $mc->passwordEmployee($request->get('email'), $params);
+        if($ret !== true){
+            abort(500, $ret);
+        }
+
         //$send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
         //Mail::to($request->email)->send($send_2);
-
+        
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
     }
@@ -138,6 +158,7 @@ class AuthController extends Controller
                 ->numbers() //al menos un caracter numerico
             ],
             'mobile_phone' => 'required',
+            'sex' => 'required',
             'id_prevention_type_detail' => 'required',
             'carer' => 'required',
         ]);
@@ -160,7 +181,8 @@ class AuthController extends Controller
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
-            'aps' => false
+            'aps' => false,
+            'sex' => $request->get('sex')
         ]);
 
         $sol = new solicitudes();
@@ -189,6 +211,16 @@ class AuthController extends Controller
         }
         elseif ($request->terms_condition == true) {
             $sol->save();
+        }
+
+        $mc = new MailController;
+        $params = [
+            'otp' => $user->otp
+        ];
+
+        $ret = $mc->register($request->get('email'), $params);
+        if($ret !== true){
+            abort(500, $ret);
         }
 
         //$send = new registroMailable($user->otp);
@@ -220,7 +252,6 @@ class AuthController extends Controller
                 }
         }
 
-        
         $credentials = $request->only(['rut', 'password']);
 
         if (Auth::guard('api')->attempt($credentials)) {
@@ -290,6 +321,16 @@ class AuthController extends Controller
             $query = DB::update("UPDATE consultants.users SET otp = '$new_otp' WHERE rut = '$request->rut'");
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
+            $mc = new MailController;
+            $params = [
+                'otp' => $new_otp
+            ];
+    
+            $ret = $mc->newOTP($new_otp ,$email, $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
             //$send = new reenviarOTPMailable($new_otp);
             //Mail::to($email)->send($send);
 
@@ -321,6 +362,13 @@ class AuthController extends Controller
         if ($data->count()) {
             $email = DB::table('users')->where('otp', $request->input('otp'))->value('email');
             User::query()->where('otp', $request->input('otp'))->update(['otp' => null, 'email_active' => true]);
+            
+            $mc = new MailController;
+    
+            $ret = $mc->registerNeighbor($email);
+            if($ret !== true){
+                abort(500, $ret);
+            }
             
             //$send = new registroVecinoExitoso();
             //Mail::to($email)->send($send);
