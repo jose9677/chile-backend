@@ -294,6 +294,7 @@ class AuthController extends Controller
         return $randomString;
     }
 
+    //This method generate a new OTP in case needed...
     public function refreshOtp(Request $request)
     {
         Log::info($request);
