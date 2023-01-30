@@ -25,12 +25,10 @@ class OauthController extends Controller
     {
 
         // Create Google Provider
-        /*$o = new OauthHelper;
-        $provider = $o->getProvider();*/
+        $o = new OauthHelper;
+        $provider = $o->getProvider();
 
-        $provider = OauthHelper::getProvider();
-
-        $redirect_uri = $provider->getAuthorizationUrl(OauthHelper::getOptions());
+        $redirect_uri = $provider->getAuthorizationUrl($o->getOptions());
         return redirect($redirect_uri);
     }
 

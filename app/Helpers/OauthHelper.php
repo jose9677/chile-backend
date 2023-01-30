@@ -16,8 +16,8 @@ class OauthHelper
     private $client_secret;
     private $redirect_uri;
 
-    static $provider;
-    static $google_options;
+    private $provider;
+    private $google_options;
     
     
     /**
@@ -57,14 +57,14 @@ class OauthHelper
         return $this->redirect_uri;
     }
 
-    public static function getProvider()
+    public function getProvider()
     {
-        return static::$provider;
+        return $this->provider;
     }
 
-    public static function getOptions()
+    public function getOptions()
     {
-        return static::$google_options;
+        return $this->google_options;
     }
 
 
