@@ -32,8 +32,8 @@ class MailController extends Controller
      */
     public function __construct()
     {
-        $this->email            = 'josedarkrai@gmail.com'; 
-        $this->name             = 'la reina';
+        $this->email            = 'convenios.lareina@gmail.com'; 
+        $this->name             = 'Salud a tu Alcance';
         $this->client_id        = env('GMAIL_API_CLIENT_ID');
         $this->client_secret    = env('GMAIL_API_CLIENT_SECRET');
         $this->provider         = new Google(

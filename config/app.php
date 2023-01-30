@@ -232,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'RUT' => Malahierba\ChileRut\Facades\ChileRut::class,
+        'Helper' => \App\Helpers\OauthHelper::class
     ],
 
 ];
