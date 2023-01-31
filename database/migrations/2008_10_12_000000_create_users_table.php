@@ -31,13 +31,14 @@ class CreateUsersTable extends Migration
             $table->string('api_token')->nullable();
             $table->boolean('active')->nullable();
             $table->boolean('aps');
-            $table->char('sex');
+            $table->unsignedBigInteger('id_sex');
 
             $table->rememberToken();
             $table->timestamps();
 
             //$table->foreign('supervisor_rut')->references('rut')->on('users')->onUpdate('CASCADE');
             $table->foreign('id_rol')->references('id')->on('roles')->onUpdate('CASCADE');
+            $table->foreign('id_sex')->references('id_sex')->on('sex')->onUpdate('CASCADE');
 
             $table->softDeletes();
         });

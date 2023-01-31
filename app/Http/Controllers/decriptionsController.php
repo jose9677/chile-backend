@@ -13,6 +13,7 @@ use App\Models\preventions_types;
 use App\Models\property_types;
 use App\Models\remunerations;
 use App\Models\services;
+use App\Models\sex;
 use App\Models\status;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,7 @@ class decriptionsController extends Controller
         $dedications = dedications::all();
         $remunerations = remunerations::all();
         $cancel_motives = cancel_motives::all();
+        $sex = sex::all();
 
         return response()->json([
             'status' => $status,
@@ -40,7 +42,8 @@ class decriptionsController extends Controller
             'motives' => $motives,
             'dedications' => $dedications,
             'remunerations' => $remunerations,
-            'cancel_motives' => $cancel_motives
+            'cancel_motives' => $cancel_motives,
+            'sex' => $sex
         ]);
     }
 

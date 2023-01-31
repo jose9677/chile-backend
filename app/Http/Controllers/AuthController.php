@@ -42,10 +42,10 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'sex' => 'required',
             //'supervisor_rut' => 'required',
             //'profile_pic' => 'required',
-            'id_rol' => 'required'
+            'id_rol' => 'required',
+            'id_sex' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -69,7 +69,7 @@ class AuthController extends Controller
             'id_rol' => $request->get('id_rol'), 
             'api_token' => Str::random(50),
             'active' => true,
-            'sex' => $request->get('sex')
+            'id_sex' => $request->get('id_sex')
         ]);
 
         /*$mc = new MailController;
@@ -158,7 +158,7 @@ class AuthController extends Controller
                 ->numbers() //al menos un caracter numerico
             ],
             'mobile_phone' => 'required',
-            'sex' => 'required',
+            'id_sex' => 'required',
             'id_prevention_type_detail' => 'required',
             'carer' => 'required',
         ]);
@@ -182,7 +182,7 @@ class AuthController extends Controller
             'id_rol' => 1,
             'active' => true,
             'aps' => false,
-            'sex' => $request->get('sex')
+            'id_sex' => $request->get('id_sex')
         ]);
 
         $sol = new solicitudes();

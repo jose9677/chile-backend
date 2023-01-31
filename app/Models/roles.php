@@ -11,7 +11,7 @@ class roles extends Model
 
     protected $table = 'roles';
     protected $primaryKey = 'id';
-    public $incremneting = 'id';
+    public $incrementing = 'id';
 
     protected $fillable = [
         'name', 

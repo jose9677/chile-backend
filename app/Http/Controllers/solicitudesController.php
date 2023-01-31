@@ -278,7 +278,7 @@ class solicitudesController extends Controller
             solicitudes::query()->where(['id' => $id])->update(['visit_date' => $request->visit_date,
             'id_status' => 4]);
 
-            $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+            $rut = DB::table('solicitudes')->where('id', $id)->value('rut_employee');
             $names = DB::table('users')->where('rut', $rut)->value('names');
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
