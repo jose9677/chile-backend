@@ -265,7 +265,8 @@ class AuthController extends Controller
             $success = false;
             $message = 'User or Password Incorrect';
 
-            return compact('success', 'message');
+            //return compact('success', 'message');
+            return response()->json(['error' => $message], 400);
         }
     }
 

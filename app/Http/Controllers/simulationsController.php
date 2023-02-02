@@ -369,9 +369,6 @@ class simulationsController extends Controller
                                 WHERE id = $id_simulation");
                         }
                         break;
-
-                    //AGREGA UN CASE NUEVO PARA EL CASO OTRO...
-                    //NO OLVIDES ACTIVAR EL ENVIO DE CORREOS EN LOS METODOS DE REGISTRO...
                     
                     case 'NINGUNO':
                         if ($assurance == false AND $aps == false) {
