@@ -16,6 +16,6 @@
 
     Saludos cordiales.<br><br>
 
-    <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
+    <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje. Si desea información adicional o ayuda en el proceso, puede enviar un correo electrónico a convenios@corp-lareina.cl</span>
     </body>
 </html>

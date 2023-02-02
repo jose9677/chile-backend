@@ -12,7 +12,7 @@ Le informamos que su solicitud identificada con el Nro. {{$id}} será atendida p
 Le fue asignada la visita de comprobación de documentos para el día {{$visit_date}}.<br><br>
 Para continuar con el proceso por favor ingrese al sistema (saludatualcance.corp-lareina.cl) y confirme si se encontrará disponible para recibir al Asistente Social en su domicilio en la fecha y hora agendada. De lo contrario, podrá solicitar la reprogramación de la visita.<br><br>
     Gracias por su confianza.<br><br>
-    <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
+    <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje. Si desea información adicional o ayuda en el proceso, puede enviar un correo electrónico a convenios@corp-lareina.cl</span>
 </div>
 </body>
 </html>

@@ -11,7 +11,7 @@
         Hemos procesado exitosamente su registro en el sistema web de Salud a tu Alcance. A partir de ahora podrá ingresar a nuestro sistema a través de <a href="http://saludatualcance.corp-lareina.cl" style="color: #0eadb0;" target="_blank">saludatualcance.corp-lareina.cl</a> con su número de RUT y contraseña.<br><br>
         Como parte del proceso de registro hemos generado automáticamente una solicitud para optar por el beneficio, por lo que debe estar atento a su correo electrónico ya que en los próximos días le será notificada la fecha en que uno de nuestros asistentes sociales lo visitará.<br><br>
         Saludos cordiales.<br><br>
-        <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje.</span>
+        <span style="font-weight: bold;"> Esta es una cuenta de correo electrónico no monitoreada, por favor no responda este mensaje. Si desea información adicional o ayuda en el proceso, puede enviar un correo electrónico a convenios@corp-lareina.cl</span>
 </div>
     </body>
 </html>
