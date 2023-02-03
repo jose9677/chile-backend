@@ -373,7 +373,7 @@ class usersController extends Controller
         return response()->json($query, 200);
    }
 
-   public function restartUser(Request $request, $rut)
+   public function restartUser($rut)
    {
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
 

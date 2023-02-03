@@ -43,6 +43,10 @@ class documentsController extends Controller
         
         $query = solicitudes::max('id');
         $id_doc = documents::max('id') + 1;
+        $rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
+        $otp = DB::table('users')->where('rut', $rut)->value('otp');
+        $email = DB::table('users')->where('rut', $rut)->value('email');
+
         $data->id_request = $query;
         $data->id_document_type = $id_document_type;
 
@@ -52,8 +56,6 @@ class documentsController extends Controller
             $completeFilename = $request->file('document_path')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
-            
-            //$comPic = str_replace(' ', '_', $fileNameOnly).'-'.rand() .time().'.'.$extension;
 
             $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$extension;
  
@@ -62,9 +64,23 @@ class documentsController extends Controller
             $data->document_ext = $extension;
         }
         if ($data->save()) {
+
+            $mc = new MailController;
+            $params = [
+                'otp' => $otp
+            ];
+
+            $ret = $mc->register($request->get('email'), $params);
+            if($ret !== true){
+            abort(500, $ret);
+        
+            }
             return response()->json(['message' => 'Document uploaded successfull'],200);
         }else {
-            return response()->json(['error' => 'Error to upload document'],400);
+            $restart = new usersController();
+            $restart->restartUser($rut);
+
+            return response()->json(['error' => 'Error registering user user'],400);
         }
     }
 }
