@@ -75,7 +75,7 @@ class usersController extends Controller
         'f_nac' => 'required',
         'landline' => 'required',
         'mobile_phone' => 'required',
-        'profile_pic' => 'required'
+        //'profile_pic' => 'required'
 
     ]);
     
@@ -121,7 +121,7 @@ class usersController extends Controller
             'f_nac' => 'required',
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'profile_pic' => 'required',
+            //'profile_pic' => 'required',
             'id_rol' => 'required'
 
         ]);

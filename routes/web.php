@@ -121,3 +121,6 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
     Route::post('/email/test', [MailController::class, 'doSendEmail'])->name('send.email');
     Route::get('/email/oauth', [OauthController::class, 'index']);
 
+//REPORTES EXCEL
+Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
+

@@ -12,10 +12,11 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "lcobucci/jwt": "^4.0",
-        "malahierba-lab/chile-rut": "5.1.*",
-        "tymon/jwt-auth": "^1.0",
         "league/oauth2-google": "^4.0",
-        "phpmailer/phpmailer": "6.7.1"
+        "maatwebsite/excel": "^3.1",
+        "malahierba-lab/chile-rut": "5.1.*",
+        "phpmailer/phpmailer": "6.7.1",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
