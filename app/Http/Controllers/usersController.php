@@ -304,7 +304,7 @@ class usersController extends Controller
    {
         Log::info($request);
         $validator = Validator::make($request->all(), [    
-            'rut' => 'required'
+            //'rut' => 'required'
         ]);
 
         if ($validator->fails()) {
