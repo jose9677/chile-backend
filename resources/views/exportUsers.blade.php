@@ -1,0 +1,51 @@
+<table>
+    <thead>
+    <tr>
+        <th>rut</th>
+        <th>names</th>
+        <th>lastname</th>
+        <th>f_nac</th>
+        <th>email</th>
+        <th>password</th>
+        <th>landline</th>
+        <th>mobile_phone</th>
+        <th>employee</th>
+        <th>supervisor_rut</th>
+        <th>otp</th>
+        <th>email_active</th>
+        <th>profile_pic</th>
+        <th>api_token</th>
+        <th>id_rol</th>
+        <th>created_at</th>
+        <th>active</th>
+        <th>aps</th>
+        <th>id_sex</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        @foreach($users as $user)
+        <tr>
+            <td>{{$user->rut}}</td>
+            <td>{{$user->names}}</td>
+            <td>{{$user->lastname}}</td>
+            <td>{{$user->f_nac}}</td>
+            <td>{{$user->email}}</td>
+            <td>{{$user->password}}</td>
+            <td>{{$user->landline}}</td>
+            <td>{{$user->mobile_phone}}</td>
+            <td>{{$user->employee}}</td>
+            <td>{{$user->supervisor_rut}}</td>
+            <td>{{$user->otp}}</td>
+            <td>{{$user->email_active}}</td>
+            <td>{{$user->profile_pic}}</td>
+            <td>{{$user->api_token}}</td>
+            <td>{{$user->id_rol}}</td>
+            <td>{{$user->created_at}}</td>
+            <td>{{$user->active}}</td>
+            <td>{{$user->aps}}</td>
+            <td>{{$user->id_sex}}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>

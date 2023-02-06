@@ -144,7 +144,7 @@ class usersController extends Controller
         $data->email = $request->email;
         $data->landline = $request->landline;
         $data->mobile_phone = $request->mobile_phone;
-        $data->profile_pic = $request->profile_pic;
+        //$data->profile_pic = $request->profile_pic;
         $data->id_rol = $request->id_rol;
     
         try {
