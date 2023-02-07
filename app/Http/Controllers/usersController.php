@@ -193,12 +193,22 @@ class usersController extends Controller
         ])->get();
 
         if ($data->count()) {
-            $data = User::query()->where(['rut' => $request->input('rut'),'email_active' => true])->first();
+            /*$user = User::query()->where(['rut' => $request->input('rut'),'email_active' => false])->whereNotNull('otp');
 
-            if (!$data) {
-                return response()->json(['error' => 'Inactive Email'], 400);
+            if($user){
+                $this->restartUser($request->rut);
+                return response()->json(['error' => 'the user '.$request->rut.' was deleted'], 400);
+            }*/
+
+            $email_active = DB::table('users')->where('rut', $request->rut)->value('email_active');
+            $otp = DB::table('users')->where('rut', $request->rut)->value('otp');
+
+            if ($email_active == false AND !empty($otp)) {
+                $this->restartUser($request->rut);
+                return response()->json(['error' => 'the user '.$request->rut.' was deleted'], 400);
+            
             }
-
+            elseif($email_active == true AND empty($otp)){
             $api_token = $this->getNewToken();
             $data->api_token = $api_token;
             
@@ -227,9 +237,7 @@ class usersController extends Controller
                     'message' => 'User Validation successfull',
                     'api_token' => $api_token
                 ],  200);
-        }
-        else {
-            return response()->json(['error' => 'User Does Not exists in Data Base'], 400);
+            }   
         }
    }
 

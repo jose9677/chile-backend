@@ -65,20 +65,20 @@ class documentsController extends Controller
         }
         if ($data->save()) {
 
-            /*$mc = new MailController;
+            $mc = new MailController;
             $params = [
                 'otp' => $otp
             ];
 
-            $ret = $mc->register($request->get('email'), $params);
+            $ret = $mc->register($email, $params);
             if($ret !== true){
             abort(500, $ret);
         
-            }*/
+            }
             return response()->json(['message' => 'Document uploaded successfull'],200);
         }else {
-            //$restart = new usersController();
-            //$restart->restartUser($rut);
+            $restart = new usersController();
+            $restart->restartUser($rut);
 
             return response()->json(['error' => 'Error to upload document'],400);
         }
