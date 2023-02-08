@@ -327,11 +327,11 @@ class usersController extends Controller
             return response()->json(['error' => 'This employee is not a Social Assistant'], 400);
         }
 
-        $user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true, 'id_rol' => 3])->first();
+        /*$user = User::query()->where(['rut' => $request->input('rut'), 'employee' => true, 'id_rol' => 3])->first();
 
         if (!$user) {
             return response()->json(['error' => 'This user is not a Supervisor'],400);
-        }
+        }*/
 
         $assistant->supervisor_rut = $request->rut;
         $assistant->save();

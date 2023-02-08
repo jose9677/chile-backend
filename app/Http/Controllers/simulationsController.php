@@ -372,8 +372,8 @@ class simulationsController extends Controller
                     
                     case 'NINGUNO':
                         if ($assurance == false AND $aps == false) {
-                        $calc_cobert_prevention = ($sub_total * 0)/100;
                         $calc_secure_comp = ($sub_total * 0)/100;
+                        $calc_cobert_prevention = ($sub_total * 0)/100;
                         $desc_corporation = ($sub_total * 20)/100;
                         $total_copago = $sub_total - $desc_corporation;
                                 
