@@ -386,6 +386,22 @@ class simulationsController extends Controller
                             sub_total = $sub_total
                             WHERE id = $id_simulation");         
                         }
+
+                        if ($assurance == true AND $aps == false) {
+                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                        $calc_cobert_prevention = ($sub_total * 0)/100;
+                        $desc_corporation = ($sub_total * 20)/100;
+                        $total_copago = $sub_total - $desc_corporation;
+                        }
+
+                           $data = DB::update(
+                            "UPDATE consultants.simulations 
+                            SET 
+                            calc_secure_comp = $calc_secure_comp,
+                            calc_cobert_prevention = $calc_cobert_prevention,
+                            amount_payable = $total_copago,
+                            sub_total = $sub_total
+                            WHERE id = $id_simulation");   
             
                         break;
             
