@@ -15,6 +15,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 use App\Models\User;
 use App\Models\users_requests;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -181,7 +182,7 @@ class AuthController extends Controller
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
-            'aps' => false,
+            'aps' => $request->get('aps'),
             'id_sex' => $request->get('id_sex')
         ]);
 
@@ -211,6 +212,39 @@ class AuthController extends Controller
         }
         elseif ($request->terms_condition == true) {
             $sol->save();
+        }
+
+        $prevention_detail = DB::table('preventions_details')
+        ->select('prevention_detail')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where('solicitudes.rut_user', $request->rut)
+        ->value('prevention_detail');
+
+        $prevention_type = DB::table('preventions_types')
+        ->select('prevention_type')
+        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where('solicitudes.rut_user', $request->rut)
+        ->value('prevention_type');
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 50]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $request->aps == false) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $request->aps == true) {
+            $f_nac = DB::table('users')->where('rut', $request->rut)->value('f_nac');
+            $age = Carbon::parse($f_nac)->age;
+
+            if ($age < 65) {
+                User::query()->where('rut', $request->input('rut'))->update(['percent' => 30]);
+            }
+            elseif ($age >= 65) {
+                User::query()->where('rut', $request->input('rut'))->update(['percent' => 40]);
+            }
         }
 
         /*$mc = new MailController;

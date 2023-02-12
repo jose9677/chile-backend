@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->boolean('active')->nullable();
             $table->boolean('aps');
             $table->unsignedBigInteger('id_sex');
+            $table->integer('percent');
 
             $table->rememberToken();
             $table->timestamps();
