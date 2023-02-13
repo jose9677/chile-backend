@@ -247,6 +247,10 @@ class AuthController extends Controller
             }
         }
 
+        if ($prevention_type != 'FONASA' AND $request->aps == false) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+        }
+
         /*$mc = new MailController;
         $params = [
             'otp' => $user->otp
@@ -262,6 +266,24 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 
+    }
+
+    public function updatePercent(Request $request, $rut)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'percent' => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = User::fincdOrFail($rut);
+        
+        if (!$data) {
+            return response()->json(['error' => 'User does not exist in DB'], 400);
+        }
     }
     
     public function login(Request $request)
