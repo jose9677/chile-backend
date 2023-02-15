@@ -445,7 +445,8 @@ class AuthController extends Controller
             $otp = DB::table('users')->where('rut', $request->rut)->value('otp');
             
             if ($email_active == false AND !empty($otp)) {
-                $this->restartUser($request->rut);        
+                $restart = new usersController();
+                $restart->restartUser($request->rut);        
                 
                 return response()->json([
                     'error' => 'User registered incompleted in DB '
