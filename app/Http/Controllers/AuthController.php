@@ -275,7 +275,7 @@ class AuthController extends Controller
 
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
 
-        
+        //ESTE METODO ESTA INCOMPLETO.............
     }
     
     public function login(Request $request)
@@ -440,7 +440,19 @@ class AuthController extends Controller
         ])->get();
 
         if ($user->count()) {
-            return response()->json(['error' => 'User exists in Data Base'], 400);
+            
+            $email_active = DB::table('users')->where('rut', $request->rut)->value('email_active');
+            $otp = DB::table('users')->where('rut', $request->rut)->value('otp');
+            
+            if ($email_active == false AND !empty($otp)) {
+                $this->restartUser($request->rut);        
+                
+                return response()->json([
+                    'error' => 'User registered incompleted in DB '
+                    .'User '.$request->rut.' was deleted'
+                ], 400);
+            }
+
         }
         
         if ($request->rut) {
