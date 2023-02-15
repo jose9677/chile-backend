@@ -7,6 +7,7 @@ use App\Mail\claveEmpleadoMailable;
 use App\Mail\reenviarOTPMailable;
 use App\Mail\registroMailable;
 use App\Mail\registroVecinoExitoso;
+use App\Models\aps;
 use App\Models\documents;
 use App\Models\solicitudes;
 use Illuminate\Http\Request;
@@ -270,20 +271,11 @@ class AuthController extends Controller
 
     public function updatePercent(Request $request, $rut)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(), [
-            'percent' => 'required'
-        ]);
-        
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+        $data_aps = aps::all();
 
-        $data = User::fincdOrFail($rut);
+        $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
+
         
-        if (!$data) {
-            return response()->json(['error' => 'User does not exist in DB'], 400);
-        }
     }
     
     public function login(Request $request)

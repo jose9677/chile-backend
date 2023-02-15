@@ -382,7 +382,8 @@ class solicitudesController extends Controller
         $query = DB::select(
             "SELECT 
             a.id as id_request,
-            b.*
+            b.*,
+            'http://54.189.74.47/storage/profile_pic/'||consultants.users.profile_pic as profile_pic_srv_path
             from consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_employee = b.rut
             WHERE a.rut_employee = '$rut_employee'"
