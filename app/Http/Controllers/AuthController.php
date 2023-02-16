@@ -269,13 +269,68 @@ class AuthController extends Controller
         return response()->json(compact('user', 'sol', 'token'), 201); 
     }
 
-    public function updatePercent(Request $request, $rut)
+    public function updatePercent(Request $request)
     {
-        $data_aps = aps::all();
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => []
+        ]);
 
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
 
-        //ESTE METODO ESTA INCOMPLETO.............
+        $query = DB::update(
+        "UPDATE consultants.users AS a 
+            SET aps = true 
+            FROM
+            consultants.aps AS b 
+            WHERE
+            a.rut = b.rut"
+        );
+
+        $ruts = $request->rut;
+
+        for ($i=0; $i < count($ruts) ; $i++) { 
+    
+        $aps = DB::table('users')->where('rut', $ruts[$i])->value('aps');
+
+        $prevention_detail = DB::table('preventions_details')
+        ->select('prevention_detail')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where('solicitudes.rut_user', $ruts[$i])
+        ->value('prevention_detail');
+
+        $prevention_type = DB::table('preventions_types')
+        ->select('prevention_type')
+        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where('solicitudes.rut_user', $ruts[$i])
+        ->value('prevention_type');
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
+            User::query()->where('rut', $ruts[$i])->update(['percent' => 50]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
+            User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
+            $f_nac = DB::table('users')->where('rut', $ruts[$i])->value('f_nac');
+            $age = Carbon::parse($f_nac)->age;
+
+            if ($age < 65) {
+                User::query()->where('rut', $ruts[$i])->update(['percent' => 30]);
+            }
+            elseif ($age >= 65) {
+                User::query()->where('rut', $ruts[$i])->update(['percent' => 40]);
+            }
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == false) {
+            User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+        }
+
+        }
     }
     
     public function login(Request $request)
