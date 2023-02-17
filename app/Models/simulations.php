@@ -22,6 +22,7 @@ class simulations extends Model
         'percent_prevition',
         'percent_sec_comp',
         'sub_total',
-        'id_motive'
+        'id_motive',
+        'desc_corporation'
     ];
 }

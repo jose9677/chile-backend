@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\documents;
 use App\Models\solicitudes;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,7 +45,7 @@ class documentsController extends Controller
         $query = solicitudes::max('id');
         $id_doc = documents::max('id') + 1;
         $rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
-        $otp = DB::table('users')->where('rut', $rut)->value('otp');
+        
         $email = DB::table('users')->where('rut', $rut)->value('email');
 
         $data->id_request = $query;
@@ -64,6 +65,13 @@ class documentsController extends Controller
             $data->document_ext = $extension;
         }
         if ($data->save()) {
+            
+            $user = new AuthController();
+            $aux = $user->generateCodOtp();
+            
+            User::query()->where('rut', $rut)->update(['otp' => $aux]);
+
+            $otp = DB::table('users')->where('rut', $rut)->value('otp');
 
             $mc = new MailController;
             $params = [

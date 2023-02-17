@@ -54,6 +54,14 @@ class AuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if ($user->count()) {
+            return response()->json(['error' => 'User exists in DB'], 400);
+        }
+
         $user = User::create([
             'rut' => $request->get('rut'),
             'names' => $request->get('names'),
@@ -169,6 +177,14 @@ class AuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if ($user->count()) {
+            return response()->json(['error' => 'User exists in DB'], 400);
+        }
+
         $user = User::create([
             'rut' => $request->get('rut'),
             'names' => $request->get('names'),
@@ -179,7 +195,7 @@ class AuthController extends Controller
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
             'employee' => false,
-            'otp' => $this->generateCodOtp(),
+            //'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
@@ -269,7 +285,7 @@ class AuthController extends Controller
         return response()->json(compact('user', 'sol', 'token'), 201); 
     }
 
-    public function updatePercent(Request $request)
+    public function updateAps(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -504,11 +520,12 @@ class AuthController extends Controller
                 $restart->restartUser($request->rut);        
                 
                 return response()->json([
-                    'error' => 'User registered incompleted in DB '
-                    .'User '.$request->rut.' was deleted'
-                ], 400);
+                    'error' => 'User registered incompleted in DB '], 400);
             }
 
+            if ($email_active == true AND empty($otp)) {
+                return response()->json(['error' => 'Users exists in DB'], 400);
+            }
         }
         
         if ($request->rut) {

@@ -254,7 +254,8 @@ class simulationsController extends Controller
                             calc_secure_comp = $calc_secure_comp,
                             calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
-                            sub_total = $sub_total
+                            sub_total = $sub_total,
+                            desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");
                     }
 
@@ -271,7 +272,8 @@ class simulationsController extends Controller
                             calc_secure_comp = $calc_secure_comp,
                             calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
-                            sub_total = $sub_total
+                            sub_total = $sub_total,
+                            desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");
                     }
 
@@ -288,7 +290,8 @@ class simulationsController extends Controller
                             calc_secure_comp = $calc_secure_comp,
                             calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
-                            sub_total = $sub_total
+                            sub_total = $sub_total,
+                            desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");
                     }
 
@@ -309,7 +312,8 @@ class simulationsController extends Controller
                                     calc_secure_comp = $calc_secure_comp,
                                     calc_cobert_prevention = $calc_cobert_prevention,
                                     amount_payable = $total_copago,
-                                    sub_total = $sub_total
+                                    sub_total = $sub_total,
+                                    desc_corporation = $desc_corporation
                                     WHERE id = $id_simulation");
                             }
                             elseif ($age >= 65) {
@@ -325,7 +329,8 @@ class simulationsController extends Controller
                                     calc_secure_comp = $calc_secure_comp,
                                     calc_cobert_prevention = $calc_cobert_prevention,
                                     amount_payable = $total_copago,
-                                    sub_total = $sub_total
+                                    sub_total = $sub_total,
+                                    desc_corporation = $desc_corporation
                                     WHERE id = $id_simulation");
                             }
                     }
@@ -346,7 +351,8 @@ class simulationsController extends Controller
                                 calc_secure_comp = $calc_secure_comp,
                                 calc_cobert_prevention = $calc_cobert_prevention,
                                 amount_payable = $total_copago,
-                                sub_total = $sub_total
+                                sub_total = $sub_total,
+                                desc_corporation = $desc_corporation
                                 WHERE id = $id_simulation");
                         }
                     break;
@@ -366,7 +372,8 @@ class simulationsController extends Controller
                                 calc_secure_comp = $calc_secure_comp,
                                 calc_cobert_prevention = $calc_cobert_prevention,
                                 amount_payable = $total_copago,
-                                sub_total = $sub_total
+                                sub_total = $sub_total,
+                                desc_corporation = $desc_corporation
                                 WHERE id = $id_simulation");
                         }
                         break;
@@ -384,7 +391,8 @@ class simulationsController extends Controller
                             calc_secure_comp = $calc_secure_comp,
                             calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
-                            sub_total = $sub_total
+                            sub_total = $sub_total,
+                            desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");         
                         }
 
@@ -402,7 +410,8 @@ class simulationsController extends Controller
                             calc_secure_comp = $calc_secure_comp,
                             calc_cobert_prevention = $calc_cobert_prevention,
                             amount_payable = $total_copago,
-                            sub_total = $sub_total
+                            sub_total = $sub_total,
+                            desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");   
             
                         break;
