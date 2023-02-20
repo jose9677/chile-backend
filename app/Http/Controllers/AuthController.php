@@ -287,26 +287,25 @@ class AuthController extends Controller
 
     public function updateAps(Request $request)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(), [
-            'rut' => []
-        ]);
-
+        
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
-
+        
         $query = DB::update(
-        "UPDATE consultants.users AS a 
-            SET aps = true 
-            FROM
-            consultants.aps AS b 
-            WHERE
-            a.rut = b.rut"
+            "UPDATE consultants.users
+        SET aps = true 
+        WHERE rut in (SELECT rut FROM consultants.aps)"
         );
+        
+        //WE GET ALL RECORDS OF APS TABLE
+        $rut_aps = DB::table('aps')->select('rut')->get();
 
-        $ruts = $request->rut;
+        $ruts = [];
+        foreach ($rut_aps as $all_rut) {
+            $ruts[] = $all_rut->rut;
+        }
 
-        for ($i=0; $i < count($ruts) ; $i++) { 
-    
+        for ($i=0; $i <count($ruts) ; $i++) { 
+        
         $aps = DB::table('users')->where('rut', $ruts[$i])->value('aps');
 
         $prevention_detail = DB::table('preventions_details')
@@ -345,7 +344,6 @@ class AuthController extends Controller
         if ($prevention_type != 'FONASA' AND $aps == false) {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
         }
-
         }
     }
     
@@ -524,7 +522,7 @@ class AuthController extends Controller
             }
 
             if ($email_active == true AND empty($otp)) {
-                return response()->json(['error' => 'Users exists in DB'], 400);
+                return response()->json(['error' => 'User exists in DB'], 400);
             }
         }
         
