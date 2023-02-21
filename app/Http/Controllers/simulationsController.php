@@ -278,7 +278,7 @@ class simulationsController extends Controller
                     }
 
                     if ($prevention_detail != 'A' and $assurance == true and $aps == false) {
-                        $calc_secure_comp = ($sub_total * 30)/100;
+                        $calc_secure_comp = ($sub_total * 10)/100;
                         $calc_cobert_prevention = ($sub_total * $percent)/100;
                         $balance_2 = $sub_total - $calc_secure_comp;
                         $desc_corporation = ($balance_2 * 20)/100;

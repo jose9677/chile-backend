@@ -67,7 +67,7 @@ class documentsController extends Controller
         if ($data->save()) {
             
             $user = new AuthController();
-            $aux = $user->generateCodOtp();
+            $aux = $user->refreshOtp($request->rut); //CREO QUE VA A DAR ERROR... REVISAR
             
             User::query()->where('rut', $rut)->update(['otp' => $aux]);
 

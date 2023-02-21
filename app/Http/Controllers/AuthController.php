@@ -195,7 +195,7 @@ class AuthController extends Controller
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
             'employee' => false,
-            //'otp' => $this->generateCodOtp(),
+            'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
