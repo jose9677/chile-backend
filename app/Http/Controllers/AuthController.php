@@ -268,7 +268,7 @@ class AuthController extends Controller
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
         }
 
-        /*$mc = new MailController;
+        $mc = new MailController;
         $params = [
             'otp' => $user->otp
         ];
@@ -276,7 +276,7 @@ class AuthController extends Controller
         $ret = $mc->register($request->get('email'), $params);
         if($ret !== true){
             abort(500, $ret);
-        }*/
+        }
 
         //$send = new registroMailable($user->otp);
         //Mail::to($request->email)->send($send);

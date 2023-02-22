@@ -66,7 +66,7 @@ class documentsController extends Controller
         }
         if ($data->save()) {
             
-            $otp = DB::table('users')->where('rut', $rut)->value('otp');
+            /*$otp = DB::table('users')->where('rut', $rut)->value('otp');
 
             $mc = new MailController;
             $params = [
@@ -77,7 +77,7 @@ class documentsController extends Controller
             if($ret !== true){
             abort(500, $ret);
         
-            }
+            }*/
             return response()->json(['message' => 'Document uploaded successfull'],200);
         }else {
             $restart = new usersController();
