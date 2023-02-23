@@ -42,7 +42,7 @@ class AuthController extends Controller
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
-            'landline' => 'required',
+            //'landline' => 'required',
             'mobile_phone' => 'required',
             //'supervisor_rut' => 'required',
             //'profile_pic' => 'required',
@@ -73,8 +73,8 @@ class AuthController extends Controller
             'mobile_phone' => $request->get('mobile_phone'),
             'employee' => true,
             'supervisor_rut' => $request->get('supervisor_rut'),
-            'otp' => $this->generateCodOtp(),
-            'email_active' => false,
+            //'otp' => $this->generateCodOtp(),
+            'email_active' => true,
             //'profile_pic' => $request->get('profile_pic'),
             'id_rol' => $request->get('id_rol'), 
             'api_token' => Str::random(50),
@@ -96,7 +96,7 @@ class AuthController extends Controller
         //$send = new registroMailable($user->rut, $user->otp);
         //Mail::to($request->email)->send($send);
         
-        $api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
+        /*$api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
         $app_url = env('APP_URL');
 
         $mc = new MailController;
@@ -109,7 +109,7 @@ class AuthController extends Controller
         $ret = $mc->passwordEmployee($request->get('email'), $params);
         if($ret !== true){
             abort(500, $ret);
-        }
+        }*/
 
         //$send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
         //Mail::to($request->email)->send($send_2);
@@ -297,10 +297,13 @@ class AuthController extends Controller
         );
         
         //WE GET ALL RECORDS OF APS TABLE
-        $rut_aps = DB::table('aps')->select('rut')->get();
+        $rut_users = DB::table('users')->select('rut')->where('employee', false)->get();
+        
+        //ESTE METODO DA ERROR DE TIEMPO DE EJECUCION A LA HORA DE ACTUALIZAR TODOS LOS PORCENTAJES
+        //DE CADA RESULTADO DE LA TABLA USUARIOS, SI LE PONGO UN LIMITE DE 10 SI FUNCIONA....
 
         $ruts = [];
-        foreach ($rut_aps as $all_rut) {
+        foreach ($rut_users as $all_rut) {
             $ruts[] = $all_rut->rut;
         }
 
