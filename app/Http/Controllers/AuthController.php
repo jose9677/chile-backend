@@ -287,17 +287,17 @@ class AuthController extends Controller
 
     public function updateAps(Request $request)
     {
-        
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
         
         $query = DB::update(
             "UPDATE consultants.users
-        SET aps = true 
-        WHERE rut in (SELECT rut FROM consultants.aps)"
+             SET aps = true 
+             WHERE rut in (SELECT rut FROM consultants.aps)"
         );
         
-        //WE GET ALL RECORDS OF APS TABLE
+        //WE GET ALL RECORDS OF USERS TABLE
         $rut_users = DB::table('users')->select('rut')->where('employee', false)->get();
+        dd($rut_users);
         
         //ESTE METODO DA ERROR DE TIEMPO DE EJECUCION A LA HORA DE ACTUALIZAR TODOS LOS PORCENTAJES
         //DE CADA RESULTADO DE LA TABLA USUARIOS, SI LE PONGO UN LIMITE DE 10 SI FUNCIONA....
@@ -332,7 +332,8 @@ class AuthController extends Controller
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
         }
 
-        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
+        //ESTA CONDICION TENIA APS TRUE ANTERIORMENTE...
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
             $f_nac = DB::table('users')->where('rut', $ruts[$i])->value('f_nac');
             $age = Carbon::parse($f_nac)->age;
 
@@ -346,8 +347,10 @@ class AuthController extends Controller
 
         if ($prevention_type != 'FONASA' AND $aps == false) {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+            }
         }
-        }
+
+        return response()->json(['message' => 'All percents updated successfull'], 200);
     }
     
     public function login(Request $request)
