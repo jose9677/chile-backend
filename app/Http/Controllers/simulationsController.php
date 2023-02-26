@@ -55,7 +55,7 @@ class simulationsController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(), [
             //'percent_prevition' => 'required',
-            //'percent_sec_comp' => 'required',
+            'percent_sec_comp' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -242,7 +242,7 @@ class simulationsController extends Controller
         switch ($prevention_type) {
             case 'FONASA':
                     if ($prevention_detail == 'A' AND $assurance == true) {
-                        $calc_secure_comp = ($sub_total * 30)/100;
+                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
                         $calc_cobert_prevention = ($sub_total * $percent)/100;
                         $balance_2 = $sub_total - $calc_secure_comp;
                         $desc_corporation = ($balance_2 * 50)/100;
@@ -278,7 +278,7 @@ class simulationsController extends Controller
                     }
 
                     if ($prevention_detail != 'A' and $assurance == true and $aps == false) {
-                        $calc_secure_comp = ($sub_total * 10)/100;
+                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
                         $calc_cobert_prevention = ($sub_total * $percent)/100;
                         $balance_2 = $sub_total - $calc_secure_comp;
                         $desc_corporation = ($balance_2 * 20)/100;
@@ -300,7 +300,7 @@ class simulationsController extends Controller
                         $age = Carbon::parse($f_nac)->age;
             
                             if ($age < 65) {
-                            $calc_secure_comp = ($sub_total * 30)/100;
+                            $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
                             $calc_cobert_prevention = ($sub_total * $percent)/100;
                             $balance_2 = $sub_total - $calc_secure_comp;
                             $desc_corporation = ($balance_2 * 30)/100;
@@ -317,7 +317,7 @@ class simulationsController extends Controller
                                     WHERE id = $id_simulation");
                             }
                             elseif ($age >= 65) {
-                            $calc_secure_comp = ($sub_total * 30)/100;
+                            $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
                             $calc_cobert_prevention = ($sub_total * $percent)/100;
                             $balance_2 = $sub_total - $calc_secure_comp;
                             $desc_corporation = ($balance_2 * 40)/100;
@@ -380,7 +380,7 @@ class simulationsController extends Controller
                     
                     case 'NINGUNO':
                         if ($assurance == false AND $aps == false) {
-                        $calc_secure_comp = ($sub_total * 0)/100;
+                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
                         $calc_cobert_prevention = ($sub_total * 0)/100;
                         $desc_corporation = ($sub_total * 20)/100;
                         $total_copago = $sub_total - $desc_corporation;
