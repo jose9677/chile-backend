@@ -264,9 +264,9 @@ class simulationsController extends Controller
                             desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");*/
 
-                        $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
-                        $calc_secure_comp = ($calc_cobert_prevention * $percent_sec_comp)/100;
-                        $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                        $calc_cobert_prevention = 0; //Resta entre el costo y el aporte...
+                        $calc_secure_comp = ($sub_total * $percent_sec_comp)/100;
+                        $balance_2 = $sub_total - $calc_secure_comp; 
                         $desc_corporation = ($balance_2 * $percent)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
@@ -298,9 +298,9 @@ class simulationsController extends Controller
                             WHERE id = $id_simulation");*/
                         
                         //CALCULO FONAS A SIN SEGURO COMPLEMENTARIO...
-                        $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
-                        $calc_secure_comp = ($calc_cobert_prevention * 0)/100;
-                        $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                        $calc_cobert_prevention = 0; //Resta entre el costo y el aporte...
+                        $calc_secure_comp = 0;
+                        $balance_2 = $sub_total;
                         $desc_corporation = ($balance_2 * $percent)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
@@ -332,8 +332,8 @@ class simulationsController extends Controller
                             WHERE id = $id_simulation");*/
                         
                         $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
-                        $calc_secure_comp = ($calc_cobert_prevention * $percent_sec_comp)/100;
-                        $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                        $calc_secure_comp = ($sub_total_aporte * $percent_sec_comp)/100;
+                        $balance_2 = $sub_total_aporte - $calc_secure_comp; 
                         $desc_corporation = ($balance_2 * $percent)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
@@ -350,8 +350,8 @@ class simulationsController extends Controller
 
                     if ($prevention_detail != 'A' and $assurance == false and $aps == false) {
                         $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
-                        $calc_secure_comp = ($calc_cobert_prevention * 0)/100;
-                        $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                        $calc_secure_comp = 0;
+                        $balance_2 = $sub_total_aporte - $calc_secure_comp; 
                         $desc_corporation = ($balance_2 * $percent)/100;
                         $total_copago = $balance_2 - $desc_corporation;
 
@@ -387,8 +387,8 @@ class simulationsController extends Controller
                                     WHERE id = $id_simulation");*/
 
                             $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
-                            $calc_secure_comp = ($calc_cobert_prevention * $percent_sec_comp)/100;
-                            $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                            $calc_secure_comp = ($sub_total_aporte * $percent_sec_comp)/100;
+                            $balance_2 = $sub_total_aporte - $calc_secure_comp; 
                             $desc_corporation = ($balance_2 * $percent)/100;
                             $total_copago = $balance_2 - $desc_corporation;
             
@@ -419,8 +419,8 @@ class simulationsController extends Controller
                                     WHERE id = $id_simulation");*/
                         
                             $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
-                            $calc_secure_comp = ($calc_cobert_prevention * $percent_sec_comp)/100;
-                            $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                            $calc_secure_comp = ($sub_total_aporte * $percent_sec_comp)/100;
+                            $balance_2 = $sub_total_aporte - $calc_secure_comp; 
                             $desc_corporation = ($balance_2 * $percent)/100;
                             $total_copago = $balance_2 - $desc_corporation;
             
