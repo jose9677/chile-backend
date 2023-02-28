@@ -300,11 +300,11 @@ class simulationsController extends Controller
                         $data = DB::update(
                             "UPDATE consultants.simulations 
                             SET 
-                            sub_total = $sub_total,
                             calc_secure_comp = $calc_secure_comp,
                             calc_cobert_prevention = $calc_cobert_prevention,
-                            desc_corporation = $desc_corporation,
-                            amount_payable = $total_copago
+                            sub_total = $sub_total,
+                            amount_payable = $total_copago,
+                            desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");
                     }
 

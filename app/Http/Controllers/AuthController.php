@@ -288,6 +288,8 @@ class AuthController extends Controller
     public function updateAps(Request $request)
     {
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
+
+        $lower_letter = DB::update("UPDATE consultants.aps SET rut = lower(rut)");
         
         $query = DB::update(
             "UPDATE consultants.users
