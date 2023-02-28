@@ -57,6 +57,7 @@ class simulations_servicesController extends Controller
         else{
             $data->balance = DB::update("UPDATE consultants.simulations_services SET balance = ($cost - $contribution) * $request->quantity WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");
             $data->sub_total = DB::update("UPDATE consultants.simulations_services SET sub_total = ($cost * $request->quantity) WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");
+            $data->sub_total_aporte = DB::update("UPDATE consultants.simulations_services SET sub_total_aporte = ($contribution * $request->quantity) WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");
 
             //ANTES...
             //$data->sub_total = DB::update("UPDATE consultants.simulations_services SET sub_total = ($cost * $request->quantity) - balance WHERE id_simulation = $request->id_simulation AND id_service = $id_service AND quantity = $request->quantity");

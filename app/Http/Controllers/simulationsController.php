@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class simulationsController extends Controller
 {
@@ -209,10 +210,15 @@ class simulationsController extends Controller
     public function calcCopago($id_simulation)
     {
         $sum = DB::table('simulations_services')->where('id_simulation', $id_simulation)->sum('sub_total');
-        $balance = DB::table('simulations_services')->where('id_simulation', $id_simulation)->value('balance');
+        $sum_aporte = DB::table('simulations_services')->where('id_simulation', $id_simulation)->sum('sub_total_aporte');
         $calc = DB::update("UPDATE consultants.simulations SET sub_total = $sum WHERE id = $id_simulation");
+        $calc_aporte = DB::update("UPDATE consultants.simulations SET sub_total_aporte = $sum_aporte WHERE id = $id_simulation");
+        //$balance = DB::table('simulations_services')->where('id_simulation', $id_simulation)->value('balance');
 
         $sub_total = DB::table('simulations')->where('id', $id_simulation)->value('sub_total');
+        $sub_total_aporte = DB::table('simulations')->where('id', $id_simulation)->value('sub_total_aporte');
+    
+        $balance = $sub_total - $sub_total_aporte;
 
         //VALUES
         $id_request = DB::table('simulations')->where('id', $id_simulation)->value('id_request');

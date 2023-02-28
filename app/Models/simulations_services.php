@@ -18,7 +18,8 @@ class simulations_services extends Model
         'id_service',
         'quantity',
         'balance',
-        'sub_total'
+        'sub_total',
+        'sub_total_aporte'
     ];
 
     protected $hidden = [
