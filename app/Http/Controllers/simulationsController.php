@@ -341,6 +341,24 @@ class simulationsController extends Controller
                             WHERE id = $id_simulation");
                     }
 
+                    if ($prevention_detail != 'A' and $assurance == false and $aps == false) {
+                        $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
+                        $calc_secure_comp = ($calc_cobert_prevention * 0)/100;
+                        $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
+                        $desc_corporation = ($balance_2 * $percent)/100;
+                        $total_copago = $balance_2 - $desc_corporation;
+
+                        $data = DB::update(
+                            "UPDATE consultants.simulations 
+                            SET 
+                            sub_total = $sub_total,
+                            calc_secure_comp = $calc_secure_comp,
+                            calc_cobert_prevention = $calc_cobert_prevention,
+                            desc_corporation = $desc_corporation,
+                            amount_payable = $total_copago
+                            WHERE id = $id_simulation");
+                    }
+
                     if ($prevention_detail != 'A' and $assurance == true and $aps == true) {
                         $f_nac = DB::table('users')->where('rut', $rut)->value('f_nac');
                         $age = Carbon::parse($f_nac)->age;
