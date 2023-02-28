@@ -296,7 +296,8 @@ class simulationsController extends Controller
                             sub_total = $sub_total,
                             desc_corporation = $desc_corporation
                             WHERE id = $id_simulation");*/
-
+                        
+                        //CALCULO FONAS A SIN SEGURO COMPLEMENTARIO...
                         $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
                         $calc_secure_comp = ($calc_cobert_prevention * 0)/100;
                         $balance_2 = $calc_cobert_prevention - $calc_secure_comp; 
