@@ -24,6 +24,7 @@ class simulations extends Model
         'sub_total',
         'id_motive',
         'desc_corporation',
-        'sub_total_aporte'
+        'sub_total_aporte',
+        'percent'
     ];
 }

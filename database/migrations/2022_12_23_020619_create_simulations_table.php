@@ -26,6 +26,8 @@ class CreateSimulationsTable extends Migration
             $table->float('sub_total');
             $table->unsignedBigInteger('id_motive');
             $table->integer('desc_corporation');
+            $table->integer('sub_total_aporte');
+            $table->integer('percent');
             $table->timestamps();
 
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');
