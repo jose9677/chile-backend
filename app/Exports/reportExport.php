@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use Illuminate\Support\Facades\DB;
+use App\Models\reports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class reportExport implements FromCollection
@@ -10,10 +11,14 @@ class reportExport implements FromCollection
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
+
+    public function infoReport()
     {
-        $query = DB::select(
-            "SELECT 
+        reports::truncate();
+
+        $query = DB::insert(
+            "INSERT INTO consultants.reports 
+            (SELECT 
             b.created_at as Fecha_Inscripcion,
             a.rut as RUT,
             a.names as Nombres,
@@ -38,26 +43,26 @@ class reportExport implements FromCollection
             j.description as Remuneración,
             g.status as Estado_de_Solicitud,
             a.percent as Descuento_Corporacion
-            FROM users a 
-            left JOIN solicitudes b ON a.rut = b.rut_user
-            left JOIN preventions_details c ON b.id_prevention_type_detail = c.id
-            left JOIN preventions_types d ON d.id = c.id_prevention_type
-            left JOIN locations e ON e.id = b.id_location
-            left JOIN property_types f ON f.id = b.id_property_type
-            left JOIN status g ON g.id = b.id_status
-            left JOIN motives h ON h.id_motive = b.id_motive
-            left JOIN dedications i ON i.id_dedication = b.id_dedication
-            left JOIN remunerations j ON j.id_remuneration = b.id_remuneration
-            left JOIN sex k on k.id_sex = a.id_sex
+            FROM consultants.users a 
+            left JOIN consultants.solicitudes b ON a.rut = b.rut_user
+            left JOIN consultants.preventions_details c ON b.id_prevention_type_detail = c.id
+            left JOIN consultants.preventions_types d ON d.id = c.id_prevention_type
+            left JOIN consultants.locations e ON e.id = b.id_location
+            left JOIN consultants.property_types f ON f.id = b.id_property_type
+            left JOIN consultants.status g ON g.id = b.id_status
+            left JOIN consultants.motives h ON h.id_motive = b.id_motive
+            left JOIN consultants.dedications i ON i.id_dedication = b.id_dedication
+            left JOIN consultants.remunerations j ON j.id_remuneration = b.id_remuneration
+            left JOIN consultants.sex k on k.id_sex = a.id_sex
             WHERE a.employee = 'f' and a.otp is null
-            order by b.created_at asc"
-        );
+            order by b.created_at asc)"
+            );
+    }
+    
+    public function collection()
+    {
+        $this->infoReport();
 
-        /*$info = [];
-        foreach ($query as $all_info) {
-            $info[] = $all_info;
-        }
-
-        return $info;*/
+        return reports::all();
     }
 }
