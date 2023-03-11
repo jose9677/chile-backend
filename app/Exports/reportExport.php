@@ -5,8 +5,10 @@ namespace App\Exports;
 use Illuminate\Support\Facades\DB;
 use App\Models\reports;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class reportExport implements FromCollection
+class reportExport implements FromView
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -59,10 +61,19 @@ class reportExport implements FromCollection
             );
     }
     
-    public function collection()
+    /*public function collection()
     {
         $this->infoReport();
 
         return reports::all();
+    }*/
+
+    public function view(): View
+    {   
+        $this->infoReport();
+
+        return view('exportReport', [
+            'reports' => reports::all()
+        ]);
     }
 }

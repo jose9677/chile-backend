@@ -534,4 +534,23 @@ class solicitudesController extends Controller
                 'data_complete' => $query
             ]);
      }
+
+     public function guardCard($rut)
+     {
+            $info = DB::select(
+                "SELECT 
+                a.rut_user,
+                d.names,
+                d.lastname,
+                c.prevention_type,
+                b.prevention_detail
+                FROM consultants.solicitudes as a 
+                JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
+                JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
+                JOIN consultants.users as d ON a.rut_user = d.rut
+                WHERE a.rut_user = '$rut'
+                ");
+
+                return response()->json($info);
+     }
 }
