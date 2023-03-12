@@ -55,7 +55,7 @@ class integramedicaExport implements FromView
     {   
         $this->infoReport();
 
-        return view('exportReport', [
+        return view('exportIntegramedica', [
             'integramedica' => integramedica::all()
         ]);
     }
