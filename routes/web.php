@@ -128,6 +128,7 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
 //REPORTES EXCEL
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
 Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
+Route::get('export-integramedica', [App\Http\Controllers\exportController::class, 'exportIntegramedica']);
 
 
 
