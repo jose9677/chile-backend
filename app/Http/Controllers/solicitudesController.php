@@ -535,7 +535,7 @@ class solicitudesController extends Controller
             ]);
      }
 
-     public function guardCard($rut)
+     public function guardCard($id_simulation)
      {
             $info = DB::select(
                 "SELECT 
@@ -548,7 +548,8 @@ class solicitudesController extends Controller
                 JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
                 JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
                 JOIN consultants.users as d ON a.rut_user = d.rut
-                WHERE a.rut_user = '$rut'
+                JOIN consultants.simulations as e ON a.id = e.id_request
+                WHERE e.id = $id_simulation
                 ");
 
                 return response()->json($info);
