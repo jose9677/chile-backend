@@ -57,7 +57,7 @@ class reportExport implements FromView
             left JOIN consultants.dedications i ON i.id_dedication = b.id_dedication
             left JOIN consultants.remunerations j ON j.id_remuneration = b.id_remuneration
             left JOIN consultants.sex k on k.id_sex = a.id_sex
-            WHERE a.employee = 'f' and a.otp is null
+            WHERE (a.employee = 'f' and a.otp is null) or (a.employee = 't' and b.id is not null)
             order by b.created_at asc)"
             );
     }
