@@ -25,7 +25,7 @@ class reportExport implements FromView
             a.rut as RUT,
             a.names as Nombres,
             a.lastname as Apellidos,
-            a.f_nac as Fecha_de_Nac,
+            to_char(date(a.f_nac), 'dd/mm/yyyy') as Fecha_de_Nac,
             k.description as Sexo,
             EXTRACT(YEAR from AGE(LOCALTIMESTAMP,a.f_nac)) as Edad,
             a.email as Email,
