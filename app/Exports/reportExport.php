@@ -22,13 +22,13 @@ class reportExport implements FromView
             "INSERT INTO consultants.reports 
             (SELECT 
             b.created_at as Fecha_Inscripcion,
-            a.rut as RUT,
-            a.names as Nombres,
-            a.lastname as Apellidos,
+            upper(a.rut) as RUT,
+            upper(a.names) as Nombres,
+            upper(a.lastname) as Apellidos,
             to_char(date(a.f_nac), 'dd/mm/yyyy') as Fecha_de_Nac,
             k.description as Sexo,
             EXTRACT(YEAR from AGE(LOCALTIMESTAMP,a.f_nac)) as Edad,
-            a.email as Email,
+            lower(a.email) as Email,
             a.landline as Tel_Fijo,
             a.mobile_phone as Tel_Móvil,
             e.street as Calle,
