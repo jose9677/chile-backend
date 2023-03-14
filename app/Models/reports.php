@@ -18,6 +18,7 @@ class reports extends Model
         'apellidos',
         'fecha_de_nac',
         'sexo',
+        'edad',
         'email',
         'tel_fijo',
         'tel_móvil',

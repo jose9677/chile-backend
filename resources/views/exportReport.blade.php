@@ -1,30 +1,31 @@
 <table>
     <thead>
         <tr>
-        <th>fecha_inscripcion</th>
-        <th>rut</th>
-        <th>nombres</th>
-        <th>apellidos</th>
-        <th>fecha_de_nac</th>
-        <th>sexo</th>
-        <th>email</th>
-        <th>tel_fijo</th>
-        <th>tel_móvil</th>
-        <th>calle</th>
-        <th>número_calle</th>
-        <th>casa_dpto_ofic</th>
-        <th>número_casa_dpto_ofic</th>
-        <th>aps</th>
-        <th>nro_solicitud</th>
-        <th>tipo_previsión</th>
-        <th>detalle_de_previsión</th>
-        <th>seguro_complementario</th>
-        <th>cuidador</th>
-        <th>motivo</th>
-        <th>dedicación</th>
-        <th>remuneración</th>
-        <th>estado_de_solicitud</th>
-        <th>descuento_corporacion</th>
+        <th>Fecha Inscripcion</th>
+        <th>RUT</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Fecha de Nac</th>
+        <th>Sexo</th>
+        <th>Edad</th>
+        <th>Email</th>
+        <th>Tel. fijo</th>
+        <th>Tel. Móvil</th>
+        <th>Calle</th>
+        <th>Número Calle</th>
+        <th>Casa/Dpto/Ofic</th>
+        <th>Número Casa/Dpto/Ofic</th>
+        <th>APS</th>
+        <th>Nro. Solicitud</th>
+        <th>Tipo Previsión</th>
+        <th>Detalle de Previsión</th>
+        <th>Seguro Complementario</th>
+        <th>Cuidador</th>
+        <th>Motivo</th>
+        <th>Dedicación</th>
+        <th>Remuneración</th>
+        <th>Estado de Solicitud</th>
+        <th>Descuento Corporacion</th>
         </tr>
     </thead>
 
@@ -37,6 +38,7 @@
         <td>{{ $report->apellidos }}</td>
         <td>{{ $report->fecha_de_nac }}</td>
         <td>{{ $report->sexo }}</td>
+        <td>{{ $report->edad }}</td>
         <td>{{ $report->email }}</td>
         <td>{{ $report->tel_fijo }}</td>
         <td>{{ $report->tel_móvil }}</td>

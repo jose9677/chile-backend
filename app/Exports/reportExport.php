@@ -27,6 +27,7 @@ class reportExport implements FromView
             a.lastname as Apellidos,
             a.f_nac as Fecha_de_Nac,
             k.description as Sexo,
+            EXTRACT(YEAR from AGE(LOCALTIMESTAMP,a.f_nac)) as Edad,
             a.email as Email,
             a.landline as Tel_Fijo,
             a.mobile_phone as Tel_Móvil,

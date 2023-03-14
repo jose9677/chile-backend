@@ -17,11 +17,15 @@ class exportController extends Controller
 
     public function exportReport()
     {
-        return Excel::download(new reportExport, 'report.xlsx');
+        $date = date('d-m-Y');
+
+        return Excel::download(new reportExport, 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'.xlsx');
     }
 
     public function exportIntegramedica()
     {
-        return Excel::download(new integramedicaExport, 'integramedica.xlsx');
+        $date = date('d-m-Y');
+
+        return Excel::download(new integramedicaExport, 'REPORTE-INTEGRAMEDICA - '.$date.'.xlsx');
     }
 }

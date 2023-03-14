@@ -1,19 +1,19 @@
 <table>
     <thead>
         <tr>
-        <th>codigo_entidad</th>
-        <th>rut</th>
-        <th>nombres</th>
-        <th>apellidos</th>
-        <th>fecha_nacimiento</th>
-        <th>sexo</th>
-        <th>relacion</th>
-        <th>fecha_ingreso</th>
-        <th>fecha_inicio_vigencia</th>
-        <th>fecha_término_vigencia</th>
-        <th>codigo_plan</th>
-        <th>rut_titular</th>
-        <th>tipo_evento</th>
+        <th>Código Entidad</th>
+        <th>Rut</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Fecha Nacimiento</th>
+        <th>Sexo</th>
+        <th>Relación</th>
+        <th>Fecha Ingreso</th>
+        <th>Fecha Inicio Vigencia</th>
+        <th>Fecha Término Vigencia</th>
+        <th>Código Plan</th>
+        <th>Rut Titular</th>
+        <th>Tipo Evento</th>
         </tr>
     </thead>
 
