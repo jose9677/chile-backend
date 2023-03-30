@@ -21,7 +21,7 @@ class integramedicaExport implements FromView
         $query = DB::insert(
             "INSERT INTO consultants.integramedica
             (SELECT
-            '262' as Codigo_Entidad,
+            '202' as Codigo_Entidad,
             upper(a.rut) as Rut,
             upper(a.names) as Nombres,
             upper(a.lastname) as Apellidos,
@@ -29,16 +29,16 @@ class integramedicaExport implements FromView
             k.description as Sexo,
             0 as Relacion,
             to_char(date(b.created_at), 'dd/mm/yyyy') as Fecha_Ingreso,
-            null as Fecha_Inicio_Vigencia,
-            '31/12/2023' as Fecha_Término_Vigencia,
-            900001591 as Codigo_Plan,
+            '01/04/2023' as Fecha_Inicio_Vigencia,
+            '31/12/2023' as Fecha_Termino_Vigencia,
+            CASE WHEN a.percent = 50 THEN '900001591 - FA' WHEN a.percent = 40 THEN '900001591 - AM' WHEN a.percent = 30 THEN '900001591 - CI' ELSE '900001591 - SI' END AS Codigo_Plan,
             null as Rut_Titular,
             null as Tipo_Evento
             FROM consultants.users a 
             left JOIN consultants.solicitudes b ON a.rut = b.rut_user
             left JOIN consultants.sex k on k.id_sex = a.id_sex
             WHERE b.id_status = 6 and ((a.employee = 'f' and a.otp is null) or (a.employee = 't' and b.id is not null))
-            order by b.created_at asc 
+            order by b.created_at asc
             )");
 
             return response()->json();

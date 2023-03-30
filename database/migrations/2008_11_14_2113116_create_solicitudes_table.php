@@ -39,6 +39,7 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('id_motive')->nullable();
             $table->unsignedBigInteger('id_dedication')->nullable();
             $table->unsignedBigInteger('id_remuneration')->nullable();
+            $table->date('admission_date');
 
             $table->timestamps();
 

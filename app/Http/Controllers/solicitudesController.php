@@ -98,7 +98,8 @@ class solicitudesController extends Controller
             'carer' => 'required',
             'motive' => 'required',
             'dedication' => 'required',
-            'remuneration' => 'required'
+            'remuneration' => 'required',
+            'admission_date' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -126,6 +127,7 @@ class solicitudesController extends Controller
         $data->motive = $request->motive;
         $data->dedication = $request->dedication;
         $data->remuneration = $request->remuneration;
+        $data->admission_date = $request->admission_date;
 
         try {
             $data->save();
@@ -209,17 +211,22 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $mc = new MailController;
+            try {    
+                $mc = new MailController;
 
-            $params = [
-                'names' => $names,
-                'lastname' => $lastname,
-                'id' => $id
-            ];
-    
-            $ret = $mc->reprogramRequestDate($email, $id, $params);
-            if($ret !== true){
-                abort(500, $ret);
+                $params = [
+                    'names' => $names,
+                    'lastname' => $lastname,
+                    'id' => $id
+                ];
+        
+                $ret = $mc->reprogramRequestDate($email, $id, $params);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new reprogramarCitaMailable($names, $lastname, $id);
@@ -254,18 +261,23 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut_employee)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $mc = new MailController;
+            try {    
+                $mc = new MailController;
 
-            $params = [
-                'id' => $id,
-                'names' => $names,
-                'lastname' => $lastname,
-                'visit_date' => $request->visit_date
-            ];
-    
-            $ret = $mc->visitDate($email, $id, $params);
-            if($ret !== true){
-                abort(500, $ret);
+                $params = [
+                    'id' => $id,
+                    'names' => $names,
+                    'lastname' => $lastname,
+                    'visit_date' => $request->visit_date
+                ];
+        
+                $ret = $mc->visitDate($email, $id, $params);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new asignarSolicitudMailable($id, $names, $lastname, $request->visit_date);
@@ -283,17 +295,22 @@ class solicitudesController extends Controller
             $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $mc = new MailController;
+            try {
+                $mc = new MailController;
 
-            $params = [
-                'id' => $id,
-                'names' => $names,
-                'lastname' => $lastname
-            ];
-    
-            $ret = $mc->confirmVisit($email, $id, $params);
-            if($ret !== true){
-                abort(500, $ret);
+                $params = [
+                    'id' => $id,
+                    'names' => $names,
+                    'lastname' => $lastname
+                ];
+        
+                $ret = $mc->confirmVisit($email, $id, $params);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new confirmarCitaMailable($names, $lastname, $id);
@@ -342,7 +359,8 @@ class solicitudesController extends Controller
 
         $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-        $mc = new MailController;
+        try {
+            $mc = new MailController;
 
             $params = [
                 'id' => $id,
@@ -354,6 +372,10 @@ class solicitudesController extends Controller
             if($ret !== true){
                 abort(500, $ret);
             }
+
+        } catch (\Throwable $th) {
+            return response()->json(['Error' => 'Failed to send Email'], 400);
+        }
 
         //$send = new asignarVisitadorMailable($user->names, $user->lastname ,$id);
         //Mail::to($email)->send($send);
@@ -431,15 +453,20 @@ class solicitudesController extends Controller
             $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
             $email = DB::table('users')->where('rut', $rut)->value('email');
 
-            $mc = new MailController;
+            try {    
+                $mc = new MailController;
 
-            $params = [
-                'id' => $id
-            ];
-    
-            $ret = $mc->rejectRequest($email, $id, $params);
-            if($ret !== true){
-                abort(500, $ret);
+                $params = [
+                    'id' => $id
+                ];
+        
+                $ret = $mc->rejectRequest($email, $id, $params);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+                
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new rechazarSolicitudMailable($id);
@@ -453,7 +480,8 @@ class solicitudesController extends Controller
         $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
         $email = DB::table('users')->where('rut', $rut)->value('email');
 
-        $mc = new MailController;
+        try {
+            $mc = new MailController;
 
             $params = [
                 'id' => $id
@@ -463,9 +491,9 @@ class solicitudesController extends Controller
             if($ret !== true){
                 abort(500, $ret);
             }
-
-        //$send = new aprobarSolicitudMailable($id);
-        //Mail::to($email)->send($send);
+        } catch (\Throwable $th) {
+            return response()->json(['Error' => 'Failed to send Email'], 400);
+        }
 
         return response()->json(['message' => 'Date '.$id. ' has been approved'], 200);
     }

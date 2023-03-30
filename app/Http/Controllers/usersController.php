@@ -69,7 +69,7 @@ class usersController extends Controller
    {
     Log::info($request);
     $validator = Validator::make($request->all(), [
-        'rut' => 'required',
+        //'rut' => 'required',
         'names'  => 'required|string|max:255',
         'lastname' => 'required|string|max:255',
         'f_nac' => 'required',
@@ -115,7 +115,7 @@ class usersController extends Controller
    {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-            'rut' => 'required',
+            //'rut' => 'required',
             'names'  => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
@@ -217,16 +217,21 @@ class usersController extends Controller
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
             $app_url = env('APP_URL');
             
-            $mc = new MailController;
+            try {    
+                $mc = new MailController;
 
-            $params = [
-                'api_token' => $data->api_token,
-                'app_url' => $app_url
-            ];
-    
-            $ret = $mc->validate_User($email, $params);
-            if($ret !== true){
-                abort(500, $ret);
+                $params = [
+                    'api_token' => $data->api_token,
+                    'app_url' => $app_url
+                ];
+        
+                $ret = $mc->validate_User($email, $params);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new validarMailable($data->api_token, $app_url);
@@ -292,11 +297,16 @@ class usersController extends Controller
 
             User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
             
-            $mc = new MailController;
-    
-            $ret = $mc->newPassword($email);
-            if($ret !== true){
-                abort(500, $ret);
+            try {    
+                $mc = new MailController;
+        
+                $ret = $mc->newPassword($email);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+                
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new cambiarclaveMailable();

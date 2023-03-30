@@ -33,7 +33,8 @@ class solicitudes extends Model
         'carer',
         'id_motive',
         'id_dedication',
-        'id_remuneration'
+        'id_remuneration',
+        'admission date'
     ];
 
     protected $hidden = [

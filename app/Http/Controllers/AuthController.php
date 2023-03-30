@@ -63,9 +63,9 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'rut' => $request->get('rut'),
-            'names' => $request->get('names'),
-            'lastname' => $request->get('lastname'),
+            'rut' => Str::upper($request->get('rut')),
+            'names' => Str::upper($request->get('names')),
+            'lastname' => Str::upper($request->get('lastname')),
             'f_nac' => $request->get('f_nac'),
             'email' => $request->get('email'),
             'password' => Hash::make($this->employeePassword()),
@@ -171,6 +171,7 @@ class AuthController extends Controller
             'id_sex' => 'required',
             'id_prevention_type_detail' => 'required',
             'carer' => 'required',
+            'admission_date' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -186,9 +187,9 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'rut' => $request->get('rut'),
-            'names' => $request->get('names'),
-            'lastname' => $request->get('lastname'),
+            'rut' => Str::upper($request->get('rut')),
+            'names' => Str::upper($request->get('names')),
+            'lastname' => Str::upper($request->get('lastname')),
             'f_nac' => $request->get('f_nac'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
@@ -204,7 +205,7 @@ class AuthController extends Controller
         ]);
 
         $sol = new solicitudes();
-        $sol->rut_user = $request->rut;
+        $sol->rut_user = Str::upper($request->rut);
         $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
         $sol->assurance = $request->get('assurance');
         $sol->id_location = $request->get('id_location');
@@ -223,6 +224,7 @@ class AuthController extends Controller
         $sol->id_motive = $request->get('id_motive');
         $sol->id_dedication = $request->get('id_dedication');
         $sol->id_remuneration = $request->get('id_remuneration');
+        $sol->admission_date = $request->get('admission_date');
 
         if ($request->terms_condition == false) {
             return response()->json(['error' => 'User must to accept terms condition'], 400);
@@ -268,14 +270,19 @@ class AuthController extends Controller
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
         }
 
-        $mc = new MailController;
-        $params = [
-            'otp' => $user->otp
-        ];
+        try {    
+            $mc = new MailController;
+            $params = [
+                'otp' => $user->otp
+            ];
 
-        $ret = $mc->register($request->get('email'), $params);
-        if($ret !== true){
-            abort(500, $ret);
+            $ret = $mc->register($request->get('email'), $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['Error' => 'Failed to send Email'], 400);
         }
 
         //$send = new registroMailable($user->otp);
@@ -447,14 +454,20 @@ class AuthController extends Controller
             $query = DB::update("UPDATE consultants.users SET otp = '$new_otp' WHERE rut = '$request->rut'");
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-            $mc = new MailController;
-            $params = [
-                'otp' => $new_otp
-            ];
-    
-            $ret = $mc->newOTP($new_otp ,$email, $params);
-            if($ret !== true){
-                abort(500, $ret);
+            
+            try {
+                $mc = new MailController;
+                $params = [
+                    'otp' => $new_otp
+                ];
+        
+                $ret = $mc->newOTP($new_otp ,$email, $params);
+                if($ret !== true){
+                    abort(500, $ret);
+                }    
+
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
 
             //$send = new reenviarOTPMailable($new_otp);
@@ -489,13 +502,18 @@ class AuthController extends Controller
             $email = DB::table('users')->where('otp', $request->input('otp'))->value('email');
             User::query()->where('otp', $request->input('otp'))->update(['otp' => null, 'email_active' => true]);
             
-            $mc = new MailController;
-    
-            $ret = $mc->registerNeighbor($email);
-            if($ret !== true){
-                abort(500, $ret);
+            try {    
+                $mc = new MailController;
+        
+                $ret = $mc->registerNeighbor($email);
+                if($ret !== true){
+                    abort(500, $ret);
+                }
+                
+            } catch (\Throwable $th) {
+                return response()->json(['Error' => 'Failed to send Email'], 400);
             }
-            
+
             //$send = new registroVecinoExitoso();
             //Mail::to($email)->send($send);
 
