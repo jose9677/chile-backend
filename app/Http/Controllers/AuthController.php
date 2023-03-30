@@ -171,7 +171,7 @@ class AuthController extends Controller
             'id_sex' => 'required',
             'id_prevention_type_detail' => 'required',
             'carer' => 'required',
-            'admission_date' => 'required'
+            // 'admission_date' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -224,7 +224,7 @@ class AuthController extends Controller
         $sol->id_motive = $request->get('id_motive');
         $sol->id_dedication = $request->get('id_dedication');
         $sol->id_remuneration = $request->get('id_remuneration');
-        $sol->admission_date = $request->get('admission_date');
+        // $sol->admission_date = $request->get('admission_date');
 
         if ($request->terms_condition == false) {
             return response()->json(['error' => 'User must to accept terms condition'], 400);

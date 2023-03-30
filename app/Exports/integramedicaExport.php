@@ -29,7 +29,7 @@ class integramedicaExport implements FromView
             k.description as Sexo,
             0 as Relacion,
             to_char(date(b.created_at), 'dd/mm/yyyy') as Fecha_Ingreso,
-            '01/04/2023' as Fecha_Inicio_Vigencia,
+            null as Fecha_Inicio_Vigencia,
             '31/12/2023' as Fecha_Termino_Vigencia,
             CASE WHEN a.percent = 50 THEN '900001591 - FA' WHEN a.percent = 40 THEN '900001591 - AM' WHEN a.percent = 30 THEN '900001591 - CI' ELSE '900001591 - SI' END AS Codigo_Plan,
             null as Rut_Titular,
