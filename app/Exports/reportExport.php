@@ -21,7 +21,7 @@ class reportExport implements FromView
         $query = DB::insert(
             "INSERT INTO consultants.reports 
             (SELECT 
-            b.created_at as Fecha_Inscripcion,
+            to_char(b.created_at ::timestamp, 'DD/MM/YYYY HH12:MI:SS PM') as Fecha_Inscripcion,
             upper(a.rut) as RUT,
             upper(a.names) as Nombres,
             upper(a.lastname) as Apellidos,

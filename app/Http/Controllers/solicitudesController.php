@@ -551,7 +551,8 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.property_types as d ON a.id_property_type = d.id
             LEFT JOIN consultants.users as e ON e.rut = a.rut_employee
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
-            LEFT JOIN consultants.status as g ON a.id_status = g.id"
+            LEFT JOIN consultants.status as g ON a.id_status = g.id
+            order by a.id ASC"
          );
  
          return response()->json(
