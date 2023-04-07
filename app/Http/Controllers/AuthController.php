@@ -200,7 +200,7 @@ class AuthController extends Controller
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
-            'aps' => $request->get('aps'),
+            //'aps' => false,
             'id_sex' => $request->get('id_sex')
         ]);
 
@@ -231,6 +231,15 @@ class AuthController extends Controller
         }
         elseif ($request->terms_condition == true) {
             $sol->save();
+        }
+
+        $verify_rut = DB::table('aps')->where('rut', $request->rut)->value('rut');
+        $id_sol = DB::table('solicitudes')->where('rut_user', $request->rut)->value('id');
+        
+        if ($verify_rut) {
+            User::query()->where('rut', $request->rut)->update(['aps' => true]);
+        }elseif (!$verify_rut) {
+            User::query()->where('rut', $request->rut)->update(['aps' => false]);
         }
 
         $prevention_detail = DB::table('preventions_details')
@@ -289,7 +298,7 @@ class AuthController extends Controller
         //Mail::to($request->email)->send($send);
 
         $token = JWTAuth::fromUser($user);
-        return response()->json(compact('user', 'sol', 'token'), 201); 
+        return response()->json(compact('user', $id_sol, 'sol', 'token'), 201); 
     }
 
     public function updateAps(Request $request)

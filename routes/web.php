@@ -94,7 +94,7 @@ Route::put('/desactive-rol/{id}', [App\Http\Controllers\rolesController::class, 
 Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
 Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 
-Route::post('/file/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
+Route::post('/file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
 
 //SIMULATIONS_CONTROLLER
 Route::get('/details-simulations', [App\Http\Controllers\simulationsController::class, 'detailsSimulation']);

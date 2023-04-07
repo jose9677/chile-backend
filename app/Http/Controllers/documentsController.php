@@ -38,13 +38,13 @@ class documentsController extends Controller
         
     }
 
-    public function file(Request $request, $id_document_type)
+    public function file(Request $request, $rut, $id_document_type)
     {
         $data = new documents();
         
-        $query = solicitudes::max('id');
+        $query = solicitudes::where('rut_user', $rut)->max('id');
         $id_doc = documents::max('id') + 1;
-        $rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
+        //$rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
         
         $email = DB::table('users')->where('rut', $rut)->value('email');
 
@@ -78,7 +78,7 @@ class documentsController extends Controller
             abort(500, $ret);
         
             }*/
-            return response()->json(['message' => 'Document uploaded successfull'],200);
+            return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
         }else {
             $restart = new usersController();
             $restart->restartUser($rut);
