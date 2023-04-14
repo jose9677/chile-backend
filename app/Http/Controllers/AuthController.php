@@ -238,7 +238,7 @@ class AuthController extends Controller
         
         if ($verify_rut) {
             User::query()->where('rut', $request->rut)->update(['aps' => true]);
-        }elseif (!$verify_rut) {
+        }elseif ($verify_rut == null) {
             User::query()->where('rut', $request->rut)->update(['aps' => false]);
         }
 
@@ -255,15 +255,17 @@ class AuthController extends Controller
         ->where('solicitudes.rut_user', $request->rut)
         ->value('prevention_type');
 
+        $aps = Db::table('users')->where('rut', $request->rut)->value('aps');
+
         if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 50]);
         }
 
-        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $request->aps == false) {
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
         }
 
-        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $request->aps == true) {
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
             $f_nac = DB::table('users')->where('rut', $request->rut)->value('f_nac');
             $age = Carbon::parse($f_nac)->age;
 
@@ -275,7 +277,7 @@ class AuthController extends Controller
             }
         }
 
-        if ($prevention_type != 'FONASA' AND $request->aps == false) {
+        if ($prevention_type != 'FONASA' AND $aps == false) {
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
         }
 
@@ -292,7 +294,7 @@ class AuthController extends Controller
 
         } catch (\Throwable $th) {
             return response()->json(['Error' => 'Failed to send Email'], 400);
-        }
+        } 
 
         //$send = new registroMailable($user->otp);
         //Mail::to($request->email)->send($send);

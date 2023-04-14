@@ -162,7 +162,7 @@ class user_requestController extends Controller
             LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
             LEFT JOIN consultants.documents as i ON i.id_request = a.id
             LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
-            WHERE a.id = $id"
+            WHERE a.id = $id AND i.active = true"
         );
 
         return response()->json($query);

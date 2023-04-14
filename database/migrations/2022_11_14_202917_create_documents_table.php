@@ -19,6 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->unsignedBigInteger('id_document_type');
             $table->string('document_path');
             $table->string('document_ext');
+            $table->boolean('active');
             $table->timestamps();
 
             $table->foreign('id_request')->references('id')->on('solicitudes')->onUpdate('cascade');

@@ -42,7 +42,7 @@ class documentsController extends Controller
     {
         $data = new documents();
         
-        $query = solicitudes::where('rut_user', $rut)->max('id');
+        $query = solicitudes::where('rut_user', $rut)->max('id'); //ID ULTIMA SOLICITUD DEL USUARIO....
         $id_doc = documents::max('id') + 1;
         //$rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
         
@@ -78,6 +78,9 @@ class documentsController extends Controller
             abort(500, $ret);
         
             }*/
+
+            documents::query()->where('id', $id_doc)->update(['active' => true]);
+
             return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
         }else {
             $restart = new usersController();
