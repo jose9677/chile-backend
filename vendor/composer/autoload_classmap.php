@@ -16,6 +16,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\MailController' => $baseDir . '/app/Http/Controllers/MailController.php',
     'App\\Http\\Controllers\\OauthController' => $baseDir . '/app/Http/Controllers/OauthController.php',
+    'App\\Http\\Controllers\\apsController' => $baseDir . '/app/Http/Controllers/apsController.php',
     'App\\Http\\Controllers\\categoriesController' => $baseDir . '/app/Http/Controllers/categoriesController.php',
     'App\\Http\\Controllers\\certificatesController' => $baseDir . '/app/Http/Controllers/certificatesController.php',
     'App\\Http\\Controllers\\costsController' => $baseDir . '/app/Http/Controllers/costsController.php',

@@ -603,6 +603,7 @@ class ComposerStaticInit49ca95daedf37454c5a78a4587b7fe31
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\MailController' => __DIR__ . '/../..' . '/app/Http/Controllers/MailController.php',
         'App\\Http\\Controllers\\OauthController' => __DIR__ . '/../..' . '/app/Http/Controllers/OauthController.php',
+        'App\\Http\\Controllers\\apsController' => __DIR__ . '/../..' . '/app/Http/Controllers/apsController.php',
         'App\\Http\\Controllers\\categoriesController' => __DIR__ . '/../..' . '/app/Http/Controllers/categoriesController.php',
         'App\\Http\\Controllers\\certificatesController' => __DIR__ . '/../..' . '/app/Http/Controllers/certificatesController.php',
         'App\\Http\\Controllers\\costsController' => __DIR__ . '/../..' . '/app/Http/Controllers/costsController.php',

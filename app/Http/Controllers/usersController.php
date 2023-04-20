@@ -171,6 +171,28 @@ class usersController extends Controller
         return response()->json(['message' => 'User '.$data->rut.' was deleted successfull'], 200);
    }
 
+   public function consultEmail(Request $request)
+   {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'email' => 'required|string|email|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = User::where([
+            'email' => $request['email']
+        ])->get();
+
+        if ($data->count()) {
+            return response()->json(['error' => 'Email exist into DB'], 400);
+        }
+
+        return response()->json(['message' => 'Email does not registered'], 200);
+   }
+
    public function validateUser(Request $request)
    {
         Log::info($request);

@@ -10,6 +10,9 @@ class aps extends Model
     use HasFactory;
 
     protected $table = 'aps';
+    protected $primaryKey = 'rut';
+    public $incrementing = false;
+    protected $keyType = 'string';
     
     protected $fillable = [
         'rut'

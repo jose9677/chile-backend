@@ -130,5 +130,10 @@ Route::get('export-users', [App\Http\Controllers\exportController::class, 'expor
 Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
 Route::get('export-integramedica', [App\Http\Controllers\exportController::class, 'exportIntegramedica']);
 
+//IMPORTAR REPORTES 
 
+Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);
+Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import']);
+//WOTS
+Route::get('consult-email', [App\Http\Controllers\usersController::class, 'consultEmail']);
 
