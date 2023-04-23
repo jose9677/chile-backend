@@ -1,0 +1,385 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\cancel_motives;
+use App\Models\dedications;
+use App\Models\locations;
+use App\Models\motives;
+use App\Models\preventions_details;
+use App\Models\preventions_types;
+use App\Models\property_types;
+use App\Models\remunerations;
+use App\Models\sex;
+use App\Models\solicitudes;
+use App\Models\status;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
+use Malahierba\ChileRut\ChileRut;
+use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
+use Malahierba\ChileRut\Rules\ValidChileanRut;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class wotsController extends Controller
+{
+    
+    public function validateRut(Request $request)
+    {
+        $request->validate([
+            'rut' => ['required', 'string', new ValidChileanRut(new ChileRut)],
+        ]);
+
+        $user = User::where([
+            'rut' => Str::upper($request['rut']) 
+        ])->get();
+
+        if ($user->count()) {
+            
+            $email_active = DB::table('users')->where('rut', $request->rut)->value('email_active');
+            $otp = DB::table('users')->where('rut', $request->rut)->value('otp');
+            
+            if ($email_active == false AND !empty($otp)) {
+                $restart = new usersController();
+                $restart->restartUser($request->rut);        
+                
+                return response()->json([
+                    'error' => 'User registered incompleted in DB '], 400);
+            }
+
+            if ($email_active == true AND empty($otp)) {
+                return response()->json(['error' => 'User exists in DB'], 400);
+            }
+        }
+        
+        if ($request->rut) {
+            return response()->json(['message' => $request->rut.' Is Valid'], 200);
+        }else {
+            return response()->json(['error' => $request->rut.' Is not Valid'], 400);
+        }
+    }
+
+    public function registerEmployee(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => 'required',
+            'names'  => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'f_nac' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            //'landline' => 'required',
+            'mobile_phone' => 'required',
+            //'supervisor_rut' => 'required',
+            //'profile_pic' => 'required',
+            'id_rol' => 'required',
+            'id_sex' => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if ($user->count()) {
+            return response()->json(['error' => 'User exists in DB'], 400);
+        }
+
+        $user = User::create([
+            'rut' => Str::upper($request->get('rut')),
+            'names' => Str::upper($request->get('names')),
+            'lastname' => Str::upper($request->get('lastname')),
+            'f_nac' => $request->get('f_nac'),
+            'email' => Str::lower($request->get('email')),
+            'password' => Hash::make($this->employeePassword()),
+            'landline' => $request->get('landline'),
+            'mobile_phone' => $request->get('mobile_phone'),
+            'employee' => true,
+            'supervisor_rut' => $request->get('supervisor_rut'),
+            //'otp' => $this->generateCodOtp(),
+            'email_active' => true,
+            //'profile_pic' => $request->get('profile_pic'),
+            'id_rol' => $request->get('id_rol'), 
+            'api_token' => Str::random(50),
+            'active' => true,
+            'id_sex' => $request->get('id_sex')
+        ]);
+
+        /*$mc = new MailController;
+        $params = [
+            'otp' => $user->otp,
+            'url' => env('APP_URL')
+        ];
+
+        $ret = $mc->register($request->get('email'), $params);
+        if($ret !== true){
+            abort(500, $ret);
+        }*/
+        
+        //$send = new registroMailable($user->rut, $user->otp);
+        //Mail::to($request->email)->send($send);
+        
+        /*$api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
+        $app_url = env('APP_URL');
+
+        $mc = new MailController;
+        $params = [
+            'rut' => $user->rut,
+            'api_token' => $api_token,
+            'app_url' => $app_url,
+        ];
+
+        $ret = $mc->passwordEmployee($request->get('email'), $params);
+        if($ret !== true){
+            abort(500, $ret);
+        }*/
+
+        //$send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
+        //Mail::to($request->email)->send($send_2);
+        
+        $token = JWTAuth::fromUser($user);
+        return response()->json(compact('user', 'token'), 201);   
+    }
+
+    public function profilePic(Request $request, $rut)
+    {
+        if ($request->hasFile('profile_pic')) {
+            $completeFilename = $request->file('profile_pic')->getClientOriginalName();
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $extension = $request->file('profile_pic')->getClientOriginalExtension();
+
+            $comPic = str_replace(' ', '_', $request->rut).'.'.$extension;
+        
+            $path = $request->file('profile_pic')->storeAs('public/profile_pic', $comPic);
+            $pic = User::query()->where('rut', $rut)->update(['profile_pic' => $comPic]);
+        }       
+
+        return response()->json(['message' => 'Pic uploaded successfull'],200);
+    }
+
+    public function employeePassword()
+    {
+        $lenght = 8;
+
+        $characters = '0123456789#$%&/=-+_.';
+
+        $charactersLenght = strlen($characters);
+
+        $randomString = '';
+
+        for ($i=0; $i < $lenght; $i++) { 
+            $randomString .= $characters[rand(0, $charactersLenght -1)];
+        }
+
+        return $randomString;
+    }
+
+    public function registerNeighbor(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut' => 'required',
+            'names'  => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'f_nac' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            
+            'password' => ['required',
+                Password::min(8)
+                ->letters() //al menos una letra
+                ->mixedCase() //al menos una letra minuscula y una mayuscula
+                ->numbers() //al menos un caracter numerico
+            ],
+            'mobile_phone' => 'required',
+            'id_sex' => 'required',
+            'id_prevention_type_detail' => 'required',
+            'carer' => 'required',
+            // 'admission_date' => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if ($user->count()) {
+            return response()->json(['error' => 'User exists in DB'], 400);
+        }
+
+        $user = User::create([
+            'rut' => Str::upper($request->get('rut')),
+            'names' => Str::upper($request->get('names')),
+            'lastname' => Str::upper($request->get('lastname')),
+            'f_nac' => $request->get('f_nac'),
+            'email' => Str::lower($request->get('email')),
+            'password' => Hash::make($request->get('password')),
+            'landline' => $request->get('landline'),
+            'mobile_phone' => $request->get('mobile_phone'),
+            'employee' => false,
+            'otp' => $this->generateCodOtp(),
+            'email_active' => false,
+            'id_rol' => 1,
+            'active' => true,
+            //'aps' => false,
+            'id_sex' => $request->get('id_sex')
+        ]);
+
+        $sol = new solicitudes();
+        $sol->rut_user = Str::upper($request->rut);
+        $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
+        $sol->assurance = $request->get('assurance');
+        $sol->id_location = $request->get('id_location');
+        $sol->way_number = $request->get('way_number');
+        $sol->id_property_type = $request->get('id_property_type');
+        $sol->property_number = $request->get('property_number');
+        $sol->terms_condition = $request->get('terms_condition');
+        $sol->id_status = 1;
+        $sol->applicant_at_home = false;
+        $sol->prevention_is_valid = false;
+        $sol->location_is_valid = false;
+        $sol->comments = $request->get('comments');
+        $sol->is_active = true;
+        $sol->rut_match = false;
+        $sol->carer = $request->get('carer');
+        $sol->id_motive = $request->get('id_motive');
+        $sol->id_dedication = $request->get('id_dedication');
+        $sol->id_remuneration = $request->get('id_remuneration');
+        // $sol->admission_date = $request->get('admission_date');
+
+        if ($request->terms_condition == false) {
+            return response()->json(['error' => 'User must to accept terms condition'], 400);
+        }
+        elseif ($request->terms_condition == true) {
+            $sol->save();
+        }
+
+        $verify_rut = DB::table('aps')->where('rut', $request->rut)->value('rut');
+        
+        if ($verify_rut) {
+            User::query()->where('rut', $request->rut)->update(['aps' => true]);
+        }elseif ($verify_rut == null) {
+            User::query()->where('rut', $request->rut)->update(['aps' => false]);
+        }
+
+        $prevention_detail = DB::table('preventions_details')
+        ->select('prevention_detail')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where('solicitudes.rut_user', $request->rut)
+        ->value('prevention_detail');
+
+        $prevention_type = DB::table('preventions_types')
+        ->select('prevention_type')
+        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where('solicitudes.rut_user', $request->rut)
+        ->value('prevention_type');
+
+        $aps = Db::table('users')->where('rut', $request->rut)->value('aps');
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 50]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
+            $f_nac = DB::table('users')->where('rut', $request->rut)->value('f_nac');
+            $age = Carbon::parse($f_nac)->age;
+
+            if ($age < 65) {
+                User::query()->where('rut', $request->input('rut'))->update(['percent' => 30]);
+            }
+            elseif ($age >= 65) {
+                User::query()->where('rut', $request->input('rut'))->update(['percent' => 40]);
+            }
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == false) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+        }
+
+        try {    
+            $mc = new MailController;
+            $params = [
+                'otp' => $user->otp
+            ];
+
+            $ret = $mc->register($request->get('email'), $params);
+            if($ret !== true){
+                abort(500, $ret);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['Error' => 'Failed to send Email'], 400);
+        } 
+
+        //$send = new registroMailable($user->otp);
+        //Mail::to($request->email)->send($send);
+
+        $token = JWTAuth::fromUser($user);
+        return response()->json(compact('user', 'sol', 'token'), 201); 
+    }
+
+    public function consultEmail(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'email' => 'required|string|email|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = User::where([
+            'email' => $request['email']
+        ])->get();
+
+        if ($data->count()) {
+            return response()->json(['error' => 'Email exist into DB'], 400);
+        }
+
+        return response()->json(['message' => 'Email does not registered'], 200);
+   }
+
+   public function dropdownInfo()
+    {
+        $status = status::all();
+        $property_types = property_types::all();
+        $preventions_types_details = preventions_details::all();
+        $preventions_types = preventions_types::all();
+        $locations = locations::all();
+        $motives = motives::all();
+        $dedications = dedications::all();
+        $remunerations = remunerations::all();
+        $cancel_motives = cancel_motives::all();
+        $sex = sex::all();
+
+        return response()->json([
+            'status' => $status,
+            'property_types' => $property_types,
+            'preventions_types_details' => $preventions_types_details,
+            'preventions_types' => $preventions_types,
+            'locations' => $locations,
+            'motives' => $motives,
+            'dedications' => $dedications,
+            'remunerations' => $remunerations,
+            'cancel_motives' => $cancel_motives,
+            'sex' => $sex
+        ]);
+    }
+}
