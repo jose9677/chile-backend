@@ -32,6 +32,9 @@
                 <label for="document_path">{{"document_path"}}</label>
                 <input type="file" name="document_path">
 
+                <label for="url">{{"url"}}</label>
+                <input type="text" name="url">
+
                 <input type="submit" value="save">
             </form>
     </body>

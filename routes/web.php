@@ -94,6 +94,7 @@ Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
 Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 
 Route::post('/file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
+Route::post('/url-file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'urlFile']);
 
 /* //SIMULATIONS_CONTROLLER
 Route::get('/details-simulations', [App\Http\Controllers\simulationsController::class, 'detailsSimulation']);
@@ -124,14 +125,13 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
     Route::post('/email/test', [MailController::class, 'doSendEmail'])->name('send.email');
     Route::get('/email/oauth', [OauthController::class, 'index']);
 
-/* //REPORTES EXCEL
+ //REPORTES EXCEL
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
 Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
 Route::get('export-integramedica', [App\Http\Controllers\exportController::class, 'exportIntegramedica']);
 
 //IMPORTAR REPORTES 
-
 Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);
-Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import']); */
+Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import']); 
 
 

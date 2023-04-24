@@ -89,4 +89,56 @@ class documentsController extends Controller
             return response()->json(['error' => 'Error to upload document'],400);
         }
     }
+
+    public function urlFile(Request $request, $rut, $id_document_type)
+    {
+        $data = new documents();
+        
+        $query = solicitudes::where('rut_user', $rut)->max('id'); //ID ULTIMA SOLICITUD DEL USUARIO....
+        $id_doc = documents::max('id') + 1;
+        //$rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
+        
+        $email = DB::table('users')->where('rut', $rut)->value('email');
+
+        $data->id_request = $query;
+        $data->id_document_type = $id_document_type;
+
+        $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
+
+        if ($request->file_get_contents('url')) {
+            $completeFilename = $request->file_get_contents('url')->getClientOriginalName();//TAL VEZ TOQUE CAMBIAR A LA FUNCION FILE...
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $extension = $request->file_get_contents('url')->getClientOriginalExtension();
+
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$extension;
+ 
+            $path = $request->file_put_contents('url')->storeAs('public/posts', $comPic);
+            $data->document_path = $comPic;
+            $data->document_ext = $extension;
+        }
+        if ($data->save()) {
+            
+            /*$otp = DB::table('users')->where('rut', $rut)->value('otp');
+
+            $mc = new MailController;
+            $params = [
+                'otp' => $otp
+            ];
+
+            $ret = $mc->register($email, $params);
+            if($ret !== true){
+            abort(500, $ret);
+        
+            }*/
+
+            documents::query()->where('id', $id_doc)->update(['active' => true]);
+
+            return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
+        }else {
+            $restart = new usersController();
+            $restart->restartUser($rut);
+
+            return response()->json(['error' => 'Error to upload document'],400);
+        }
+    }
 }

@@ -18,6 +18,10 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/registerEmployee', [App\Http\Controllers\AuthController::class, 'registerEmployee']);
 Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'registerNeighbor']);
 
+//WOTSCONTROLLER....
+Route::post('/registerEmployee', [App\Http\Controllers\wotsController::class, 'registerEmployee']);
+Route::post('/registerNeighbor', [App\Http\Controllers\wotsController::class, 'registerNeighbor']);
+
 Route::middleware('auth:api')->group(function(){
     
     //USERCONTROLLER...
@@ -101,15 +105,9 @@ Route::middleware('auth:api')->group(function(){
     //DESCIPTIONCONTROLLER
     Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 'dropdownInfo']);
     Route::get('/services-categories', [App\Http\Controllers\decriptionsController::class, 'Categories_Services']);
-
-    //REPORTES EXCEL
-    Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
-    Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
-    Route::get('export-integramedica', [App\Http\Controllers\exportController::class, 'exportIntegramedica']);
-
-    //IMPORTAR REPORTES 
-    Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);
-    Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import']);
+    
+    //WOTSCONTROLLER....
+    
 
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 });
