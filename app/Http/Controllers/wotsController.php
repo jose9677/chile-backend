@@ -65,7 +65,7 @@ class wotsController extends Controller
         }
     }
 
-    public function registerEmployee(Request $request)
+    public function wotsRegisterEmployee(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -113,38 +113,6 @@ class wotsController extends Controller
             'active' => true,
             'id_sex' => $request->get('id_sex')
         ]);
-
-        /*$mc = new MailController;
-        $params = [
-            'otp' => $user->otp,
-            'url' => env('APP_URL')
-        ];
-
-        $ret = $mc->register($request->get('email'), $params);
-        if($ret !== true){
-            abort(500, $ret);
-        }*/
-        
-        //$send = new registroMailable($user->rut, $user->otp);
-        //Mail::to($request->email)->send($send);
-        
-        /*$api_token = DB::table('users')->where('rut', $request->rut)->value('api_token');
-        $app_url = env('APP_URL');
-
-        $mc = new MailController;
-        $params = [
-            'rut' => $user->rut,
-            'api_token' => $api_token,
-            'app_url' => $app_url,
-        ];
-
-        $ret = $mc->passwordEmployee($request->get('email'), $params);
-        if($ret !== true){
-            abort(500, $ret);
-        }*/
-
-        //$send_2 = new claveEmpleadoMailable($user->rut, $api_token , $app_url);
-        //Mail::to($request->email)->send($send_2);
         
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);   
@@ -183,7 +151,7 @@ class wotsController extends Controller
         return $randomString;
     }
 
-    public function registerNeighbor(Request $request)
+    public function wotsRegisterNeighbor(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -228,7 +196,7 @@ class wotsController extends Controller
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
             'employee' => false,
-            'otp' => $this->generateCodOtp(),
+            //'otp' => $this->generateCodOtp(),
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
@@ -311,24 +279,6 @@ class wotsController extends Controller
         if ($prevention_type != 'FONASA' AND $aps == false) {
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
         }
-
-        try {    
-            $mc = new MailController;
-            $params = [
-                'otp' => $user->otp
-            ];
-
-            $ret = $mc->register($request->get('email'), $params);
-            if($ret !== true){
-                abort(500, $ret);
-            }
-
-        } catch (\Throwable $th) {
-            return response()->json(['Error' => 'Failed to send Email'], 400);
-        } 
-
-        //$send = new registroMailable($user->otp);
-        //Mail::to($request->email)->send($send);
 
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'sol', 'token'), 201); 

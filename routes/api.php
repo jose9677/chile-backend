@@ -18,8 +18,8 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'registerNeighbor']);
 
 //WOTSCONTROLLER....
-Route::post('/registerEmployee', [App\Http\Controllers\wotsController::class, 'registerEmployee']);
-Route::post('/registerNeighbor', [App\Http\Controllers\wotsController::class, 'registerNeighbor']);
+Route::post('/wots-registerEmployee', [App\Http\Controllers\wotsController::class, 'wotsRegisterEmployee']);
+Route::post('/wots-registerNeighbor', [App\Http\Controllers\wotsController::class, 'wotsRegisterNeighbor']);
 
 Route::middleware('auth:api')->group(function(){
     
