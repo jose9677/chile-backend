@@ -90,6 +90,11 @@ class documentsController extends Controller
         }
     }
 
+    public function indexUrl()
+    {
+        return view('formUrl');
+    }
+
     public function urlFile(Request $request, $rut, $id_document_type)
     {
         $data = new documents();
@@ -111,8 +116,10 @@ class documentsController extends Controller
             $extension = $request->file_get_contents('url')->getClientOriginalExtension();
 
             $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$extension;
- 
-            $path = $request->file_put_contents('url')->storeAs('public/posts', $comPic);
+            
+            $dir = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\url_documents';
+            //$path = $request->file_put_contents('url')->storeAs('public/posts', $comPic);
+            $path = file_put_contents($dir, $comPic, $completeFilename);
             $data->document_path = $comPic;
             $data->document_ext = $extension;
         }

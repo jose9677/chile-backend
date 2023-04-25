@@ -103,11 +103,8 @@ Route::middleware('auth:api')->group(function(){
     Route::put('/calc-copago/{id_simulation}', [App\Http\Controllers\simulationsController::class, 'calcCopago']);
 
     //DESCIPTIONCONTROLLER
-    Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 'dropdownInfo']);
     Route::get('/services-categories', [App\Http\Controllers\decriptionsController::class, 'Categories_Services']);
-    
-    //WOTSCONTROLLER....
-    
 
+    //WOTSCONTROLLER....
     Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 });

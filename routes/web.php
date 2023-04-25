@@ -19,14 +19,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/* //COPAGO
+/*  //COPAGO
 Route::get('/details-copago/{id}', [App\Http\Controllers\simulationsController::class, 'detailsCopago']);
 Route::get('/details-certificate/{rut}', [App\Http\Controllers\simulationsController::class, 'detailsCerticate']);
 Route::put('/calc-copago/{id_simulation}', [App\Http\Controllers\simulationsController::class, 'calcCopago']);
 
 //DESCIPTIONCONTROLLER
+Route::get('/services-categories', [App\Http\Controllers\decriptionsController::class, 'Categories_Services']);  */
 Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 'dropdownInfo']);
-Route::get('/services-categories', [App\Http\Controllers\decriptionsController::class, 'Categories_Services']); */
 
 //USERCONTROLLER
 //Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detailsUser']);
@@ -94,6 +94,8 @@ Route::get('/form', [App\Http\Controllers\documentsController::class, 'index']);
 Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 
 Route::post('/file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
+
+Route::get('/form-url', [App\Http\Controllers\documentsController::class, 'indexUrl']);
 Route::post('/url-file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'urlFile']);
 
 /* //SIMULATIONS_CONTROLLER
