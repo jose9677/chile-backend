@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
-Route::post('/registerEmployee', [App\Http\Controllers\AuthController::class, 'registerEmployee']);
 Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'registerNeighbor']);
 
 //WOTSCONTROLLER....
@@ -43,6 +42,7 @@ Route::middleware('auth:api')->group(function(){
 
     //AUTHCONTROLLER...
     Route::put('/update-aps', [App\Http\Controllers\AuthController::class, 'updateAps']);
+    Route::post('/registerEmployee', [App\Http\Controllers\AuthController::class, 'registerEmployee']);
     
     //SOLICITUDESCONTROLLER...
     Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
