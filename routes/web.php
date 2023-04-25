@@ -36,13 +36,13 @@ Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 
 //Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);
 Route::put('/change-password', [App\Http\Controllers\usersController::class, 'changePassword']);
 Route::post('/validate-user', [App\Http\Controllers\usersController::class, 'validateUser']);
+Route::delete('/restartUser/{rut}', [App\Http\Controllers\usersController::class, 'restartUser']);
 /* Route::get('/employees', [App\Http\Controllers\usersController::class, 'employees']);
 Route::get('/assistant-list/{rut}', [App\Http\Controllers\usersController::class, 'assistantList']);
 Route::post('/add-supervisor/{rut}', [App\Http\Controllers\usersController::class, 'add_supervisor']);
 Route::get('/detailsAssistant/{rut}', [App\Http\Controllers\usersController::class, 'detailsAssistant']);
 Route::get('/details-assistants-and-supervisors', [App\Http\Controllers\usersController::class, 'detailsAssistant_Supervisor']);
 Route::get('/detailsSupervisor', [App\Http\Controllers\usersController::class, 'detailsSupersisor']);
-Route::delete('/restartUser/{rut}', [App\Http\Controllers\usersController::class, 'restartUser']);
 Route::put('/active-user/{rut}', [App\Http\Controllers\usersController::class, 'activeUser']);
 Route::put('/desactive-user/{rut}', [App\Http\Controllers\usersController::class, 'desactiveUser']);
 Route::get('/provider-user/{rut}', [App\Http\Controllers\usersController::class, 'providerUser']); 
