@@ -20,6 +20,10 @@ Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'r
 //WOTSCONTROLLER....
 Route::post('/wots-registerEmployee', [App\Http\Controllers\wotsController::class, 'wotsRegisterEmployee']);
 Route::post('/wots-registerNeighbor', [App\Http\Controllers\wotsController::class, 'wotsRegisterNeighbor']);
+Route::post('/wots-profile-pic/{rut}', [App\Http\Controllers\wotsController::class, 'wotsProfilePic']);
+Route::get('/wots-consult-email', [App\Http\Controllers\wotsController::class, 'wotsConsultEmail']);
+Route::get('/wots-dropdownInfo', [App\Http\Controllers\wotsController::class, 'wotsDropdownInfo']);
+
 
 Route::middleware('auth:api')->group(function(){
     

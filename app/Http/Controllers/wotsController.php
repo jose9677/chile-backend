@@ -118,7 +118,7 @@ class wotsController extends Controller
         return response()->json(compact('user', 'token'), 201);   
     }
 
-    public function profilePic(Request $request, $rut)
+    public function wotsProfilePic(Request $request, $rut)
     {
         if ($request->hasFile('profile_pic')) {
             $completeFilename = $request->file('profile_pic')->getClientOriginalName();
@@ -284,7 +284,7 @@ class wotsController extends Controller
         return response()->json(compact('user', 'sol', 'token'), 201); 
     }
 
-    public function consultEmail(Request $request)
+    public function wotsConsultEmail(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -306,7 +306,7 @@ class wotsController extends Controller
         return response()->json(['message' => 'Email does not registered'], 200);
    }
 
-   public function dropdownInfo()
+   public function wotsDropdownInfo()
     {
         $status = status::all();
         $property_types = property_types::all();
