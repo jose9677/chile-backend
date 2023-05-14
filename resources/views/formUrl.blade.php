@@ -21,19 +21,19 @@
         </style>
     </head>
     <body class="antialiased">
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="url-file" method="post" enctype="multipart/form-data">
                 @csrf
 
-                <label for="id_request">{{"rut"}}</label>
-                <input style="border: solid;" type="text" name="rut">
+                <!-- <label for="id_request">{{"rut"}}</label>
+                <input style="border: solid;" type="text" name="rut"> -->
 
-                <label for="id_document_type">{{"id_document_type"}}</label>
-                <input style="border: solid;" type="number" name="id_document_type">
+                <!-- <label for="id_document_type">{{"id_document_type"}}</label>
+                <input style="border: solid;" type="number" name="id_document_type"> -->
 
                 <label for="url">{{"url"}}</label>
                 <input style="border: solid;" type="text" name="url">
 
-                <input type="submit" value="save">
+                <input type="submit" name="save" value="save">
             </form>
     </body>
 </html>

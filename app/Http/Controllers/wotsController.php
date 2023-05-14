@@ -26,6 +26,9 @@ use Malahierba\ChileRut\ChileRut;
 use Malahierba\ChileRut\Facades\ChileRut as FacadesChileRut;
 use Malahierba\ChileRut\Rules\ValidChileanRut;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\wots_token;
+
+use Illuminate\Support\Facades\Auth;
 
 class wotsController extends Controller
 {
@@ -331,5 +334,92 @@ class wotsController extends Controller
             'cancel_motives' => $cancel_motives,
             'sex' => $sex
         ]);
+    }
+
+    public function getNewToken()
+    {
+        $newToken = Str::random(50);
+        return $newToken;
+    }
+
+    public function wotsAuth(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'user' => 'required',
+            'password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = DB::table('wots_token')->where('user', $request->user)->value('user');
+        $password = DB::table('wots_token')->where('password', $request->password)->value('password');
+
+        if ($request->user === $user AND $request->password === $password) {
+            $token = $this->getNewToken();
+            wots_token::query()->where('user', $request->user)->update(['api_token' => $token]);
+            
+            return response()->json(
+                ['message' => 'User autenticated',
+                 'api_token' => $token
+                ], 200);
+        }
+        else {
+            return response()->json(['error' => 'User or Password Incorrect'], 400);
+        }
+    }
+
+    public function wotsAuthJWT(Request $request)
+    {
+        $data = new wots_token();
+        //$data = wots_token::query()->where(['user', $request->input('user')])->first();
+        $data = DB::table('wots_token')->where('user', $request->user)->value('user');
+
+        if (!$data) {
+            return response()->json(['error' => 'User dows not exists in Data Base']);
+        }
+
+        $credentials = $request->only(['user', 'password']);
+
+        if (Auth::guard('api')->attempt($credentials)) {
+            $user = Auth::guard('api')->user();
+            $jwt = JWTAuth::attemp($credentials);
+            $success = true;
+            $api_token = $this->getNewToken();
+            wots_token::query()->where('user', $request->user)->update(['api_token' => $api_token]);
+            $data = compact('user', 'jwt');
+
+            return compact('success', 'data');
+        }else {
+            $success = false;
+            $message = 'User or Password Incorrect';
+
+            return response()->json(['error' => $message], 400);
+        }
+    }
+
+    public function wotsOut(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'api_token' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $api_token = DB::table('wots_token')->where('api_token', $request->api_token)->value('api_token');
+
+        if ($request->api_token === $api_token) {
+            wots_token::query()->where('api_token', $request->api_token)->update(['api_token' => null]);
+
+            return response()->json(['message' => 'User Logout'], 200);
+        }
+        else {
+            return response()->json(['error' => 'api_token Does not exists'], 400);
+        }
     }
 }

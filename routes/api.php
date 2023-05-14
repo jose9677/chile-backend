@@ -24,6 +24,7 @@ Route::post('/wots-profile-pic/{rut}', [App\Http\Controllers\wotsController::cla
 Route::get('/wots-consult-email', [App\Http\Controllers\wotsController::class, 'wotsConsultEmail']);
 Route::get('/wots-dropdownInfo', [App\Http\Controllers\wotsController::class, 'wotsDropdownInfo']);
 
+Route::post('/wots-authJWT', [App\Http\Controllers\wotsController::class, 'wotsAuthJWT']);
 
 Route::middleware('auth:api')->group(function(){
     

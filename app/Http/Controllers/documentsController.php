@@ -8,6 +8,7 @@ use App\Models\solicitudes;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Ixudra\Curl\Facades\Curl;
 
 class documentsController extends Controller
 {
@@ -95,57 +96,23 @@ class documentsController extends Controller
         return view('formUrl');
     }
 
-    public function urlFile(Request $request, $rut, $id_document_type)
+    public function urlFile(Request $request)
     {
-        $data = new documents();
-        
-        $query = solicitudes::where('rut_user', $rut)->max('id'); //ID ULTIMA SOLICITUD DEL USUARIO....
-        $id_doc = documents::max('id') + 1;
-        //$rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
-        
-        $email = DB::table('users')->where('rut', $rut)->value('email');
+        if (!empty($_POST['url'])) {
+            $url = $_POST['url'];
+            $start = curl_init();
 
-        $data->id_request = $query;
-        $data->id_document_type = $id_document_type;
+            curl_setopt($start, CURLOPT_URL, $url);
+            curl_setopt($start, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($start, CURLOPT_SSLVERSION, 3);
 
-        $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
+            $file_data = curl_exec($start);
+            curl_close($start);
 
-        if ($request->file_get_contents('url')) {
-            $completeFilename = $request->file_get_contents('url')->getClientOriginalName();//TAL VEZ TOQUE CAMBIAR A LA FUNCION FILE...
-            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
-            $extension = $request->file_get_contents('url')->getClientOriginalExtension();
-
-            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$extension;
-            
-            $dir = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\url_documents';
-            //$path = $request->file_put_contents('url')->storeAs('public/posts', $comPic);
-            $path = file_put_contents($dir, $comPic, $completeFilename);
-            $data->document_path = $comPic;
-            $data->document_ext = $extension;
-        }
-        if ($data->save()) {
-            
-            /*$otp = DB::table('users')->where('rut', $rut)->value('otp');
-
-            $mc = new MailController;
-            $params = [
-                'otp' => $otp
-            ];
-
-            $ret = $mc->register($email, $params);
-            if($ret !== true){
-            abort(500, $ret);
-        
-            }*/
-
-            documents::query()->where('id', $id_doc)->update(['active' => true]);
-
-            return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
-        }else {
-            $restart = new usersController();
-            $restart->restartUser($rut);
-
-            return response()->json(['error' => 'Error to upload document'],400);
+            $file_path = 'C:\Users\Jose\Desktop\prueba'. uniqid() .  '.jpg';
+            $file = fopen($file_path, 'w+');
+            fputs($file, $file_data);
+            fclose($file); 
         }
     }
 }

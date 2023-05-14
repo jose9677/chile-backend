@@ -38,11 +38,13 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'users'
+            //'provider' => 'wots'
         ],
         'api' => [
             'driver' => 'jwt',
-            'provider' => 'users',
+            'provider' => 'users'
+            //'provider' => 'wots'
         ],
     ],
 
@@ -69,10 +71,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        /* 'wots' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\wots_token::class,
+        ] */
     ],
 
     /*
@@ -97,6 +99,13 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+/* 
+        'wots' => [
+            'provider' => 'wots',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ] */
     ],
 
     /*

@@ -164,6 +164,7 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Malahierba\ChileRut\ChileRutServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -235,6 +236,7 @@ return [
         'RUT' => Malahierba\ChileRut\Facades\ChileRut::class,
         'Helper' => \App\Helpers\OauthHelper::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
     ],
 
 ];

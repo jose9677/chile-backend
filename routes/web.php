@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\OauthController;
+use Ixudra\Curl\Facades\Curl;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +97,7 @@ Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 Route::post('/file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
 
 Route::get('/form-url', [App\Http\Controllers\documentsController::class, 'indexUrl']);
-Route::post('/url-file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'urlFile']);
+Route::post('/url-file', [App\Http\Controllers\documentsController::class, 'urlFile']);
 
 /* //SIMULATIONS_CONTROLLER
 Route::get('/details-simulations', [App\Http\Controllers\simulationsController::class, 'detailsSimulation']);
@@ -136,4 +137,13 @@ Route::get('export-integramedica', [App\Http\Controllers\exportController::class
 Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);
 Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import']); 
 
+Route::get('token', [App\Http\Controllers\usersController::class, 'getNewToken']);
+Route::post('wots-auth', [App\Http\Controllers\wotsController::class, 'wotsAuth']);
+Route::post('wots-out', [App\Http\Controllers\wotsController::class, 'wotsOut']);
 
+Route::get('curl', function(){
+    $response = Curl::to('https://jsonplaceholder.typicode.com/posts/7')
+    ->get();
+
+    dd($response);
+});

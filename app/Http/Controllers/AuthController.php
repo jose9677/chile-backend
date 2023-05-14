@@ -325,7 +325,7 @@ class AuthController extends Controller
             $ruts[] = $all_rut->rut;
         }
 
-        for ($i=0; $i <count($ruts) ; $i++) { 
+        for ($i=0; $i < count($ruts) ; $i++) { 
         
         $aps = DB::table('users')->where('rut', $ruts[$i])->value('aps');
 
@@ -464,7 +464,6 @@ class AuthController extends Controller
             $query = DB::update("UPDATE consultants.users SET otp = '$new_otp' WHERE rut = '$request->rut'");
             $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
 
-            
             try {
                 $mc = new MailController;
                 $params = [
