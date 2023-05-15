@@ -68,92 +68,6 @@ class wotsController extends Controller
         }
     }
 
-    public function wotsRegisterEmployee(Request $request)
-    {
-        Log::info($request);
-        $validator = Validator::make($request->all(), [
-            'rut' => 'required',
-            'names'  => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'f_nac' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
-            //'landline' => 'required',
-            'mobile_phone' => 'required',
-            //'supervisor_rut' => 'required',
-            //'profile_pic' => 'required',
-            'id_rol' => 'required',
-            'id_sex' => 'required'
-        ]);
-        
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        $user = User::where([
-            'rut' => $request['rut']
-        ])->get();
-
-        if ($user->count()) {
-            return response()->json(['error' => 'User exists in DB'], 400);
-        }
-
-        $user = User::create([
-            'rut' => Str::upper($request->get('rut')),
-            'names' => Str::upper($request->get('names')),
-            'lastname' => Str::upper($request->get('lastname')),
-            'f_nac' => $request->get('f_nac'),
-            'email' => Str::lower($request->get('email')),
-            'password' => Hash::make($this->employeePassword()),
-            'landline' => $request->get('landline'),
-            'mobile_phone' => $request->get('mobile_phone'),
-            'employee' => true,
-            'supervisor_rut' => $request->get('supervisor_rut'),
-            //'otp' => $this->generateCodOtp(),
-            'email_active' => true,
-            //'profile_pic' => $request->get('profile_pic'),
-            'id_rol' => $request->get('id_rol'), 
-            'api_token' => Str::random(50),
-            'active' => true,
-            'id_sex' => $request->get('id_sex')
-        ]);
-        
-        $token = JWTAuth::fromUser($user);
-        return response()->json(compact('user', 'token'), 201);   
-    }
-
-    public function wotsProfilePic(Request $request, $rut)
-    {
-        if ($request->hasFile('profile_pic')) {
-            $completeFilename = $request->file('profile_pic')->getClientOriginalName();
-            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
-            $extension = $request->file('profile_pic')->getClientOriginalExtension();
-
-            $comPic = str_replace(' ', '_', $request->rut).'.'.$extension;
-        
-            $path = $request->file('profile_pic')->storeAs('public/profile_pic', $comPic);
-            $pic = User::query()->where('rut', $rut)->update(['profile_pic' => $comPic]);
-        }       
-
-        return response()->json(['message' => 'Pic uploaded successfull'],200);
-    }
-
-    public function employeePassword()
-    {
-        $lenght = 8;
-
-        $characters = '0123456789#$%&/=-+_.';
-
-        $charactersLenght = strlen($characters);
-
-        $randomString = '';
-
-        for ($i=0; $i < $lenght; $i++) { 
-            $randomString .= $characters[rand(0, $charactersLenght -1)];
-        }
-
-        return $randomString;
-    }
-
     public function wotsRegisterNeighbor(Request $request)
     {
         Log::info($request);
@@ -319,7 +233,6 @@ class wotsController extends Controller
         $motives = motives::all();
         $dedications = dedications::all();
         $remunerations = remunerations::all();
-        $cancel_motives = cancel_motives::all();
         $sex = sex::all();
 
         return response()->json([
@@ -331,7 +244,6 @@ class wotsController extends Controller
             'motives' => $motives,
             'dedications' => $dedications,
             'remunerations' => $remunerations,
-            'cancel_motives' => $cancel_motives,
             'sex' => $sex
         ]);
     }

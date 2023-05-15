@@ -18,9 +18,8 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'registerNeighbor']);
 
 //WOTSCONTROLLER....
-Route::post('/wots-registerEmployee', [App\Http\Controllers\wotsController::class, 'wotsRegisterEmployee']);
+Route::post('/wots-validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);
 Route::post('/wots-registerNeighbor', [App\Http\Controllers\wotsController::class, 'wotsRegisterNeighbor']);
-Route::post('/wots-profile-pic/{rut}', [App\Http\Controllers\wotsController::class, 'wotsProfilePic']);
 Route::get('/wots-consult-email', [App\Http\Controllers\wotsController::class, 'wotsConsultEmail']);
 Route::get('/wots-dropdownInfo', [App\Http\Controllers\wotsController::class, 'wotsDropdownInfo']);
 
