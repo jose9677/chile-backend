@@ -22,6 +22,8 @@ Route::post('/wots-validateRut', [App\Http\Controllers\AuthController::class, 'v
 Route::post('/wots-registerNeighbor', [App\Http\Controllers\wotsController::class, 'wotsRegisterNeighbor']);
 Route::get('/wots-consult-email', [App\Http\Controllers\wotsController::class, 'wotsConsultEmail']);
 Route::get('/wots-dropdownInfo', [App\Http\Controllers\wotsController::class, 'wotsDropdownInfo']);
+Route::put('/wots-change-password', [App\Http\Controllers\usersController::class, 'wotsChangePassword']);
+Route::post('/wots-validate-user', [App\Http\Controllers\usersController::class, 'wotsValidateUser']);
 
 Route::post('/wots-authJWT', [App\Http\Controllers\wotsController::class, 'wotsAuthJWT']);
 
