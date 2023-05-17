@@ -187,10 +187,10 @@ class usersController extends Controller
         ])->get();
 
         if ($data->count()) {
-            return response()->json(['error' => 'Email exist into DB'], 400);
+            return response()->json(['error' => 'Email already exist into DB'], 400);
         }
 
-        return response()->json(['message' => 'Email does not registered'], 200);
+        return response()->json(['message' => 'Email does not exist into DB'], 200);
    }
 
    public function validateUser(Request $request)

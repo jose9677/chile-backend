@@ -53,7 +53,7 @@ class wotsController extends Controller
                 $restart->restartUser($request->rut);        
                 
                 return response()->json([
-                    'error' => 'User registered incompleted in DB '], 400);
+                    'error' => 'User is not registered'], 400);
             }
 
             if ($email_active == true AND empty($otp)) {
@@ -62,7 +62,7 @@ class wotsController extends Controller
         }
         
         if ($request->rut) {
-            return response()->json(['message' => $request->rut.' Is Valid'], 200);
+            return response()->json(['message' => 'User is not registered'], 200);
         }else {
             return response()->json(['error' => $request->rut.' Is not Valid'], 400);
         }
@@ -117,7 +117,7 @@ class wotsController extends Controller
             'email_active' => false,
             'id_rol' => 1,
             'active' => true,
-            //'aps' => false,
+            'aps' => false,
             'id_sex' => $request->get('id_sex')
         ]);
 
@@ -129,18 +129,18 @@ class wotsController extends Controller
         $sol->way_number = $request->get('way_number');
         $sol->id_property_type = $request->get('id_property_type');
         $sol->property_number = $request->get('property_number');
-        $sol->terms_condition = $request->get('terms_condition');
+        $sol->terms_condition = true;
         $sol->id_status = 1;
         $sol->applicant_at_home = false;
         $sol->prevention_is_valid = false;
         $sol->location_is_valid = false;
-        $sol->comments = $request->get('comments');
+        $sol->comments = null;
         $sol->is_active = true;
         $sol->rut_match = false;
         $sol->carer = $request->get('carer');
-        $sol->id_motive = 1;
-        $sol->id_dedication = 1;
-        $sol->id_remuneration = 1;
+        $sol->id_motive = $request->get('id_motive');
+        $sol->id_dedication = $request->get('id_dedication');
+        $sol->id_remuneration = $request->get('id_remuneration');
         // $sol->admission_date = $request->get('admission_date');
 
         if ($request->terms_condition == false) {
@@ -218,125 +218,6 @@ class wotsController extends Controller
         return $randomString;
     }
 
-    public function wotsChangePassword(Request $request)
-   {
-        Log::info($request);
-        $validator = Validator::make($request->all(), [    
-            'password' => ['required',
-                Password::min(8)
-                ->letters() //al menos una letra
-                ->mixedCase() //al menos una letra minuscula y una mayuscula
-                ->numbers() //al menos un caracter numerico
-            ],
-            'api_token' => 'required'
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        
-        $data = User::where([
-            'api_token' => $request['api_token']
-        ])->get();
-
-        if ($data->count()) {
-            $data = new User();
-            $data->password = Hash::make($request->password);
-            //$rut = DB::table('users')->where('api_token', $request->input('api_token'))->value('rut');
-            $email = DB::table('users')->where('api_token', $request->input('api_token'))->value('email');
-
-            User::query()->where('api_token', $request->input('api_token'))->update(['api_token' => NULL, 'password' => $data->password]);
-            
-            try {    
-                $mc = new MailController;
-        
-                $ret = $mc->newPassword($email);
-                if($ret !== true){
-                    abort(500, $ret);
-                }
-                
-            } catch (\Throwable $th) {
-                return response()->json(['Error' => 'Failed to send Email'], 400);
-            }
-
-            //$send = new cambiarclaveMailable();
-            //Mail::to($email)->send($send);
-
-            return response()->json(['message' => 'Password Changed successfull'], 200);
-        }else {
-            return response()->json(['error' => 'Invalid Token'], 400);
-        }   
-   }
-
-   public function wotsValidateUser(Request $request)
-   {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'rut' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        $data = User::query()->where(['rut' => $request->input('rut')])->first();
-        
-        if (!$data) {
-            return response()->json(['error' => 'User Does Not exists in Data Base'], 400);
-        }
-
-        $data = User::where([
-            'rut' => $request['rut'],
-        ])->get();
-
-        if ($data->count()) {
-    
-            $email_active = DB::table('users')->where('rut', $request->rut)->value('email_active');
-            $otp = DB::table('users')->where('rut', $request->rut)->value('otp');
-
-            if ($email_active == false AND !empty($otp)) {
-                $this->restartUser($request->rut);
-                return response()->json(['error' => 'the user '.$request->rut.' was deleted'], 400);
-            
-            }
-            elseif($email_active == true AND empty($otp)){
-            $api_token = $this->getNewToken();
-            $data->api_token = $api_token;
-            
-            User::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
-            
-            $email = DB::table('users')->where('rut', $request->input('rut'))->value('email');
-            $app_url = env('APP_URL');
-            
-            try {    
-                $mc = new MailController;
-
-                $params = [
-                    'api_token' => $data->api_token,
-                    'app_url' => $app_url
-                ];
-        
-                $ret = $mc->validate_User($email, $params);
-                if($ret !== true){
-                    abort(500, $ret);
-                }
-
-            } catch (\Throwable $th) {
-                return response()->json(['Error' => 'Failed to send Email'], 400);
-            }
-
-            //$send = new validarMailable($data->api_token, $app_url);
-            //Mail::to($email)->send($send);
-
-            return response()->json(
-                [
-                    'message' => 'User Validation successfull',
-                    'api_token' => $api_token
-                ],  200);
-            }   
-        }
-   }
-
     public function wotsConsultEmail(Request $request)
     {
         Log::info($request);
@@ -353,10 +234,10 @@ class wotsController extends Controller
         ])->get();
 
         if ($data->count()) {
-            return response()->json(['error' => 'Email exist into DB'], 400);
+            return response()->json(['error' => 'Email already exist into DB'], 400);
         }
 
-        return response()->json(['message' => 'Email does not registered'], 200);
+        return response()->json(['message' => 'Email does not exist into DB'], 200);
    }
 
    public function wotsDropdownInfo()
