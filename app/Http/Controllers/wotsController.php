@@ -144,6 +144,7 @@ class wotsController extends Controller
         // $sol->admission_date = $request->get('admission_date');
 
         if ($request->terms_condition == false) {
+            $data = DB::delete("DELETE FROM consultanta.users WHERE rut = '$request->rut");
             return response()->json(['error' => 'User must to accept terms condition'], 400);
         }
         elseif ($request->terms_condition == true) {
@@ -198,7 +199,8 @@ class wotsController extends Controller
         }
 
         $token = JWTAuth::fromUser($user);
-        return response()->json(compact('user', 'sol', 'token'), 201); 
+        //return response()->json(compact('user', 'sol', 'token'), 201); 
+        return response()->json(['message' => 'User registered'], 200);
     }
 
     public function generatePassword()
