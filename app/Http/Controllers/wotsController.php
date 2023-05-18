@@ -144,7 +144,7 @@ class wotsController extends Controller
         // $sol->admission_date = $request->get('admission_date');
 
         if ($request->terms_condition == false) {
-            $data = DB::delete("DELETE FROM consultanta.users WHERE rut = '$request->rut");
+            $data = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
             return response()->json(['error' => 'User must to accept terms condition'], 400);
         }
         elseif ($request->terms_condition == true) {
