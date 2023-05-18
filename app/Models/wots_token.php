@@ -20,7 +20,8 @@ class wots_token extends Authenticatable implements JWTSubject
         'app',
         'user',
         'password',
-        'api_token'
+        'api_token',
+        'rut'
     ];
 
     /**

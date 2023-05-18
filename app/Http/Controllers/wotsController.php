@@ -129,7 +129,7 @@ class wotsController extends Controller
         $sol->way_number = $request->get('way_number');
         $sol->id_property_type = $request->get('id_property_type');
         $sol->property_number = $request->get('property_number');
-        $sol->terms_condition = true;
+        $sol->terms_condition = $request->get('terms_condition');
         $sol->id_status = 1;
         $sol->applicant_at_home = false;
         $sol->prevention_is_valid = false;

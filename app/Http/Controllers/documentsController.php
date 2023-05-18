@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ixudra\Curl\Facades\Curl;
+use SplFileInfo;
 
 class documentsController extends Controller
 {
@@ -96,23 +97,41 @@ class documentsController extends Controller
         return view('formUrl');
     }
 
-    public function urlFile(Request $request)
+    public function urlFile(Request $request, $rut, $id_document_type)
     {
+        $data = new documents();
+        
+        $query = solicitudes::where('rut_user', $rut)->max('id');
+        $id_doc = documents::max('id') + 1;
+
+        $data->id_request = $query;
+        $data->id_document_type = $id_document_type;
+
+        $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
+
         if (!empty($_POST['url'])) {
             $url = $_POST['url'];
-            $start = curl_init();
+            $nombre = '_'. $documents_types.'_'.'SOL'.$query.'-'.$id_doc.'.'.'jpg';
+            
+            $file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\url_documents\\';
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.'jpg';
+        
+            $imagen = file_get_contents($url);
+            file_put_contents($file_path. $nombre, $imagen);
 
-            curl_setopt($start, CURLOPT_URL, $url);
-            curl_setopt($start, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($start, CURLOPT_SSLVERSION, 3);
+            /* $path = $url;
+            $file = new SplFileInfo($path);
+            $extension = $file->getExtension(); */
 
-            $file_data = curl_exec($start);
-            curl_close($start);
+            $data->document_path = $comPic;
+            $data->document_ext = 'jpg';
+            $data->save();
 
-            $file_path = 'C:\Users\Jose\Desktop\prueba'. uniqid() .  '.jpg';
-            $file = fopen($file_path, 'w+');
-            fputs($file, $file_data);
-            fclose($file); 
+            documents::query()->where('id', $id_doc)->update(['active' => true]);
+
+            return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
+        }else {
+            return response()->json(['error' => 'Error to upload document'],400);
         }
     }
 
