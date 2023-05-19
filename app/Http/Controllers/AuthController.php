@@ -280,6 +280,10 @@ class AuthController extends Controller
             User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
         }
 
+        if ($prevention_type != 'FONASA' AND $aps == true) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+        }
+
         try {    
             $mc = new MailController;
             $params = [
@@ -351,7 +355,7 @@ class AuthController extends Controller
         }
 
         //ESTA CONDICION TENIA APS TRUE ANTERIORMENTE...
-        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
             $f_nac = DB::table('users')->where('rut', $ruts[$i])->value('f_nac');
             $age = Carbon::parse($f_nac)->age;
 
@@ -364,6 +368,10 @@ class AuthController extends Controller
         }
 
         if ($prevention_type != 'FONASA' AND $aps == false) {
+            User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+            }
+
+        if ($prevention_type != 'FONASA' AND $aps == true) {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
             }
         }

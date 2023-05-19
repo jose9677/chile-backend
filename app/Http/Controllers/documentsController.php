@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\documents;
 use App\Models\solicitudes;
 use App\Models\User;
+use finfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ixudra\Curl\Facades\Curl;
 use SplFileInfo;
+use App\Helpers\FileInfoHelper;
 
 class documentsController extends Controller
 {
@@ -111,25 +113,36 @@ class documentsController extends Controller
 
         if (!empty($_POST['url'])) {
             $url = $_POST['url'];
-            $nombre = '_'. $documents_types.'_'.'SOL'.$query.'-'.$id_doc.'.'.'jpg';
+            
             
             $file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\url_documents\\';
-            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.'jpg';
+            
         
             $imagen = file_get_contents($url);
-            file_put_contents($file_path. $nombre, $imagen);
 
-            /* $path = $url;
-            $file = new SplFileInfo($path);
-            $extension = $file->getExtension(); */
+            $finfo = new finfo(FILEINFO_MIME);
 
-            $data->document_path = $comPic;
-            $data->document_ext = 'jpg';
-            $data->save();
+            $b = $finfo->buffer($imagen);
+            if($b){
+                $mime = explode(";", $b)[0];
+                $ext = FileInfoHelper::get_image_ext($mime);
+                $nombre = '_'. $documents_types.'_'.'SOL'.$query.'-'.$id_doc.'.'.$ext;
+                $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$ext;
+                file_put_contents($file_path. $nombre, $imagen);
 
-            documents::query()->where('id', $id_doc)->update(['active' => true]);
+                $data->document_path = $comPic;
+                $data->document_ext = $ext;
+                $data->save();
 
-            return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
+                documents::query()->where('id', $id_doc)->update(['active' => true]);
+
+                return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
+                
+            } else {
+                abort(500);
+            }
+            die();
+            
         }else {
             return response()->json(['error' => 'Error to upload document'],400);
         }
