@@ -114,10 +114,8 @@ class documentsController extends Controller
         if (!empty($_POST['url'])) {
             $url = $_POST['url'];
             
-            
             $file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\url_documents\\';
             
-        
             $imagen = file_get_contents($url);
 
             $finfo = new finfo(FILEINFO_MIME);
@@ -146,32 +144,5 @@ class documentsController extends Controller
         }else {
             return response()->json(['error' => 'Error to upload document'],400);
         }
-    }
-
-    public function curlFile()
-    {
-        $key = ''; //PENDIENTE.....
-        $api = 'https://api.imgbb.com/';
-        $title = $_POST['title'];
-        $expiration = $_POST['expiration'];
-
-        $imagen = $_FILES['url'];
-
-        $contentIMG = file_get_contents($imagen['tmp_name']);
-        $base64 = base64_encode($contentIMG);
-
-        $post = "key=".urlencode($key)."&imagen=".urlencode($base64)."&name=".urlencode($title)."&expiration=".urlencode($expiration);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $api);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $result = curl_exec($ch);
-
-        $json = json_decode($result, true);
-
-        var_dump($json);
     }
 }

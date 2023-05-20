@@ -16,6 +16,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 use App\Models\User;
 use App\Models\users_requests;
+use App\Models\wots_token;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -401,21 +402,41 @@ class AuthController extends Controller
                 }
         }
 
-        $credentials = $request->only(['rut', 'password']);
+        $data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT rut FROM consultants.wots_token)");
+        
+        if ($data) {
+            $credentials = $request->only(['rut', 'password']);
 
-        if (Auth::guard('api')->attempt($credentials)) {
-            $user = Auth::guard('api')->user();
-            $jwt = JWTAuth::attempt($credentials);
-            $success = true;
-            $data = compact('user', 'jwt');
+            if (Auth::guard('api')->attempt($credentials)) {
+                $user = Auth::guard('api')->user();
+                $jwt = JWTAuth::attempt($credentials);
+                $success = true;
+                $api_token = Str::random(50);
+                wots_token::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
+                $data = compact('user', 'jwt');
 
-            return compact('success', 'data');
-        }else {
-            $success = false;
-            $message = 'User or Password Incorrect';
+                return compact('success', 'data');
+            }else {
+                $success = false;
+                $message = 'User or Password Incorrect';
+                return response()->json(['error' => $message], 400);
+            }
+        }
+        elseif (!$data) {
+            $credentials = $request->only(['rut', 'password']);
 
-            //return compact('success', 'message');
-            return response()->json(['error' => $message], 400);
+            if (Auth::guard('api')->attempt($credentials)) {
+                $user = Auth::guard('api')->user();
+                $jwt = JWTAuth::attempt($credentials);
+                $success = true;
+                $data = compact('user', 'jwt');
+
+                return compact('success', 'data');
+            }else {
+                $success = false;
+                $message = 'User or Password Incorrect';
+                return response()->json(['error' => $message], 400);
+            }
         }
     }
 
