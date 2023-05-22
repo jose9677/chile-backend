@@ -90,6 +90,8 @@ class wotsController extends Controller
             //'id_prevention_type_detail' => 'required',
             'carer' => 'required',
             // 'admission_date' => 'required'
+            'url_residence_file' => 'required',
+            'url_prevition_file' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -164,8 +166,8 @@ class wotsController extends Controller
 
         $file = new documentsController();
         
-        $url_1 = $file->urlFile($user->rut, 1);//This Url make reference to residence file---
-        $url_2 = $file->urlFile($user->rut, 2);//This Url make reference to prevition file---
+        $url_1 = $file->urlFile($request->url_residence_file,$user->rut, 1);//This Url make reference to residence file---
+        $url_2 = $file->urlFile($request->url_prevition_file,$user->rut, 2);//This Url make reference to prevition file---
         $gate = false;
 
         if ($url_1 AND $url_2) {
