@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\cancel_motives;
 use App\Models\dedications;
+use App\Models\documents_types;
 use App\Models\locations;
 use App\Models\motives;
 use App\Models\preventions_details;
@@ -68,7 +69,7 @@ class wotsController extends Controller
         }
     }
 
-    public function wotsRegisterNeighbor(Request $request)
+    public function wotsRegisterNeighbor(Request $request, $id_document_type)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -102,7 +103,7 @@ class wotsController extends Controller
         if ($user->count()) {
             return response()->json(['error' => 'User exists in DB'], 400);
         }
-
+/* 
         $user = User::create([
             'rut' => Str::upper($request->get('rut')),
             'names' => Str::upper($request->get('names')),
@@ -118,9 +119,27 @@ class wotsController extends Controller
             'id_rol' => 1,
             'active' => true,
             'aps' => false,
-            'id_sex' => $request->get('id_sex')
-        ]);
+            'id_sex' => $request->get('id_sex'),
+            'origin' => 'wots'
+        ]); */
 
+        $user = new User();
+        $user->rut = Str::upper($request->get('rut'));
+        $user->names = Str::upper($request->get('names'));
+        $user->lastname = Str::upper($request->get('lastname'));
+        $user->f_nac = $request->get('f_nac');
+        $user->email = Str::lower($request->get('email'));
+        $user->password = Hash::make($this->generatePassword());
+        $user->landline = $request->get('landline');
+        $user->mobile_phone = $request->get('mobile_phone');
+        $user->employee = false;
+        $user->email_active = false;
+        $user->id_rol = 1;
+        $user->active = true;
+        $user->aps = false;
+        $user->id_sex = $request->get('id_sex');
+        $user->origin = 'wots';
+        
         $sol = new solicitudes();
         $sol->rut_user = Str::upper($request->rut);
         $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
@@ -143,11 +162,20 @@ class wotsController extends Controller
         $sol->id_remuneration = $request->get('id_remuneration');
         // $sol->admission_date = $request->get('admission_date');
 
+        $file = new documentsController();
+        $gate = false;
+
+        while ($id_document_type <= 2) {
+            $file->urlFile($user->rut, $id_document_type);
+            $gate = true;
+        }
+
         if ($request->terms_condition == false) {
             $data = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
             return response()->json(['error' => 'User must to accept terms condition'], 400);
         }
-        elseif ($request->terms_condition == true) {
+        elseif ($request->terms_condition == true AND $gate == true) {
+            $user->save();
             $sol->save();
         }
 
@@ -199,7 +227,6 @@ class wotsController extends Controller
         }
 
         $token = JWTAuth::fromUser($user);
-        //return response()->json(compact('user', 'sol', 'token'), 201); 
         return response()->json(['message' => 'User registered'], 200);
     }
 

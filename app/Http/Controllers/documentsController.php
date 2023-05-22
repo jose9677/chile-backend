@@ -99,7 +99,7 @@ class documentsController extends Controller
         return view('formUrl');
     }
 
-    public function urlFile(Request $request, $rut, $id_document_type)
+    public function urlFile($rut, $id_document_type)
     {
         $data = new documents();
         

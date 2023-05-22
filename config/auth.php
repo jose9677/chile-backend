@@ -34,19 +34,29 @@ return [
     | Supported: "session"
     |
     */
-
+/* 
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users'
-            //'provider' => 'wots'
+        ],
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users'
+        ],
+    ], */
+
+    //VIEJA CONFIGURACION CON JWT....
+     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users'
         ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users'
-            //'provider' => 'wots'
         ],
-    ],
+    ], 
 
     /*
     |--------------------------------------------------------------------------
@@ -70,11 +80,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        /* 'wots' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\wots_token::class,
-        ] */
     ],
 
     /*
@@ -99,13 +104,6 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-/* 
-        'wots' => [
-            'provider' => 'wots',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ] */
     ],
 
     /*

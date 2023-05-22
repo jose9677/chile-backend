@@ -165,6 +165,7 @@ return [
         Malahierba\ChileRut\ChileRutServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
         /*
          * Package Service Providers...
