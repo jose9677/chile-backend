@@ -114,7 +114,7 @@ class documentsController extends Controller
         if (!empty($_POST['url'])) {
             $url = $_POST['url'];
             
-            $file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\url_documents\\';
+            $file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\posts\\';
             
             $imagen = file_get_contents($url);
 

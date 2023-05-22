@@ -69,7 +69,7 @@ class wotsController extends Controller
         }
     }
 
-    public function wotsRegisterNeighbor(Request $request, $id_document_type)
+    public function wotsRegisterNeighbor(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
@@ -139,7 +139,7 @@ class wotsController extends Controller
         $user->aps = false;
         $user->id_sex = $request->get('id_sex');
         $user->origin = 'wots';
-        
+
         $sol = new solicitudes();
         $sol->rut_user = Str::upper($request->rut);
         $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
@@ -163,13 +163,15 @@ class wotsController extends Controller
         // $sol->admission_date = $request->get('admission_date');
 
         $file = new documentsController();
+        
+        $url_1 = $file->urlFile($user->rut, 1);//This Url make reference to residence file---
+        $url_2 = $file->urlFile($user->rut, 2);//This Url make reference to prevition file---
         $gate = false;
 
-        while ($id_document_type <= 2) {
-            $file->urlFile($user->rut, $id_document_type);
+        if ($url_1 AND $url_2) {
             $gate = true;
         }
-
+        
         if ($request->terms_condition == false) {
             $data = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
             return response()->json(['error' => 'User must to accept terms condition'], 400);
