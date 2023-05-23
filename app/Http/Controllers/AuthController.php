@@ -402,7 +402,13 @@ class AuthController extends Controller
                 }
         }
 
-        $data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT user FROM consultants.wots_token)");
+        //$data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT user FROM consultants.wots_token)");
+        $data = DB::select(
+            "SELECT 
+            a.rut 
+            FROM consultants.users as a
+            JOIN consultants.wots_token as b ON a.rut = b.user"
+        );
         
         if ($data) {
             $credentials = $request->only(['rut', 'password']);
@@ -412,7 +418,7 @@ class AuthController extends Controller
                 $jwt = JWTAuth::attempt($credentials);
                 $success = true;
                 $api_token = Str::random(50);
-                wots_token::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
+                wots_token::query()->where('user', $request->input('rut'))->update(['api_token' => $api_token]);
                 User::query()->where('rut', $request->input('rut'))->update(['origin' => 'wots']);
                 $data = compact('user', 'jwt');
 
