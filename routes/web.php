@@ -97,7 +97,7 @@ Route::post('/save', [App\Http\Controllers\documentsController::class, 'save']);
 Route::post('/file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'file']);
 
 Route::get('/form-url', [App\Http\Controllers\documentsController::class, 'indexUrl']);
-Route::post('/url-file/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'urlFile']);
+Route::post('/url-file/{url_doc}/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'urlFile']);
 
 /* //SIMULATIONS_CONTROLLER
 Route::get('/details-simulations', [App\Http\Controllers\simulationsController::class, 'detailsSimulation']);

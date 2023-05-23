@@ -101,17 +101,8 @@ class documentsController extends Controller
         return view('formUrl');
     }
 
-    public function urlFile(Request $request, $rut, $id_document_type)
+    public function urlFile($url_doc, $rut, $id_document_type)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(), [
-            'url_doc' => 'required'
-        ]);
-        
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
         $data = new documents();
         
         $query = solicitudes::where('rut_user', $rut)->max('id');
@@ -122,8 +113,8 @@ class documentsController extends Controller
 
         $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
 
-        if (!empty($request->url_doc)) {
-            $url = $request->url_doc;
+        if (!empty($url_doc)) {
+            $url = $url_doc;
             
             $file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\posts\\';
             
