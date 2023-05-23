@@ -402,7 +402,7 @@ class AuthController extends Controller
                 }
         }
 
-        $data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT rut FROM consultants.wots_token)");
+        $data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT user FROM consultants.wots_token)");
         
         if ($data) {
             $credentials = $request->only(['rut', 'password']);
@@ -413,6 +413,7 @@ class AuthController extends Controller
                 $success = true;
                 $api_token = Str::random(50);
                 wots_token::query()->where('rut', $request->input('rut'))->update(['api_token' => $api_token]);
+                User::query()->where('rut', $request->input('rut'))->update(['origin' => 'wots']);
                 $data = compact('user', 'jwt');
 
                 return compact('success', 'data');

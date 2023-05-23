@@ -164,6 +164,18 @@ class wotsController extends Controller
         $sol->id_remuneration = $request->get('id_remuneration');
         // $sol->admission_date = $request->get('admission_date');
 
+        
+        if ($request->terms_condition == true) {
+            $user->save();
+            $sol->save();
+        }
+        elseif ($request->terms_condition == false) {
+            $data_user = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
+            $data_sol = DB::delete("DELETE FROM consultants.solicitudes WHERE rut = '$request->rut");
+
+            return response()->json(['error' => 'User must to accept terms condition'], 400);
+        }
+
         $file = new documentsController();
         
         $url_1 = $file->urlFile($request->url_residence_file,$user->rut, 1);//This Url make reference to residence file---
@@ -174,13 +186,11 @@ class wotsController extends Controller
             $gate = true;
         }
         
-        if ($request->terms_condition == false) {
-            $data = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
-            return response()->json(['error' => 'User must to accept terms condition'], 400);
-        }
-        elseif ($request->terms_condition == true AND $gate == true) {
-            $user->save();
-            $sol->save();
+        if ($gate == false) {
+            $data_user = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
+            $data_sol = DB::delete("DELETE FROM consultants.solicitudes WHERE rut = '$request->rut");
+            
+            return response()->json(['error' => 'User must to load files'], 400);
         }
 
         $verify_rut = DB::table('aps')->where('rut', $request->rut)->value('rut');
