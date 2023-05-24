@@ -19,7 +19,7 @@ Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'r
 Route::post('/registerEmployee', [App\Http\Controllers\AuthController::class, 'registerEmployee']);
 
 //WOTSCONTROLLER....
-Route::post('/wots-auth', [App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/wots-auth', [App\Http\Controllers\wotsController::class, 'wotsAuth']);
 
 Route::middleware('auth:api')->group(function(){
     
@@ -102,11 +102,11 @@ Route::middleware('auth:api')->group(function(){
 
     //DESCIPTIONCONTROLLER
     Route::get('/services-categories', [App\Http\Controllers\decriptionsController::class, 'Categories_Services']);
-
-    //WOTSCONTROLLER....
-    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
     
-    Route::post('/wots-out', [App\Http\Controllers\AuthController::class, 'logout']);
+    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+    //WOTSCONTROLLER....
+    
+    Route::post('/wots-out', [App\Http\Controllers\wotsController::class, 'wotsOut']);
     Route::post('/wots-validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);    
     Route::get('/wots-consult-email', [App\Http\Controllers\wotsController::class, 'wotsConsultEmail']);
     Route::get('/wots-dropdownInfo', [App\Http\Controllers\wotsController::class, 'wotsDropdownInfo']);

@@ -135,7 +135,7 @@ class wotsController extends Controller
         $user->landline = $request->get('landline');
         $user->mobile_phone = $request->get('mobile_phone');
         $user->employee = false;
-        $user->email_active = false;
+        $user->email_active = true;
         $user->id_rol = 1;
         $user->active = true;
         $user->aps = false;
@@ -314,35 +314,6 @@ class wotsController extends Controller
         return $newToken;
     }
 
-    public function wotsAuth(Request $request)
-    {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'user' => 'required',
-            'password' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        $user = DB::table('wots_token')->where('user', $request->user)->value('user');
-        $password = DB::table('wots_token')->where('password', $request->password)->value('password');
-
-        if ($request->user === $user AND $request->password === $password) {
-            $token = $this->getNewToken();
-            wots_token::query()->where('user', $request->user)->update(['api_token' => $token]);
-            
-            return response()->json(
-                ['message' => 'User autenticated',
-                 'api_token' => $token
-                ], 200);
-        }
-        else {
-            return response()->json(['error' => 'User or Password Incorrect'], 400);
-        }
-    }
-
     public function wotsAuthJWT(Request $request)
     {
         $data = new wots_token();
@@ -371,27 +342,79 @@ class wotsController extends Controller
             return response()->json(['error' => $message], 400);
         }
     }
-
-    public function wotsOut(Request $request)
+    
+    public function wotsAuth(Request $request)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'api_token' => 'required'
-        ]);
+        $data = new User();
+        $data = User::query()->where(['rut' => $request->input('rut')])->first();
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+        if (!$data) {
+            return response()->json(['error' => 'User does not exists in Data Base'], 400);
+        }
+        
+        if ($data->email_active == false) {
+            return response()->json(['error' => 'Inactive Email'], 400);
+        }
+        
+        //this validation ask if the user is a employee, in that case the method must to ask if
+        //that employee is active or not.
+        if ($data->employee == true) {
+            $data = User::query()->where(['rut' => $request->input('rut'), 'active' => true])->first();
+                if (!$data) {
+                    return response()->json(['error' => 'This employee is not actived'], 400);
+                }
         }
 
-        $api_token = DB::table('wots_token')->where('api_token', $request->api_token)->value('api_token');
+        //$data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT user FROM consultants.wots_token)");
+        $data = DB::select(
+            "SELECT 
+            a.rut 
+            FROM consultants.users as a
+            JOIN consultants.wots_token as b ON a.rut = b.user"
+        );
+        
+        if ($data) {
+            $credentials = $request->only(['rut', 'password']);
 
-        if ($request->api_token === $api_token) {
-            wots_token::query()->where('api_token', $request->api_token)->update(['api_token' => null]);
+            if (Auth::guard('api')->attempt($credentials)) {
+                $user = Auth::guard('api')->user();
+                $jwt = JWTAuth::attempt($credentials);
+                $success = true;
+                $api_token = Str::random(50);
+                wots_token::query()->where('user', $request->input('rut'))->update(['api_token' => $api_token]);
+                User::query()->where('rut', $request->input('rut'))->update(['origin' => 'wots']);
+                $data = compact('jwt');
 
-            return response()->json(['message' => 'User Logout'], 200);
+                return compact('success', 'data');
+            }else {
+                $success = false;
+                $message = 'User or Password Incorrect';
+                return response()->json(['error' => $message], 400);
+            }
         }
-        else {
-            return response()->json(['error' => 'api_token Does not exists'], 400);
+        elseif (!$data) {
+            $credentials = $request->only(['rut', 'password']);
+
+            if (Auth::guard('api')->attempt($credentials)) {
+                $user = Auth::guard('api')->user();
+                $jwt = JWTAuth::attempt($credentials);
+                $success = true;
+                $data = compact('jwt');
+
+                return compact('success', 'data');
+            }else {
+                $success = false;
+                $message = 'User or Password Incorrect';
+                return response()->json(['error' => $message], 400);
+            }
         }
+    }
+
+    public function wotsOut()
+    {
+        Auth::guard('api')->logout();
+        $success = true;
+
+        return compact('success');
     }
 }
