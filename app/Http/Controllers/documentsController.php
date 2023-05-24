@@ -129,7 +129,7 @@ class documentsController extends Controller
             if($b){
                 $mime = explode(";", $b)[0];
                 $ext = FileInfoHelper::get_image_ext($mime);
-                $nombre = '_'. $documents_types.'_'.'SOL'.$query.'-'.$random_number.'.'.$ext;
+                $nombre = $documents_types.'_'.'SOL'.$query.'-'.$random_number.'.'.$ext;
                 $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$random_number.'.'.$ext;
                 //file_put_contents($file_path. $nombre, $imagen);
 

@@ -27,7 +27,8 @@ class FileInfoHelper
             "image/iff" => "iff",
             "image/wbmp" => "wbmp",
             "image/xbm" => "xbm",
-            "image/ico" => "ico"
+            "image/ico" => "ico",
+            "image/pdf" => "pdf"
         );
     
         /*
