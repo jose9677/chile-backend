@@ -13,6 +13,7 @@ use Ixudra\Curl\Facades\Curl;
 use SplFileInfo;
 use App\Helpers\FileInfoHelper;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class documentsController extends Controller
@@ -107,6 +108,7 @@ class documentsController extends Controller
         
         $query = solicitudes::where('rut_user', $rut)->max('id');
         $id_doc = documents::max('id') + 1;
+        $random_number = rand(10,999);
 
         $data->id_request = $query;
         $data->id_document_type = $id_document_type;
@@ -117,7 +119,7 @@ class documentsController extends Controller
             $url = $url_doc;
             
             //$file_path = 'C:\xampp\htdocs\salud-a-tu-alcance-backend\storage\app\public\posts\\';
-            $file_path = 'http://54.189.74.47/storage/profile_pic/posts';
+            //$file_path = 'http://54.189.74.47/storage/profile_pic/posts';
             
             $imagen = file_get_contents($url);
 
@@ -127,9 +129,11 @@ class documentsController extends Controller
             if($b){
                 $mime = explode(";", $b)[0];
                 $ext = FileInfoHelper::get_image_ext($mime);
-                $nombre = '_'. $documents_types.'_'.'SOL'.$query.'-'.$id_doc.'.'.$ext;
-                $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$ext;
-                file_put_contents($file_path. $nombre, $imagen);
+                $nombre = '_'. $documents_types.'_'.'SOL'.$query.'-'.$random_number.'.'.$ext;
+                $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$random_number.'.'.$ext;
+                //file_put_contents($file_path. $nombre, $imagen);
+
+                Storage::disk('posts')->put($nombre, $imagen);
 
                 $data->document_path = $comPic;
                 $data->document_ext = $ext;
