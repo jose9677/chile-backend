@@ -90,6 +90,9 @@ class wotsController extends Controller
             //'id_prevention_type_detail' => 'required',
             'carer' => 'required',
             // 'admission_date' => 'required'
+            'dir_wots' => 'required',
+            'latitude' => 'required',
+            'length'   => 'required',
             'url_residence_file' => 'required',
             'url_prevition_file' => 'required'
         ]);
@@ -105,25 +108,6 @@ class wotsController extends Controller
         if ($user->count()) {
             return response()->json(['error' => 'User exists in DB'], 400);
         }
-/* 
-        $user = User::create([
-            'rut' => Str::upper($request->get('rut')),
-            'names' => Str::upper($request->get('names')),
-            'lastname' => Str::upper($request->get('lastname')),
-            'f_nac' => $request->get('f_nac'),
-            'email' => Str::lower($request->get('email')),
-            'password' => Hash::make($this->generatePassword()),
-            'landline' => $request->get('landline'),
-            'mobile_phone' => $request->get('mobile_phone'),
-            'employee' => false,
-            //'otp' => $this->generateCodOtp(),
-            'email_active' => false,
-            'id_rol' => 1,
-            'active' => true,
-            'aps' => false,
-            'id_sex' => $request->get('id_sex'),
-            'origin' => 'wots'
-        ]); */
 
         $user = new User();
         $user->rut = Str::upper($request->get('rut'));
@@ -146,8 +130,8 @@ class wotsController extends Controller
         $sol->rut_user = Str::upper($request->rut);
         $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
         $sol->assurance = $request->get('assurance');
-        $sol->id_location = $request->get('id_location');
-        $sol->way_number = $request->get('way_number');
+        $sol->id_location = 1;
+        $sol->way_number = 1;
         $sol->id_property_type = $request->get('id_property_type');
         $sol->property_number = $request->get('property_number');
         $sol->terms_condition = $request->get('terms_condition');
@@ -163,7 +147,9 @@ class wotsController extends Controller
         $sol->id_dedication = $request->get('id_dedication');
         $sol->id_remuneration = $request->get('id_remuneration');
         // $sol->admission_date = $request->get('admission_date');
-
+        $sol->dir_wots = $request->get('dir_wots');
+        $sol->latitude = $request->get('latitude');
+        $sol->length = $request->get('length');
         
         if ($request->terms_condition == true) {
             $user->save();

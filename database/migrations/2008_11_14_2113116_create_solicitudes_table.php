@@ -40,6 +40,9 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('id_dedication')->nullable();
             $table->unsignedBigInteger('id_remuneration')->nullable();
             $table->date('admission_date');
+            $table->string('dir_wots')->nullable();
+            $table->string('latitude')->nullable();
+            $table->float('length')->nullable();
 
             $table->timestamps();
 

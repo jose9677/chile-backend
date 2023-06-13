@@ -34,7 +34,11 @@ class solicitudes extends Model
         'id_motive',
         'id_dedication',
         'id_remuneration',
-        'admission date'
+        'admission date',
+        'dir_wots',
+        'latitude',
+        'length'
+
     ];
 
     protected $hidden = [
