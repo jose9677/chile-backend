@@ -187,7 +187,7 @@ class user_requestController extends Controller
                 a.property_number,
                 a.dir_wots,
                 a.latitude,
-                a.length,
+                a.longitude,
                 f.rut as rut_assistant,
                 f.names as names_assistant,
                 f.lastname as lastname_assistant,

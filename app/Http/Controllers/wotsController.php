@@ -92,7 +92,7 @@ class wotsController extends Controller
             // 'admission_date' => 'required'
             'dir_wots' => 'required',
             'latitude' => 'required',
-            'length'   => 'required',
+            'longitude'   => 'required',
             'url_residence_file' => 'required',
             'url_prevition_file' => 'required'
         ]);
@@ -149,7 +149,7 @@ class wotsController extends Controller
         // $sol->admission_date = $request->get('admission_date');
         $sol->dir_wots = $request->get('dir_wots');
         $sol->latitude = $request->get('latitude');
-        $sol->length = $request->get('length');
+        $sol->longitude = $request->get('longitude');
         
         if ($request->terms_condition == true) {
             $user->save();

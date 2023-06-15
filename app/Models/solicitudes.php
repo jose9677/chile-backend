@@ -37,7 +37,7 @@ class solicitudes extends Model
         'admission date',
         'dir_wots',
         'latitude',
-        'length'
+        'longitude'
 
     ];
 
