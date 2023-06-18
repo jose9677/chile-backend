@@ -107,7 +107,7 @@ Route::middleware('auth:api')->group(function(){
     //WOTSCONTROLLER....
     
     Route::post('/wots-out', [App\Http\Controllers\wotsController::class, 'wotsOut']);
-    Route::post('/wots-validateRut', [App\Http\Controllers\AuthController::class, 'validateRut']);    
+    Route::post('/wots-validateRut', [App\Http\Controllers\wotsController::class, 'validateRut']);    
     Route::get('/wots-consult-email', [App\Http\Controllers\wotsController::class, 'wotsConsultEmail']);
     Route::get('/wots-dropdownInfo', [App\Http\Controllers\wotsController::class, 'wotsDropdownInfo']);
     Route::post('/url-file/{url_doc}/{rut}/{id_document_type}', [App\Http\Controllers\documentsController::class, 'urlFile']);

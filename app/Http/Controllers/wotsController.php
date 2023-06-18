@@ -63,7 +63,8 @@ class wotsController extends Controller
         }
         
         if ($request->rut) {
-            return response()->json(['message' => 'User is not registered'], 200);
+            //return response()->json(['message' => 'User is not registered'], 200);
+            return response()->json(['message' => $request->rut.' Is Valid'], 200);
         }else {
             return response()->json(['error' => $request->rut.' Is not Valid'], 400);
         }
