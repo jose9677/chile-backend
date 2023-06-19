@@ -62,12 +62,12 @@ class wotsController extends Controller
             }
         }
         
-        if ($request->rut) {
+        /* if ($request->rut) {
             //return response()->json(['message' => 'User is not registered'], 200);
             return response()->json(['message' => $request->rut.' Is Valid'], 200);
         }else {
             return response()->json(['error' => $request->rut.' Is not Valid'], 400);
-        }
+        } */
     }
 
     public function wotsRegisterNeighbor(Request $request)
@@ -108,6 +108,12 @@ class wotsController extends Controller
 
         if ($user->count()) {
             return response()->json(['error' => 'User exists in DB'], 400);
+        }
+
+        $verify = $this->validateRut($request);
+
+        if ($verify) {
+            return response()->json(['error' => 'Invalid Rut'], 400);
         }
 
         $user = new User();
