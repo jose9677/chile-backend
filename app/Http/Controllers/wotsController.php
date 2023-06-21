@@ -78,7 +78,7 @@ class wotsController extends Controller
             'names'  => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             /* 
             'password' => ['required',
                 Password::min(8)

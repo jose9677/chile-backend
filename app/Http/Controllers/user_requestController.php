@@ -164,9 +164,9 @@ class user_requestController extends Controller
                 LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
                 LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
                 LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
-                LEFT JOIN consultants.documents as i ON i.id_request = a.id
+                LEFT JOIN consultants.documents as i ON i.id_request = a.id AND i.active = true
                 LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
-                WHERE a.id = $id AND i.active = true"
+                WHERE a.id = $id "
             );    
         }elseif ($origin) {
             $query = DB::select(
@@ -180,8 +180,8 @@ class user_requestController extends Controller
                 a.id_status,
                 c.status,
                 a.id_location,
-                a.way_number,
-                d.street||'  '||a.dir_wots||'  '||a.latitude||'  '||a.longitude as direction,
+                '' as way_number,
+                a.dir_wots as street,
                 a.id_property_type,
                 e.description,
                 a.property_number,
@@ -206,9 +206,9 @@ class user_requestController extends Controller
                 LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
                 LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
                 LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
-                LEFT JOIN consultants.documents as i ON i.id_request = a.id
+                LEFT JOIN consultants.documents as i ON i.id_request = a.id AND i.active = true
                 LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
-                WHERE a.id = $id AND i.active = true"
+                WHERE a.id = $id"
             );
         }
         
