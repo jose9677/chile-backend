@@ -11,8 +11,8 @@
         <th>Email</th>
         <th>Tel. fijo</th>
         <th>Tel. Móvil</th>
-        <th>Calle</th>
         <th>Número Calle</th>
+        <th>Calle</th>
         <th>Casa/Dpto/Ofic</th>
         <th>Número Casa/Dpto/Ofic</th>
         <th>APS</th>
@@ -42,8 +42,8 @@
         <td>{{ $report->email }}</td>
         <td>{{ $report->tel_fijo }}</td>
         <td>{{ $report->tel_móvil }}</td>
-        <td>{{ $report->calle }}</td>
         <td>{{ $report->número_calle }}</td>
+        <td>{{ $report->calle }}</td>
         <td>{{ $report->casa_dpto_ofic }}</td>
         <td>{{ $report->número_casa_dpto_ofic }}</td>
         <td>{{ $report->aps }}</td>
