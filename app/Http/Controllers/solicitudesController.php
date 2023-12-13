@@ -422,7 +422,6 @@ class solicitudesController extends Controller
             'prevention_is_valid' => 'required',
             'location_is_valid' => 'required',
             'rut_match' => 'required'
-
         ]);
 
         if ($validator->fails()) {
