@@ -35,12 +35,24 @@ class apsController extends Controller
         $data = update_aps::FindOrFail($id_aps);
         $dataFound = $data;
 
+        /* $data = DB::table('update_aps')
+                    ->select('update_aps.*', 'aps_status.description as status_description')
+                    ->join('aps_status', 'aps_status.id_status', '=', 'update_aps.id_status')
+                    ->where('id_aps', $id_aps)
+                    ->get(); */
+
+        //return response()->json($data, 200);
         return response()->json($dataFound, 200);
     }
 
     public function lastUpdateAps()
     {
-        $data = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->get();
+        $data = DB::table('update_aps')
+                    ->select('update_aps.*', 'aps_status.description as status_description')
+                    ->join('aps_status', 'aps_status.id_status', '=', 'update_aps.id_status')
+                    ->orderByDesc('id_aps')
+                    ->limit(1)
+                    ->get();
 
         return response()->json($data, 200);
     }
