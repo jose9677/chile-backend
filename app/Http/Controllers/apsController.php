@@ -23,26 +23,15 @@ class apsController extends Controller
         return view('aps');
     }
 
-    public function detailsUpdateAps()
-    {
-        $data = DB::table('update_aps')->orderBy('id_aps')->get();
-
-        return response()->json($data, 200);
-    }
-
     public function searchUpdateAps($id_aps)
     {
-        $data = update_aps::FindOrFail($id_aps);
-        $dataFound = $data;
-
-        /* $data = DB::table('update_aps')
+        $data = DB::table('update_aps')
                     ->select('update_aps.*', 'aps_status.description as status_description')
                     ->join('aps_status', 'aps_status.id_status', '=', 'update_aps.id_status')
                     ->where('id_aps', $id_aps)
-                    ->get(); */
+                    ->get();
 
-        //return response()->json($data, 200);
-        return response()->json($dataFound, 200);
+        return response()->json($data, 200);
     }
 
     public function lastUpdateAps()
@@ -99,7 +88,8 @@ class apsController extends Controller
     
                 $name = DB::table('users')->where('rut', $request->rut)->value('names');
                 $lastname = DB::table('users')->where('rut', $request->rut)->value('lastname');
-                $path = 'storage/app/public/aps/'.$comPic;
+                $app_url = env('APP_URL');
+                $path = $app_url.'/storage/app/public/aps/'.$comPic;
                 
                 $data->cant_records = $cant_records;
                 $data->coincidence = $this->apsCoincidence();

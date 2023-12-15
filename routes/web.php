@@ -136,7 +136,6 @@ Route::get('export-integramedica', [App\Http\Controllers\exportController::class
 //IMPORTAR REPORTES 
 Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);
 Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import']);
-Route::get('details-update-aps', [App\Http\Controllers\apsController::class, 'detailsUpdateAps']);
 Route::get('search-update-aps/{id_aps}', [App\Http\Controllers\apsController::class, 'searchUpdateAps']);
 Route::get('last-aps', [App\Http\Controllers\apsController::class, 'lastUpdateAps']);
 Route::get('aps-historic', [App\Http\Controllers\apsController::class, 'apsHistoric']); 
