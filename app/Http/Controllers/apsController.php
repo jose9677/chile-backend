@@ -68,18 +68,27 @@ class apsController extends Controller
         }
         elseif ($employee == true) {
             if ($request->hasFile('document')) {
-                aps::truncate();
+                if ($this->trucateAPS()) {
+                    $status = 1;
+                    $des_status = DB::table('aps_status')->where('id_status', $status)->value('description');
+                }
                 
                 $excel = new apsImport;
-                Excel::import($excel, request()->file('document'));
-    
+                if (Excel::import($excel, request()->file('document'))) {
+                    $status = 2;
+                    $des_status = DB::table('aps_status')->where('id_status', $status)->value('description');
+                }
+                
                 $completeFilename = $request->file('document')->getClientOriginalName();
                 $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
                 $extension = $request->file('document')->getClientOriginalExtension();
                 
                 $comPic = str_replace(' ', '_', $completeFilename.'-'.$date).'.'.$extension;
                 
-                $path = $request->file('document')->storeAs('public/aps', $comPic);
+                if ($path = $request->file('document')->storeAs('public/aps', $comPic)) {
+                    $status = 3;
+                    $des_status = DB::table('aps_status')->where('id_status', $status)->value('description');
+                }
                 
                 //INSERTAR DATOS EN LA TABLA DE update_aps...
                 
@@ -97,12 +106,29 @@ class apsController extends Controller
                 $data->path = $path;
                 $data->id_status = 6;
                 $data->update_date = $request->update_date;
-    
-                $data->save();
+                
+                try {
+                    $data->save();
+                    $status = $data->id_status;
+                    $des_status = DB::table('aps_status')->where('id_status', $data->id_status)->value('description');
+                } catch (\Throwable $th) {
+                    return response()->json(['error' => 'Fail to insert new record'], 400);
+                }
+
             }                
         }
         //return back();
-        return response()->json(['message' => 'File uploaded successfull'], 200);
+        return response()->json([
+            'message' => 'File uploaded successfull',
+            'status' => $des_status
+        ], 200);
+    }
+
+    public function trucateAPS()
+    {
+        aps::truncate();
+
+        return response()->json(['message' => 'List Aps truncated'], 200);
     }
 
     public function apsCoincidence()
@@ -121,7 +147,7 @@ class apsController extends Controller
         $data = DB::table('update_aps')
                 ->select('update_aps.*', 'aps_status.description')
                 ->join('aps_status', 'update_aps.id_status', '=', 'aps_status.id_status')
-                ->orderBy('id_aps')
+                ->orderByDesc('id_aps')
                 ->get();
 
         return response()->json($data, 200);
