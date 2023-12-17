@@ -139,6 +139,7 @@ Route::post('import-aps', [App\Http\Controllers\apsController::class, 'import'])
 Route::get('search-update-aps/{id_aps}', [App\Http\Controllers\apsController::class, 'searchUpdateAps']);
 Route::get('last-aps', [App\Http\Controllers\apsController::class, 'lastUpdateAps']);
 Route::get('aps-historic', [App\Http\Controllers\apsController::class, 'apsHistoric']); 
+Route::get('aps-download', [App\Http\Controllers\apsController::class, 'downloadFile']); 
 
 Route::get('token', [App\Http\Controllers\usersController::class, 'getNewToken']);
 Route::post('wots-auth', [App\Http\Controllers\wotsController::class, 'wotsAuth']);

@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Imports\apsImport;
 use App\Models\aps;
+use App\Models\aps_status;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\update_aps;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class apsController extends Controller
@@ -97,8 +99,9 @@ class apsController extends Controller
     
                 $name = DB::table('users')->where('rut', $request->rut)->value('names');
                 $lastname = DB::table('users')->where('rut', $request->rut)->value('lastname');
-                $app_url = env('APP_URL');
-                $path = $app_url.'/storage/app/public/aps/'.$comPic;
+                /* $app_url = env('APP_URL');
+                $path = $app_url.'/storage/app/public/aps/'.$comPic; */
+                $path = $comPic;
                 
                 $data->cant_records = $cant_records;
                 $data->coincidence = $this->apsCoincidence();
@@ -114,7 +117,6 @@ class apsController extends Controller
                 } catch (\Throwable $th) {
                     return response()->json(['error' => 'Fail to insert new record'], 400);
                 }
-
             }                
         }
         //return back();
@@ -122,6 +124,20 @@ class apsController extends Controller
             'message' => 'File uploaded successfull',
             'status' => $des_status
         ], 200);
+    }
+
+    public function downloadFile(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'document' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        return Storage::download('public/aps/'.$request->document);
     }
 
     public function trucateAPS()
@@ -151,5 +167,20 @@ class apsController extends Controller
                 ->get();
 
         return response()->json($data, 200);
+    }
+
+    public function detailsStatus()
+    {
+        $data = aps_status::all();
+
+        return response()->json($data, 200);
+    }
+
+    public function searchStatus($id_status)
+    {
+        $data = aps_status::FindOrFail($id_status);
+        $dataFound = $data;
+
+        return response()->json($dataFound, 200);
     }
 }
