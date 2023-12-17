@@ -141,6 +141,10 @@ Route::get('last-aps', [App\Http\Controllers\apsController::class, 'lastUpdateAp
 Route::get('aps-historic', [App\Http\Controllers\apsController::class, 'apsHistoric']); 
 Route::get('aps-download/{file}', [App\Http\Controllers\apsController::class, 'downloadFile']); 
 
+//STATUS APS...
+Route::get('details-aps-status', [App\Http\Controllers\apsController::class, 'detailsStatus']); 
+Route::get('search-aps-status/{id_status}', [App\Http\Controllers\apsController::class, 'searchStatus']); 
+
 Route::get('token', [App\Http\Controllers\usersController::class, 'getNewToken']);
 Route::post('wots-auth', [App\Http\Controllers\wotsController::class, 'wotsAuth']);
 Route::post('wots-out', [App\Http\Controllers\wotsController::class, 'wotsOut']);

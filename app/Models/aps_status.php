@@ -10,6 +10,8 @@ class aps_status extends Model
     use HasFactory;
 
     protected $table = 'aps_status';
+    protected $primaryKey = 'id_status';
+    public $incrementing = false;
 
     protected $fillable = [
         'description'
