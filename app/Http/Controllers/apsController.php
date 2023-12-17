@@ -126,18 +126,9 @@ class apsController extends Controller
         ], 200);
     }
 
-    public function downloadFile(Request $request)
+    public function downloadFile($file)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(), [
-            'document' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        return Storage::download('public/aps/'.$request->document);
+        return Storage::download('public/aps/'.$file);
     }
 
     public function trucateAPS()
