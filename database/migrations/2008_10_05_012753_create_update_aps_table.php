@@ -15,12 +15,12 @@ class CreateUpdateApsTable extends Migration
     {
         Schema::create('update_aps', function (Blueprint $table) {
             $table->id('id_aps');
-            $table->integer('cant_records');
-            $table->integer('coincidence');
-            $table->string('user_name');
-            $table->string('path');
-            $table->unsignedBigInteger('id_status');
-            $table->date('update_date');
+            $table->integer('cant_records')->nullable();
+            $table->integer('coincidence')->nullable();
+            $table->string('user_name')->nullable();
+            $table->string('path')->nullable();
+            $table->unsignedBigInteger('id_status')->nullable();
+            $table->date('update_date')->nullable();
             $table->timestamps();
 
             $table->foreign('id_status')->references('id_status')->on('aps_status')->onUpdate('CASCADE');

@@ -80,9 +80,12 @@ class apsController extends Controller
                 $data->coincidence = null;
                 $data->user_name = null;
                 $data->path = null;
-                $data->id_status = 1;
+                $data->id_status = null;
                 $data->update_date = null;
                 $data->save();
+
+                $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                DB::update("UPDATE consultants.update_aps SET id_status = 1 WHERE id_aps = $id_aps");
 
                 $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
                 $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
@@ -94,7 +97,6 @@ class apsController extends Controller
                 
                 try {
                 Excel::import($excel, request()->file('document'));
-                $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
                 DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
 
                 $status_2 = DB::table('aps_status')->where('id_status', 2)->value('description');
@@ -120,7 +122,7 @@ class apsController extends Controller
                 try {
                 //SUBIR ARCHIVO AL SERVIDOR...
                 $save = $request->file('document')->storeAs('public/aps', $comPic);
-                DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
+                DB::update("UPDATE consultants.update_aps SET id_status = 3 WHERE id_aps = $id_aps");
                     
                 $status_3 = DB::table('aps_status')->where('id_status', 3)->value('description');
                 $step_3 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
