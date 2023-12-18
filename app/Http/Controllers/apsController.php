@@ -151,27 +151,22 @@ class apsController extends Controller
                     $step_4 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                     $step_5 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
-                
-                /* $data->cant_records = $cant_records;
-                $data->coincidence = $this->apsCoincidence();
-                $data->user = $name.' '.$lastname;
-                $data->path = $path;
-                $data->update_date = $request->update_date; */
 
                 try {
+                    $user_fullName = $name.' '.$lastname;
                     $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
 
-                    update_aps::query()->where('id_aps', $id_aps)->update(
-                        [
-                            'cant_records' => $cant_records,
-                            'coincidence' => $this->apsCoincidence(),
-                            'user' => $name.' '.$lastname,
-                            'path' => $path,
-                            'update_date' => $request->update_date
-                        ]
-                    );
-
-                    update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 6]);
+                    DB::update(
+                        "UPDATE consultants.update_aps 
+                        SET 
+                        cant_records = $cant_records,
+                        coincidence = {$this->apsCoincidence()},
+                        user_name =  '$user_fullName',
+                        path = '$path',
+                        id_status = 6,
+                        update_date = '$request->update_date'
+                        WHERE id_aps = $id_aps
+                        ");
                     
                     $status_6 = DB::table('aps_status')->where('id_status', 6)->value('description');
                     $step_6 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
@@ -183,7 +178,7 @@ class apsController extends Controller
         }
         //return back();
         return response()->json([
-            'truncate_aps' => $status_1,
+             'truncate_aps' => $status_1,
             'status_process' => $step_1,
             'new_aps_list' => $status_2,
             'status_process' => $step_2,
@@ -192,7 +187,7 @@ class apsController extends Controller
             'users_aps' => $status_4,
             'status_process' => $step_4,
             'percent_aps' => $status_5,
-            'status_process' => $step_5,
+            'status_process' => $step_5, 
             'final_process' => $status_6,
             'status_process' => $step_6
         ], 200);

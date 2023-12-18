@@ -16,7 +16,7 @@ class update_aps extends Model
     protected $fillable = [
         'cant_records',
         'coincidence',
-        'user',
+        'user_name',
         'path',
         'id_status',
         'update_date'

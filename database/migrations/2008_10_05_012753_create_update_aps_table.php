@@ -17,7 +17,7 @@ class CreateUpdateApsTable extends Migration
             $table->id('id_aps');
             $table->integer('cant_records');
             $table->integer('coincidence');
-            $table->string('user');
+            $table->string('user_name');
             $table->string('path');
             $table->unsignedBigInteger('id_status');
             $table->date('update_date');
