@@ -152,16 +152,25 @@ class apsController extends Controller
                     $step_5 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
                 
-                $data->cant_records = $cant_records;
+                /* $data->cant_records = $cant_records;
                 $data->coincidence = $this->apsCoincidence();
                 $data->user = $name.' '.$lastname;
                 $data->path = $path;
-                $data->id_status = 6;
-                $data->update_date = $request->update_date;
-                
+                $data->update_date = $request->update_date; */
+
                 try {
-                    $data->save();
                     $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+
+                    update_aps::query()->where('id_aps', $id_aps)->update(
+                        [
+                            'cant_records' => $cant_records,
+                            'coincidence' => $this->apsCoincidence(),
+                            'user' => $name.' '.$lastname,
+                            'path' => $path,
+                            'update_date' => $request->update_date
+                        ]
+                    );
+
                     update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 6]);
                     
                     $status_6 = DB::table('aps_status')->where('id_status', 6)->value('description');
