@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\apsImport;
 use App\Models\aps;
 use App\Models\aps_status;
+use App\Models\des_aps_status;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\update_aps;
@@ -70,15 +71,34 @@ class apsController extends Controller
         }
         elseif ($employee == true) {
             if ($request->hasFile('document')) {
-                if ($this->trucateAPS()) {
-                    $status = 1;
-                    $des_status = DB::table('aps_status')->where('id_status', $status)->value('description');
+
+                try {
+                    $this->trucateAPS();
+                    DB::table('update_aps')->insert([
+                        'cant_records' => null,
+                        'coincidence' => null,
+                        'user' => null,
+                        'path' => null,
+                        'id_status' => 1,
+                        'update_date' => null
+                    ]);
+
+                    $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
+                    $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+                } catch (\Throwable $th) {
+                    $step_1 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
-                
+
                 $excel = new apsImport;
-                if (Excel::import($excel, request()->file('document'))) {
-                    $status = 2;
-                    $des_status = DB::table('aps_status')->where('id_status', $status)->value('description');
+                try {
+                    Excel::import($excel, request()->file('document'));
+                    $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                    update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 2]);
+                    
+                    $status_2 = DB::table('aps_status')->where('id_status', 2)->value('description');
+                    $step_2 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+                } catch (\Throwable $th) {
+                    $step_2 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
                 
                 $completeFilename = $request->file('document')->getClientOriginalName();
@@ -87,11 +107,6 @@ class apsController extends Controller
                 
                 $comPic = str_replace(' ', '_', $completeFilename.'-'.$date).'.'.$extension;
                 
-                if ($path = $request->file('document')->storeAs('public/aps', $comPic)) {
-                    $status = 3;
-                    $des_status = DB::table('aps_status')->where('id_status', $status)->value('description');
-                }
-                
                 //INSERTAR DATOS EN LA TABLA DE update_aps...
                 
                 $data = new update_aps();
@@ -99,9 +114,43 @@ class apsController extends Controller
     
                 $name = DB::table('users')->where('rut', $request->rut)->value('names');
                 $lastname = DB::table('users')->where('rut', $request->rut)->value('lastname');
-                /* $app_url = env('APP_URL');
-                $path = $app_url.'/storage/app/public/aps/'.$comPic; */
+                
+                //SUBIR ARCHIVO AL SERVIDOR...
+                try {
+                    $save = $request->file('document')->storeAs('public/aps', $comPic);
+                    $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                    update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 3]);
+                    
+                    $status_3 = DB::table('aps_status')->where('id_status', 3)->value('description');
+                    $step_3 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+                } catch (\Throwable $th) {
+                    $step_3 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
+                }
+                
                 $path = $comPic;
+                
+                $aps = new AuthController();
+                
+                try {
+                    $aps->updateAps();
+                    
+                    //ACTUALIZACION DE VECINOS CON APS....
+                    $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                    update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 4]);
+                    
+                    $status_4 = DB::table('aps_status')->where('id_status', 4)->value('description');
+                    $step_4 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+
+                    //ACTUALIZACION DE PORCENTAJES APS....
+                    $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                    update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 5]);
+                    
+                    $status_5 = DB::table('aps_status')->where('id_status', 5)->value('description');
+                    $step_5 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+                } catch (\Throwable $th) {
+                    $step_4 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
+                    $step_5 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
+                }
                 
                 $data->cant_records = $cant_records;
                 $data->coincidence = $this->apsCoincidence();
@@ -112,17 +161,31 @@ class apsController extends Controller
                 
                 try {
                     $data->save();
-                    $status = $data->id_status;
-                    $des_status = DB::table('aps_status')->where('id_status', $data->id_status)->value('description');
+                    $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                    update_aps::query()->where(['id_aps', $id_aps])->update(['id_status' => 6]);
+                    
+                    $status_6 = DB::table('aps_status')->where('id_status', 6)->value('description');
+                    $step_6 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
                 } catch (\Throwable $th) {
+                    $step_6 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                     return response()->json(['error' => 'Fail to insert new record'], 400);
                 }
             }                
         }
         //return back();
         return response()->json([
-            'message' => 'File uploaded successfull',
-            'status' => $des_status
+            'truncate_aps' => $status_1,
+            'status_process' => $step_1,
+            'new_aps_list' => $status_2,
+            'status_process' => $step_2,
+            'save_file_sever' => $status_3,
+            'status_process' => $step_3,
+            'users_aps' => $status_4,
+            'status_process' => $step_4,
+            'percent_aps' => $status_5,
+            'status_process' => $step_5,
+            'final_process' => $status_6,
+            'status_process' => $step_6
         ], 200);
     }
 

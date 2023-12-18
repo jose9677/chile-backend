@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\des_aps_status;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        $this->call(aps_statusSeeder::class);
+        //$this->call(aps_statusSeeder::class);
+        $this->call(desApsStatusSeeder::class);
     }
 }

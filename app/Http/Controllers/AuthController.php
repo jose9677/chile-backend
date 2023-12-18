@@ -307,7 +307,7 @@ class AuthController extends Controller
         return response()->json(compact('user', 'sol', 'token'), 201); 
     }
 
-    public function updateAps(Request $request)
+    public function updateAps()
     {
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
 
