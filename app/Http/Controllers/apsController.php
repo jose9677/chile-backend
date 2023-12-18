@@ -152,7 +152,7 @@ class apsController extends Controller
                     $step_5 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
 
-                try {
+            
                     $user_fullName = $name.' '.$lastname;
                     $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
 
@@ -170,10 +170,6 @@ class apsController extends Controller
                     
                     $status_6 = DB::table('aps_status')->where('id_status', 6)->value('description');
                     $step_6 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
-                } catch (\Throwable $th) {
-                    $step_6 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
-                    return response()->json(['error' => 'Fail to insert new record'], 400);
-                }
             }                
         }
         //return back();
