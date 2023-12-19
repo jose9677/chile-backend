@@ -144,6 +144,7 @@ Route::get('aps-download/{file}', [App\Http\Controllers\apsController::class, 'd
 //STATUS APS...
 Route::get('details-aps-status', [App\Http\Controllers\apsController::class, 'detailsStatus']); 
 Route::get('search-aps-status/{id_status}', [App\Http\Controllers\apsController::class, 'searchStatus']); 
+Route::get('process-aps', [App\Http\Controllers\apsController::class, 'ProcessAps']); 
 
 Route::get('token', [App\Http\Controllers\usersController::class, 'getNewToken']);
 Route::post('wots-auth', [App\Http\Controllers\wotsController::class, 'wotsAuth']);

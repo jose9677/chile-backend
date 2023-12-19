@@ -86,9 +86,41 @@ class apsController extends Controller
 
                 $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
                 DB::update("UPDATE consultants.update_aps SET id_status = 1 WHERE id_aps = $id_aps");
+                DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 1");
 
-                $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
-                $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+                /* $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
+                $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
+                                
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 2,
+                    'id_des_status' => 2
+                ]);
+
+                 DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 3,
+                    'id_des_status' => 3
+                ]);
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 4,
+                    'id_des_status' => 3
+                ]);
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 5,
+                    'id_des_status' => 3
+                ]);
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 6,
+                    'id_des_status' => 3
+                ]); 
+
                 } catch (\Throwable $th) {
                     $step_1 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
@@ -98,14 +130,40 @@ class apsController extends Controller
                 try {
                 Excel::import($excel, request()->file('document'));
                 DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
+                DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 2 AND id_des_status = 5");
 
-                $status_2 = DB::table('aps_status')->where('id_status', 2)->value('description');
-                $step_2 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
+                /* $status_2 = DB::table('aps_status')->where('id_status', 2)->value('description');
+                $step_2 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 3,
+                    'id_des_status' => 2
+                ]);
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 4,
+                    'id_des_status' => 3
+                ]);
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 5,
+                    'id_des_status' => 3
+                ]);
+
+                DB::table('aps_historic_status')->insert([
+                    'id_aps' => $id_aps,
+                    'id_status' => 6,
+                    'id_des_status' => 3
+                ]); 
+
                 } catch (\Throwable $th) {
                     $step_2 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                 }
                 
-                $completeFilename = $request->file('document')->getClientOriginalName();
+                /* $completeFilename = $request->file('document')->getClientOriginalName();
                 $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
                 $extension = $request->file('document')->getClientOriginalExtension();
                 
@@ -128,13 +186,13 @@ class apsController extends Controller
                 $step_3 = DB::table('des_aps_status')->where('id_status', 1)->value('description');
                 } catch (\Throwable $th) {
                     $step_3 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
-                }
+                } */
 
-                $path = $comPic;
+                /*$path = $comPic;
                 
                 $aps = new AuthController();
             
-                try {
+                 try {
                 $aps->updateAps();
                     
                 //ACTUALIZACION DE VECINOS CON APS....
@@ -151,9 +209,9 @@ class apsController extends Controller
                 } catch (\Throwable $th) {
                     $step_4 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
                     $step_5 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
-                }
+                } */
                 
-                $user_fullName = $name.' '.$lastname;
+                /* $user_fullName = $name.' '.$lastname;
 
                 try {
                     DB::update(
@@ -172,12 +230,12 @@ class apsController extends Controller
                     $step_6 = DB::table('des_aps_status')->where('id_status', 1)->value('description');    
                 } catch (\Throwable $th) {
                     $step_6 = DB::table('des_aps_status')->where('id_status', 4)->value('description');
-                }
+                } */
             }
         }
         //return back();
-        return response()->json([
-            'truncate_aps' => $status_1,
+        return response()->json(['OK'
+            /* 'truncate_aps' => $status_1,
             'status_process' => $step_1,
             'new_aps_list' => $status_2,
             'status_process' => $step_2,
@@ -188,7 +246,7 @@ class apsController extends Controller
             'percent_aps' => $status_5,
             'status_process' => $step_5, 
             'final_process' => $status_6,
-            'status_process' => $step_6
+            'status_process' => $step_6 */
         ], 200);
     }
 
@@ -239,5 +297,19 @@ class apsController extends Controller
         $dataFound = $data;
 
         return response()->json($dataFound, 200);
+    }
+
+    public function ProcessAps()
+    {
+        $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+
+        $query = DB::table('aps_historic_status')
+                    ->select('aps_historic_status.id_aps','aps_status.description as process', 'des_aps_status.description as status')
+                    ->join('aps_status', 'aps_status.id_status', '=', 'aps_historic_status.id_status')
+                    ->join('des_aps_status', 'des_aps_status.id_status', '=', 'aps_historic_status.id_des_status')
+                    ->where('aps_historic_status.id_aps', $id_aps)
+                    ->get();
+
+        return response()->json($query, 200);
     }
 }
