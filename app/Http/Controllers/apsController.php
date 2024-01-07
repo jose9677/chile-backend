@@ -71,6 +71,11 @@ class apsController extends Controller
         }
         elseif ($employee == true) {
             if ($request->hasFile('document')) {
+                $extension = $request->file('document')->getClientOriginalExtension();
+                
+                if ($extension != 'xlsx') {
+                    return response()->json(['error' => 'This file is not xlsx'], 400);
+                }
 
                 try {
                 $this->trucateAPS();
@@ -87,10 +92,9 @@ class apsController extends Controller
                 $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
                 DB::update("UPDATE consultants.update_aps SET id_status = 1 WHERE id_aps = $id_aps");
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 1");
-
                 /* $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
                 $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
-
+                
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 1");
 
@@ -109,6 +113,7 @@ class apsController extends Controller
 
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 2");
+                
                 } catch (\Throwable $th) {
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 2");
                 }
@@ -116,7 +121,7 @@ class apsController extends Controller
                 $completeFilename = $request->file('document')->getClientOriginalName();
                 $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
                 $extension = $request->file('document')->getClientOriginalExtension();
-                
+                //dd($extension);
                 $comPic = str_replace(' ', '_', $completeFilename.'-'.$date).'.'.$extension;
                 
                 //INSERTAR DATOS EN LA TABLA DE update_aps...
@@ -134,7 +139,7 @@ class apsController extends Controller
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 3");
                     
                 /* $status_3 = DB::table('aps_status')->where('id_status', 3)->value('description');
-                $step_3 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
+                $step_3 = DB::table('des_aps_status')->where('id_status', 1)->value('description');  */
 
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 3");
@@ -162,7 +167,6 @@ class apsController extends Controller
                 //ACTUALIZACION DE PORCENTAJES APS....
                 DB::update("UPDATE consultants.update_aps SET id_status = 5 WHERE id_aps = $id_aps");
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 5");
-                    
                 /* $status_5 = DB::table('aps_status')->where('id_status', 5)->value('description');
                 $step_5 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
 
@@ -196,7 +200,7 @@ class apsController extends Controller
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 6");
                 } catch (\Throwable $th) {
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 6");
-                }
+                } 
             }
         }
         //return back();
