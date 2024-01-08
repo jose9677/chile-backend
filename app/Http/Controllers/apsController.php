@@ -88,23 +88,23 @@ class apsController extends Controller
                 }
 
                 try {
-                $this->trucateAPS();
-                $data = new update_aps();
-
-                $data->cant_records = null;
-                $data->coincidence = null;
-                $data->user_name = null;
-                $data->path = null;
-                $data->id_status = null;
-                $data->update_date = null;
-                $data->save();
-
-                $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
-                DB::update("UPDATE consultants.update_aps SET id_status = 1 WHERE id_aps = $id_aps");
-                DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 1");
-                /* $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
-                $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
-                
+                    $data = new update_aps();
+                    
+                    $data->cant_records = null;
+                    $data->coincidence = null;
+                    $data->user_name = null;
+                    $data->path = null;
+                    $data->id_status = null;
+                    $data->update_date = null;
+                    $data->save();
+                    
+                    $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
+                    DB::update("UPDATE consultants.update_aps SET id_status = 1 WHERE id_aps = $id_aps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 1");
+                    /* $status_1 = DB::table('aps_status')->where('id_status', 1)->value('description');
+                    $step_1 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
+                    
+                    $this->trucateAPS();
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 1");
 
@@ -114,13 +114,13 @@ class apsController extends Controller
                 $excel = new apsImport;
                 
                 try {
-                Excel::import($excel, request()->file('document'));
                 DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 2");
-
+                
                 /* $status_2 = DB::table('aps_status')->where('id_status', 2)->value('description');
                 $step_2 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
-
+                
+                Excel::import($excel, request()->file('document'));
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 2");
                 
@@ -144,13 +144,13 @@ class apsController extends Controller
                 
                 try {
                 //SUBIR ARCHIVO AL SERVIDOR...
-                $save = $request->file('document')->storeAs('public/aps', $comPic);
                 DB::update("UPDATE consultants.update_aps SET id_status = 3 WHERE id_aps = $id_aps");
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 3");
-                    
+                
                 /* $status_3 = DB::table('aps_status')->where('id_status', 3)->value('description');
                 $step_3 = DB::table('des_aps_status')->where('id_status', 1)->value('description');  */
-
+                
+                $save = $request->file('document')->storeAs('public/aps', $comPic);
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 3");
                 } catch (\Throwable $th) {
@@ -161,16 +161,14 @@ class apsController extends Controller
                 
                 $aps = new AuthController();
             
-                try {
-                $aps->updateAps();
-                    
+                try {    
                 //ACTUALIZACION DE VECINOS CON APS....
                 DB::update("UPDATE consultants.update_aps SET id_status = 4 WHERE id_aps = $id_aps");
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 4");
                     
                 /* $status_4 = DB::table('aps_status')->where('id_status', 4)->value('description');
                 $step_4 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
-
+                    
                 //PROCESO FINALIZADO...
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 4");
 
@@ -179,7 +177,8 @@ class apsController extends Controller
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 5");
                 /* $status_5 = DB::table('aps_status')->where('id_status', 5)->value('description');
                 $step_5 = DB::table('des_aps_status')->where('id_status', 1)->value('description'); */
-
+                
+                $aps->updateAps();
                 //PROCESO FINALIZADO....
                 DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 5");
                 } catch (\Throwable $th) {
@@ -190,6 +189,10 @@ class apsController extends Controller
                 $user_fullName = $name.' '.$lastname;
 
                 try {
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 6");
+                    /* $status_6 = DB::table('aps_status')->where('id_status', 6)->value('description');
+                    $step_6 = DB::table('des_aps_status')->where('id_status', 1)->value('description');     */
+
                     DB::update(
                         "UPDATE consultants.update_aps 
                         SET 
@@ -201,11 +204,7 @@ class apsController extends Controller
                         update_date = '$request->update_date'
                         WHERE id_aps = $id_aps
                         ");
-                    
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 6");
-                    /* $status_6 = DB::table('aps_status')->where('id_status', 6)->value('description');
-                    $step_6 = DB::table('des_aps_status')->where('id_status', 1)->value('description');     */
-
+                        
                     //PROCESO FINALIZADO....
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 6");
                 } catch (\Throwable $th) {
