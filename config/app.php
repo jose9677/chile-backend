@@ -29,7 +29,8 @@ return [
     'env' => env('APP_ENV', 'production'),
     //'max_execution_time' => 3600
 
-    ini_set('max_execution_time', 10800),
+    ini_set('max_execution_time', 18000),
+    ini_set('pcre.backtrack_limit', 9000000),
 
     /*
     |--------------------------------------------------------------------------

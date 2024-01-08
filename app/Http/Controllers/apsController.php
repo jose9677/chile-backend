@@ -49,6 +49,16 @@ class apsController extends Controller
         return response()->json($data, 200);
     }
 
+    public function apsTest(Request $request)
+    {
+        if ($request->hasFile('document')) {
+            $excel = new apsImport();
+            Excel::import($excel, request()->file('document'));
+        }
+
+        return response()->json('OK', 200);
+    }
+
     public function import(Request $request)
     {   
         Log::info($request);
