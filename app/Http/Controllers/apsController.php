@@ -49,14 +49,28 @@ class apsController extends Controller
         return response()->json($data, 200);
     }
 
-    public function apsTest(Request $request)
+    public function copyTest(Request $request)
     {
-        if ($request->hasFile('document')) {
-            $excel = new apsImport();
-            Excel::import($excel, request()->file('document'));
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'document' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
         }
 
-        return response()->json('OK', 200);
+        if ($request->file('document')) {
+            $completeFilename = $request->file('document')->getClientOriginalName();
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $save = $request->file('document')->storeAs('public/aps', $completeFilename);
+
+            $path = storage_path("app\public\aps\\".$completeFilename);
+            $test = new copyApsController();
+            $test->copyAPS($path);  
+        }
+
+        return response()->json('OK');
     }
 
     public function import(Request $request)
@@ -106,7 +120,7 @@ class apsController extends Controller
                     
                     $this->trucateAPS();
                 //PROCESO FINALIZADO...
-                DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 1");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 1");
 
                 } catch (\Throwable $th) {
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 1");
