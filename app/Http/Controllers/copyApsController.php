@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class copyApsController extends Controller
 {
-    public function copyAPS($path)
+    public function copyAPS($csvFilePath)
     {
         // Nombre del archivo CSV
         //$csvFile = 'C:/temp/aps-prueba-2-CSV.csv';
@@ -22,7 +22,7 @@ class copyApsController extends Controller
         putenv("PGPASSWORD=lareinaadmin");
 
         // Comando COPY para copiar el contenido del archivo CSV a la tabla
-        $copyCommand = sprintf("\COPY %s FROM '%s' DELIMITER ';' CSV HEADER", $tableName, $path);
+        $copyCommand = sprintf("\COPY %s FROM '%s' DELIMITER ';' CSV HEADER", $tableName, $csvFilePath);
 
         // Comando para ejecutar el comando COPY a través del shell de PHP
         $shellCommand = sprintf('psql -h %s -d %s -U %s -c "%s"', $dbHost, $dbName, $dbUser, $copyCommand);
@@ -34,10 +34,10 @@ class copyApsController extends Controller
         $update = pg_query($conn, "UPDATE consultants.aps SET rut = UPPER(rut)");
 
         // Verificar si se ejecutó correctamente
-        if ($output === null) {
+        /* if ($output === null) {
             echo "El contenido del archivo CSV se ha copiado correctamente a la tabla.";
         } else {
             echo "Ha ocurrido un error al copiar el contenido del archivo CSV a la tabla.";
-        }
+        } */
     }
 }
