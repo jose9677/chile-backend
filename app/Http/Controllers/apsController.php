@@ -164,7 +164,8 @@ class apsController extends Controller
                 //INSERTAR DATOS EN LA TABLA DE update_aps...
                 
                 $data = new update_aps();
-                $cant_records = $excel->getRowCount();
+                //$cant_records = $excel->getRowCount();
+                $cant_records = $this->cantRecordsAps();
     
                 $name = DB::table('users')->where('rut', $request->rut)->value('names');
                 $lastname = DB::table('users')->where('rut', $request->rut)->value('lastname');
@@ -234,12 +235,18 @@ class apsController extends Controller
         return response()->json(['message' => 'List Aps truncated'], 200);
     }
 
+    public function cantRecordsAps()
+    {
+        $data = aps::count();
+
+        return $data;
+    }
+
     public function apsCoincidence()
     {
         $query = DB::table('users')
                       ->join('aps', 'users.rut', '=', 'aps.rut')
                       ->join('solicitudes', 'users.rut', '=', 'solicitudes.rut_user')
-                      ->where('solicitudes.is_active', true)
                       ->count();
 
         return $query;
