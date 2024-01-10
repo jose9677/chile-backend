@@ -49,30 +49,6 @@ class apsController extends Controller
         return response()->json($data, 200);
     }
 
-    public function copyTest(Request $request)
-    {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'document' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        if ($request->file('document')) {
-            $completeFilename = $request->file('document')->getClientOriginalName();
-            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
-            $save = $request->file('document')->storeAs('public/aps', $completeFilename);
-
-            $path = storage_path("app\public\aps\\".$completeFilename);
-            $test = new copyApsController();
-            $test->copyAPS($path);  
-        }
-
-        return response()->json('OK');
-    }
-
     public function import(Request $request)
     {   
         Log::info($request);
@@ -151,7 +127,7 @@ class apsController extends Controller
                     DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 2");
 
-                    $csvFilePath = storage_path("app\public\aps\\".$completeFilename);
+                    $csvFilePath = storage_path("app/public/aps/".$completeFilename);
                     $copy->copyAPS($csvFilePath);
                     
                     //PROCESO FINALIZADO...

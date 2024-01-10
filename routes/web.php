@@ -141,8 +141,6 @@ Route::get('last-aps', [App\Http\Controllers\apsController::class, 'lastUpdateAp
 Route::get('aps-historic', [App\Http\Controllers\apsController::class, 'apsHistoric']); 
 Route::get('aps-download/{file}', [App\Http\Controllers\apsController::class, 'downloadFile']); 
 
-Route::post('aps-test', [App\Http\Controllers\apsController::class, 'copyTest']);
-
 //STATUS APS...
 Route::get('details-aps-status', [App\Http\Controllers\apsController::class, 'detailsStatus']); 
 Route::get('search-aps-status/{id_status}', [App\Http\Controllers\apsController::class, 'searchStatus']); 
