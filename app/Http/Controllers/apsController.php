@@ -127,7 +127,7 @@ class apsController extends Controller
                     DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 2");
 
-                    $csvFilePath = storage_path("app/public/aps/".$completeFilename);
+                    $csvFilePath = storage_path("app\public\aps\\".$comPic);
                     $copy->copyAPS($csvFilePath);
                     
                     //PROCESO FINALIZADO...
@@ -141,7 +141,6 @@ class apsController extends Controller
                 
                 $data = new update_aps();
                 //$cant_records = $excel->getRowCount();
-                $cant_records = $this->cantRecordsAps();
     
                 $name = DB::table('users')->where('rut', $request->rut)->value('names');
                 $lastname = DB::table('users')->where('rut', $request->rut)->value('lastname');
@@ -179,7 +178,7 @@ class apsController extends Controller
                     DB::update(
                         "UPDATE consultants.update_aps 
                         SET 
-                        cant_records = $cant_records,
+                        cant_records = {$this->cantRecordsAps()},
                         coincidence = {$this->apsCoincidence()},
                         user_name =  '$user_fullName',
                         path = '$path',

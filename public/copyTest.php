@@ -1,6 +1,6 @@
 <?php
     // Nombre del archivo CSV
-    $csvFile = 'C:/temp/aps-prueba-2-CSV.csv';
+    $csvFile = 'C:/temp/Inscritos APS_CSV al 22 12 2023 prueba 2.csv';
 
     // Nombre de la tabla en la base de datos
     $tableName = 'consultants.aps';
