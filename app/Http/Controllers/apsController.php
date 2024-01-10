@@ -127,7 +127,7 @@ class apsController extends Controller
                     DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 2");
 
-                    $csvFilePath = storage_path("app\public\aps\\".$comPic);
+                    $csvFilePath = storage_path("app/public/aps/".$comPic);
                     $copy->copyAPS($csvFilePath);
                     
                     //PROCESO FINALIZADO...
