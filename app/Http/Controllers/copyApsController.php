@@ -16,7 +16,8 @@ class copyApsController extends Controller
 
         // Conexión a la base de datos
         $dbHost = 'lareina-database.cpwa51qkkrgf.us-east-1.rds.amazonaws.com';
-        $dbName = 'lareina_dev';
+        //$dbName = 'lareina_dev';
+        $dbName = env('DB_DATABASE');
         $dbUser = 'lareina';
         $dbPass = 'lareinaadmin';
         putenv("PGPASSWORD=lareinaadmin");
