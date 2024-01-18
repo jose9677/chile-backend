@@ -58,6 +58,11 @@ Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
 Route::post('/profile-pic/{rut}', [App\Http\Controllers\AuthController::class, 'profilePic']);
 Route::put('/update-aps', [App\Http\Controllers\AuthController::class, 'updateAps']);
 
+//MODIFY MODULE...
+Route::get('/data-modifer/{rut}', [App\Http\Controllers\ModifyUserController::class, 'DataModifer']);
+Route::get('/consult-modify/{id}', [App\Http\Controllers\ModifyDataController::class, 'allData']);
+Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::class, 'loadUserData']);
+
 //SOLICITUDESCONTROLLER
 /* Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
 Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
