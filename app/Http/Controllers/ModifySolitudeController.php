@@ -10,34 +10,37 @@ use Illuminate\Support\Facades\Validator;
 
 class ModifySolitudeController extends Controller
 {
+    public function allSolicitudeModify()
+    {
+        $data = ModifySolicitude::all();
+        
+        return response()->json($data, 200);
+    }
+
+    public function searchSolicitude($id_solicitude)
+    {
+        $data = ModifySolicitude::findOrFail($id_solicitude);
+        $dataFound = $data;
+
+        return response()->json($dataFound, 200);
+    }
+
     public function loadSolicitudeData(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'rut_user' => 'required',
+            'id' => 'required',
             'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
             'way_number' => 'required',
-            'id_property_type' => 'required',
-            'property_number' => 'required',
-            'terms_condition' => 'required',
             'request_date' => 'required',
             'id_status' => 'required',
-            'applicant_at_home' => 'required',
-            'prevention_is_valid' => 'required',
-            'location_is_valid' => 'required',
-            'comments' => 'required',
-            'is_active' => 'required',
-            'carer' => 'required',
-            'motive' => 'required',
-            'dedication' => 'required',
-            'remuneration' => 'required',
-            'admission_date' => 'required'
+            'rut_employee' => 'required'
         ]);
 
         $sol = solicitudes::where([
-            'rut_user' => $request['rut_user']
+            'id' => $request['id']
         ])->get();
 
         if (!$sol->count()) {
@@ -45,7 +48,15 @@ class ModifySolitudeController extends Controller
         }
 
         $mod_sol = ModifySolicitude::create([
-                
+            'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
+            'assurance' => $request->get('assurance'),
+            'id_location' => $request->get('id_location'),
+            'way_number' => $request->get('way_number'),
+            'request_date' => $request->get('request_date'),
+            'id_status' => $request->get('id_status'),
+            'rut_employee' => $request->get('rut_employee')
         ]);
+
+        return response()->json($mod_sol, 200);
     }
 }

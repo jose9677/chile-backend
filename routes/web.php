@@ -61,7 +61,16 @@ Route::put('/update-aps', [App\Http\Controllers\AuthController::class, 'updateAp
 //MODIFY MODULE...
 Route::get('/data-modifer/{rut}', [App\Http\Controllers\ModifyUserController::class, 'DataModifer']);
 Route::get('/consult-modify/{id}', [App\Http\Controllers\ModifyDataController::class, 'allData']);
+
+//MODIFIUSERCONTROLLER...
+Route::get('/all-user-modify', [App\Http\Controllers\ModifyUserController::class, 'allMoifyUser']);
+Route::get('/search-user-modify/{id_user}', [App\Http\Controllers\ModifyUserController::class, 'searchModifyUser']);
 Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::class, 'loadUserData']);
+
+//MODIFIFYSOLICITUDECONTROLLER...
+Route::get('/all-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'allSolicitudeModify']);
+Route::get('/search-sol-modify/{id_solicitude}', [App\Http\Controllers\ModifySolitudeController::class, 'searchSolicitude']);
+Route::post('/load-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'loadSolicitudeData']);
 
 //SOLICITUDESCONTROLLER
 /* Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);

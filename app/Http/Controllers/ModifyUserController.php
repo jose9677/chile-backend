@@ -12,6 +12,21 @@ use Illuminate\Support\Str;
 
 class ModifyUserController extends Controller
 {
+    public function allMoifyUser()
+    {
+        $data = ModifyUser::all();
+
+        return response()->json($data, 200);
+    }
+
+    public function searchModifyUser($id_user)
+    {
+        $data = ModifyUser::findOrFail($id_user);
+        $dataFound = $data;
+
+        return response()->json($dataFound, 200);
+    }
+
     public function loadUserData(Request $request)
     {
         Log::info($request);
@@ -59,8 +74,11 @@ class ModifyUserController extends Controller
 
     public function DataModifer($rut)
     {
-        $data = DB::table('users')->where('rut', $rut)->value('names', 'lastname');
+        $names = DB::table('users')->where('rut', $rut)->value('names');
+        $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
 
-        return response()->json(Str::upper($data));
+        $respnse = 'Aprobado por '.$names.' '.$lastname;
+
+        return Str::upper($respnse);
     }
 }
