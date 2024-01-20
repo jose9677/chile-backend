@@ -72,6 +72,9 @@ Route::get('/all-sol-modify', [App\Http\Controllers\ModifySolitudeController::cl
 Route::get('/search-sol-modify/{id_solicitude}', [App\Http\Controllers\ModifySolitudeController::class, 'searchSolicitude']);
 Route::post('/load-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'loadSolicitudeData']);
 
+//MODIFYDOCUMENTS...
+Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadModifyFile']);
+
 //SOLICITUDESCONTROLLER
 /* Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
 Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
