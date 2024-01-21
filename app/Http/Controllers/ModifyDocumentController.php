@@ -83,18 +83,39 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function updateDocData(Request $request)
+    public function updateDocData(Request $request, $id_request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            //DEDICARSE CON LA ACTUALIZACION DE DOCUMENTOS Y DATOS ADICIONALES....
+            'rut_employee' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $update = DB::update();
+        $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not approved'], 400);
+        }
+
+        $id_document_type = DB::table('modify_documents')->where('id_request', $id_request)->value('id_document_type');
+        $document_path = DB::table('modify_documents')->where('id_request', $id_request)->value('document_path');
+        $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->value('document_ext');
+
+        $update = DB::update(
+            "UPDATE consultants.documents 
+            SET
+            id_document_type => $id_document_type,
+            document_path => '$document_path',
+            document_ext => '$document_ext',
+            WHERE id_request = $id_request"
+        );
+
+        return response()->json([
+            'response' => 'Changes approved',
+            'approved_by' => $this->DataModifer($request->rut_emloyee)
+        ]);
     }
 
     public function DataModifer($rut)

@@ -192,16 +192,16 @@ class ModifySolitudeController extends Controller
         }
 
         try {
-            $update = DB::update(
-                "UPDATE consultants.solicitudes 
-                SET
-                comments => '$request->comments',
-                carer => '$request->carer',
-                id_motive => $request->id_motive,
-                id_dedication => $request->id_dedication,
-                id_remuneration => $request->id_remuneration
-                WHERE id = $id_request;
-                ");   
+        $update = DB::update(
+            "UPDATE consultants.solicitudes 
+            SET
+            comments = '$request->comments',
+            carer = '$request->carer',
+            id_motive = $request->id_motive,
+            id_dedication = $request->id_dedication,
+            id_remuneration = $request->id_remuneration
+            WHERE id = $id_request;
+            ");   
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Fail to update solicitude data'], 400);
         }
