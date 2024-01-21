@@ -27,11 +27,10 @@ class ModifySolitudeController extends Controller
         return response()->json($dataFound, 200);
     }
 
-    public function loadSolicitudeData(Request $request)
+    public function loadSolicitudeData(Request $request, $id_request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'id' => 'required',
             'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
@@ -46,7 +45,7 @@ class ModifySolitudeController extends Controller
         }
 
         $sol = solicitudes::where([
-            'id' => $request['id']
+            'id' => $id_request
         ])->get();
 
         if (!$sol->count()) {
@@ -61,7 +60,8 @@ class ModifySolitudeController extends Controller
             'request_date' => $request->get('request_date'),
             'id_status' => $request->get('id_status'),
             'rut_employee' => $request->get('rut_employee'),
-            'appove' => false
+            'appove' => false,
+            'id_request' => $id_request
         ]);
 
         return response()->json($mod_sol, 200);
@@ -103,7 +103,7 @@ class ModifySolitudeController extends Controller
         ]);
     }
 
-    public function updateSolData(Request $request, $id_solicitude, $id)
+    public function updateSolData(Request $request, $id_solicitude)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -133,17 +133,19 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'This record is not approved'], 400);
         }
 
+        $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
+
         try {
             $update = DB::update(
                 "UPDATE consultants.solicitudes
                 SET
                 id_prevention_type_detail = $request->id_prevention_type_detail,
-                assurance = $request->assurance,
+                assurance = '$request->assurance',
                 id_location = $request->id_location,
                 way_number = $request->way_number,
                 request_date = '$request->request_date',
                 id_status = $request->id_status
-                WHERE id = $id
+                WHERE id = $id_request
                 ");  
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Fail to update solicitude data'], 400);

@@ -42,6 +42,7 @@ class CreateModifySolicitudesTable extends Migration
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
             $table->boolean('approve');
+            $table->unsignedBigInteger('id_request');
             $table->timestamps();
         });
     }

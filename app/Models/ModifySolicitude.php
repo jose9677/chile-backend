@@ -40,6 +40,7 @@ class ModifySolicitude extends Model
         'dir_wots',
         'latitude',
         'longitude',
-        'approve'
+        'approve',
+        'id_request'
     ];
 }
