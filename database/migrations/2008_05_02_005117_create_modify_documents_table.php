@@ -22,6 +22,7 @@ class CreateModifyDocumentsTable extends Migration
             $table->boolean('active');
             $table->string('rut_employee');
             $table->boolean('approve');
+            $table->unsignedBigInteger('id_doc_loaded');
             $table->timestamps();
         });
     }

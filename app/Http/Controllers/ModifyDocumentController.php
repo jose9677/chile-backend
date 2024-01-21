@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ModifyDocumentController extends Controller
 {
@@ -40,8 +41,69 @@ class ModifyDocumentController extends Controller
             $path = $request->file('document_path')->storeAs('public/modify', $comPic);
             $data->document_path = $comPic;
             $data->document_ext = $extension;
+            $data->approve = false;
         }
         $data->save();
         return response()->json(['message' => 'Document uploaded successfull'], 200);
+    }
+
+    public function approveDocChanges($id_document, $rut)
+    {
+        $record = ModifyDocument::where([
+            'id_document' => $id_document
+        ])->get();
+
+        if (!$record->count()) {
+            return response()->json(['error' => 'This record is not exists'], 400);
+        }
+
+        $data = ModifyDocument::query()->where('id_document', $id_document)->update(['approve' => true]);
+        
+        return response()->json([
+            'response' => 'Changes approved',
+            'approved_by' => $this->DataModifer($rut)
+        ]);
+    }
+
+    public function rejectDocChanges($id_document, $rut)
+    {
+        $record = ModifyDocument::where([
+            'id_document' => $id_document
+        ])->get();
+
+        if (!$record->count()) {
+            return response()->json(['error' => 'This record is not exists'], 400);
+        }
+
+        $data = ModifyDocument::query()->where('id_document', $id_document)->update(['approve' => false]);
+        
+        return response()->json([
+            'response' => 'Changes approved',
+            'rejected_by' => $this->DataModifer($rut)
+        ]);
+    }
+
+    public function updateDocData(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            //DEDICARSE CON LA ACTUALIZACION DE DOCUMENTOS Y DATOS ADICIONALES....
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $update = DB::update();
+    }
+
+    public function DataModifer($rut)
+    {
+        $names = DB::table('users')->where('rut', $rut)->value('names');
+        $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
+
+        $response = $names.' '.$lastname;
+
+        return Str::upper($response);
     }
 }

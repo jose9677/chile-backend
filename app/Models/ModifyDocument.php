@@ -20,6 +20,7 @@ class ModifyDocument extends Model
         'document_ext',
         'active',
         'rut_employee',
-        'approve'
+        'approve',
+        'id_doc_loaded'
     ];
 }

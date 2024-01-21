@@ -62,7 +62,7 @@ class ModifyUserController extends Controller
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
             'id_sex' => $request->get('id_sex'),
-            'appove' => false
+            'approve' => false
         ]);
 
         return response()->json([
@@ -70,7 +70,7 @@ class ModifyUserController extends Controller
         ]);
     }
 
-    public function appoveUserChanges($id_user, $rut)
+    public function approveUserChanges($id_user, $rut)
     {
         $record = ModifyUser::where([
             'id_user' => $id_user
@@ -84,7 +84,7 @@ class ModifyUserController extends Controller
         
         return response()->json([
             'response' => 'Changes approved',
-            'appoved_by' => $this->DataModifer($rut)
+            'approved_by' => $this->DataModifer($rut)
         ]);
     }
 
