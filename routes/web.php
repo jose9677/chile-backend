@@ -66,11 +66,17 @@ Route::get('/consult-modify/{id}', [App\Http\Controllers\ModifyDataController::c
 Route::get('/all-user-modify', [App\Http\Controllers\ModifyUserController::class, 'allMoifyUser']);
 Route::get('/search-user-modify/{id_user}', [App\Http\Controllers\ModifyUserController::class, 'searchModifyUser']);
 Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::class, 'loadUserData']);
+Route::put('/approve-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'appoveUserChanges']);
+Route::put('/reject-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'rejectUserChanges']);
+Route::put('/update-user-modify/{id_user}', [App\Http\Controllers\ModifyUserController::class, 'updateUserData']);
 
 //MODIFIFYSOLICITUDECONTROLLER...
 Route::get('/all-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'allSolicitudeModify']);
 Route::get('/search-sol-modify/{id_solicitude}', [App\Http\Controllers\ModifySolitudeController::class, 'searchSolicitude']);
 Route::post('/load-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'loadSolicitudeData']);
+Route::put('/approve-sol-modify/{id_solicitude}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'appoveSolChanges']);
+Route::put('/reject-sol-modify/{id_solicitude}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'rejectSolChanges']);
+Route::put('/update-sol-modify/{id_solicitude}/{id}', [App\Http\Controllers\ModifySolitudeController::class, 'updateSolData']);
 
 //MODIFYDOCUMENTS...
 Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadModifyFile']);

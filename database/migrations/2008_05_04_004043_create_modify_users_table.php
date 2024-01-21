@@ -36,7 +36,7 @@ class CreateModifyUsersTable extends Migration
             $table->integer('percent');
             $table->string('origin');
             $table->string('rut_employee');
-            
+            $table->boolean('approve');
             $table->rememberToken();
             $table->timestamps();
         });

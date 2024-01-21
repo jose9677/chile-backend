@@ -41,7 +41,7 @@ class CreateModifySolicitudesTable extends Migration
             $table->string('dir_wots')->nullable();
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
-
+            $table->boolean('approve');
             $table->timestamps();
         });
     }

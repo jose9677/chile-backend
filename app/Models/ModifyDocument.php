@@ -19,6 +19,7 @@ class ModifyDocument extends Model
         'document_path',
         'document_ext',
         'active',
-        'rut_employee'
+        'rut_employee',
+        'approve'
     ];
 }

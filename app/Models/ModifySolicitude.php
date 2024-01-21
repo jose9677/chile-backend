@@ -39,6 +39,7 @@ class ModifySolicitude extends Model
         'admission date',
         'dir_wots',
         'latitude',
-        'longitude'
+        'longitude',
+        'approve'
     ];
 }

@@ -21,6 +21,7 @@ class CreateModifyDocumentsTable extends Migration
             $table->string('document_ext');
             $table->boolean('active');
             $table->string('rut_employee');
+            $table->boolean('approve');
             $table->timestamps();
         });
     }

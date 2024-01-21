@@ -38,8 +38,7 @@ class ModifyUserController extends Controller
             'email' => 'required',
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'id_sex' => 'required',
-            'rut_employee' => 'required'
+            'id_sex' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -63,12 +62,102 @@ class ModifyUserController extends Controller
             'landline' => $request->get('landline'),
             'mobile_phone' => $request->get('mobile_phone'),
             'id_sex' => $request->get('id_sex'),
-            'rut_employee' => $request->get('rut_employee')
+            'appove' => false
         ]);
 
         return response()->json([
-            'user' => $mod_user,
-            'appoved_by' => $this->DataModifer($request->rut_employee)
+            'user' => $mod_user
+        ]);
+    }
+
+    public function appoveUserChanges($id_user, $rut)
+    {
+        $record = ModifyUser::where([
+            'id_user' => $id_user
+        ])->get();
+
+        if (!$record->count()) {
+            return response()->json(['error' => 'This record is not exists'], 400);
+        }
+
+        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true]);
+        
+        return response()->json([
+            'response' => 'Changes approved',
+            'appoved_by' => $this->DataModifer($rut)
+        ]);
+    }
+
+    public function rejectUserChanges($id_user, $rut)
+    {
+        $record = ModifyUser::where([
+            'id_user' => $id_user
+        ])->get();
+
+        if (!$record->count()) {
+            return response()->json(['error' => 'This record is not exists'], 400);
+        }
+
+        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => false]);
+        
+        return response()->json([
+            'response' => 'Changes approved',
+            'rejected_by' => $this->DataModifer($rut)
+        ]);
+    }
+
+    public function updateUserData(Request $request, $id_user)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'rut' => 'required',
+            'names' => 'required',
+            'lastname' => 'required',
+            'f_nac' => 'required',
+            'email' => 'required',
+            'landline' => 'required',
+            'mobile_phone' => 'required',
+            'id_sex' => 'required',
+            'rut_employee' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = ModifyUser::where([
+            'id_user' => $id_user
+        ])->get();
+
+        if (!$data->count()) {
+            return response()->json(['error' => 'This modify is not exists'], 400);
+        }
+
+        $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not approved'], 400);
+        }
+
+        try {
+            $update = DB::update(
+                "UPDATE consultants.users 
+                SET
+                rut = '$request->rut',
+                names = '$request->names',
+                lastname = '$request->lastname',
+                f_nac = '$request->f_nac',
+                email = '$request->email',
+                landline = $request->landline,
+                mobile_phone = $request->mobile_phone,
+                id_sex = $request->id_sex
+                WHERE rut = '$request->rut'");    
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Fail to update user data'], 400);
+        } 
+        
+        return response()->json([
+            'message' => 'Record '.$id_user.' updated successfull',
+            'approve_by' => $this->DataModifer($request->rut_employee)
         ]);
     }
 
@@ -77,8 +166,8 @@ class ModifyUserController extends Controller
         $names = DB::table('users')->where('rut', $rut)->value('names');
         $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
 
-        $respnse = 'Aprobado por '.$names.' '.$lastname;
+        $response = $names.' '.$lastname;
 
-        return Str::upper($respnse);
+        return Str::upper($response);
     }
 }

@@ -35,6 +35,7 @@ class ModifyUser extends Model
         'id_sex',
         'percent',
         'origin',
-        'rut_employee'
+        'rut_employee',
+        'approve'
     ];
 }
