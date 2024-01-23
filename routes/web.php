@@ -83,7 +83,7 @@ Route::put('/update-extra-data/{id_request}', [App\Http\Controllers\ModifySolitu
 Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadModifyFile']);
 Route::put('/approve-doc-modify/{id_document}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'approveDocChanges']);
 Route::put('/reject-doc-modify/{id_document}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'rejectDocChanges']);
-Route::put('/update-doc-modify/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'updateDocData']);
+Route::put('/update-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'updateDocData']);
 
 
 //SOLICITUDESCONTROLLER

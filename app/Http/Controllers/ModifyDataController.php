@@ -56,7 +56,7 @@ class ModifyDataController extends Controller
 
     public function DataDocument($id)
     {
-        $data = DB::table('documents')->select('*')->where('id_request', $id, 'active' , true)->get();
+        $data = DB::table('documents')->select('*')->where('id_request', $id)->where('active' , true)->get();
 
         return $data;
     }

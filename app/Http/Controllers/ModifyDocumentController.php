@@ -35,7 +35,6 @@ class ModifyDocumentController extends Controller
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
 
-            //$comPic = str_replace(' ', '_', $completeFilename).'.'.$extension;
             $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id.'-'.$id_doc.'.'.$extension;
 
             $path = $request->file('document_path')->storeAs('public/modify', $comPic);
@@ -83,7 +82,7 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function updateDocData(Request $request, $id_request)
+    public function updateDocData(Request $request, $id_request, $id_document_type)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -99,22 +98,38 @@ class ModifyDocumentController extends Controller
             return response()->json(['error' => 'This record is not approved'], 400);
         }
 
-        $id_document_type = DB::table('modify_documents')->where('id_request', $id_request)->value('id_document_type');
-        $document_path = DB::table('modify_documents')->where('id_request', $id_request)->value('document_path');
-        $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->value('document_ext');
+        $document_path = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_path');
+        $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_ext');
 
         $update = DB::update(
             "UPDATE consultants.documents 
             SET
-            id_document_type => $id_document_type,
-            document_path => '$document_path',
-            document_ext => '$document_ext',
-            WHERE id_request = $id_request"
+            id_document_type = $id_document_type,
+            document_path = '$document_path',
+            document_ext = '$document_ext'
+            WHERE id_request = $id_request
+            AND id_document_type = $id_document_type
+            AND active = true"
         );
+
+        /* $update = DB::update(
+            "UPDATE consultants.documents 
+            SET
+            active = false
+            WHERE id_request = $id_request
+            AND id_document_type = $id_document_type
+            AND active = true"
+        );
+
+        $insert = DB::insert(
+            "INSERT INTO consultants.documents 
+            (id_request, id_document_type, document_path, document_ext, active)
+            VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
+            "); */
 
         return response()->json([
             'response' => 'Changes approved',
-            'approved_by' => $this->DataModifer($request->rut_emloyee)
+            'approved_by' => $this->DataModifer($request->rut_employee)
         ]);
     }
 
