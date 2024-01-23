@@ -31,7 +31,12 @@ class ModifyDataController extends Controller
             c.id as prevention_type,
             a.assurance,
             a.id_location,
-            a.way_number
+            a.way_number,
+            a.id_property_type,
+            a.property_number,
+            a.dir_wots,
+            a.latitude,
+            a.longitude
             FROM consultants.solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
