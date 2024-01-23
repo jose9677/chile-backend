@@ -20,6 +20,8 @@ class ModifyDataController extends Controller
         }
 
         $rut = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+        //$origin
+
         $user_data = $this->DataUser($rut);
 
         $data_sol = DB::select(
@@ -30,7 +32,6 @@ class ModifyDataController extends Controller
             a.id_prevention_type_detail,
             c.id as prevention_type,
             a.assurance,
-            a.comments,
             a.id_location,
             a.way_number,
             a.id_property_type,
@@ -75,6 +76,7 @@ class ModifyDataController extends Controller
             "SELECT 
             a.rut_user,
             a.carer as cuidador,
+            a.comments,
             b.percent porcentaje_descuento,
             b.aps,
             a.id_motive,
