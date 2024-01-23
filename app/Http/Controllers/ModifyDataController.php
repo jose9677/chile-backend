@@ -30,16 +30,19 @@ class ModifyDataController extends Controller
             a.id_prevention_type_detail,
             c.id as prevention_type,
             a.assurance,
+            a.comments,
             a.id_location,
             a.way_number,
             a.id_property_type,
             a.property_number,
+            d.origin,
             a.dir_wots,
             a.latitude,
             a.longitude
             FROM consultants.solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
+            JOIN consultants.users as d ON a.rut_user = d.rut 
             WHERE a.id = $id"
         );
 
@@ -74,15 +77,12 @@ class ModifyDataController extends Controller
             a.carer as cuidador,
             b.percent porcentaje_descuento,
             b.aps,
-            c.description as motivo,
-            d.description as dedicacion,
-            e.description as remuneracion,
+            a.id_motive,
+            a.id_dedication,
+            a.id_remuneration,
             b.origin as origen
             FROM consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_user = b.rut
-            JOIN consultants.motives as c USING ( id_motive )
-            JOIN consultants.dedications as d USING ( id_dedication )
-            JOIN consultants.remunerations as e USING ( id_remuneration ) 
             WHERE a.id = $id"
         );
 
