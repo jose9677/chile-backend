@@ -133,10 +133,10 @@ class ModifyUserController extends Controller
             return response()->json(['error' => 'This modify is not exists'], 400);
         }
 
-        $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
+        /* $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         try {
             $update = DB::update(

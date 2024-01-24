@@ -137,10 +137,10 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'This modify is not exists'], 400);
         }
 
-        $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
+        /* $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         try {
             $update = DB::update(
@@ -186,10 +186,10 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'This modify is not exists'], 400);
         }
 
-        $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
+        /* $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         try {
         $update = DB::update(

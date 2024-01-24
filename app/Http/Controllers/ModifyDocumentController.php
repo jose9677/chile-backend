@@ -93,10 +93,10 @@ class ModifyDocumentController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
+        /* $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         $document_path = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_path');
         $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_ext');

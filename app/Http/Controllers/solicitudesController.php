@@ -444,7 +444,7 @@ class solicitudesController extends Controller
         'prevention_is_valid' => true,
         'location_is_valid' => true,
         'rut_match' => true
-    ])->first();
+        ])->first();
 
         if (!$response) {
             solicitudes::query()->where(['id' => $id])->update(['id_status' => 7, 'is_active' => false]);
