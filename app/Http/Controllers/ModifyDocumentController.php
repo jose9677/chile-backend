@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\documents;
 use App\Models\ModifyDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -93,44 +94,39 @@ class ModifyDocumentController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        /* $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
+        $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        } */
+        }
 
         $document_path = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_path');
         $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_ext');
-
-        $update = DB::update(
-            "UPDATE consultants.documents 
-            SET
-            id_document_type = $id_document_type,
-            document_path = '$document_path',
-            document_ext = '$document_ext'
-            WHERE id_request = $id_request
-            AND id_document_type = $id_document_type
-            AND active = true"
-        );
-
-        /* $update = DB::update(
-            "UPDATE consultants.documents 
-            SET
-            active = false
-            WHERE id_request = $id_request
-            AND id_document_type = $id_document_type
-            AND active = true"
-        );
 
         $insert = DB::insert(
             "INSERT INTO consultants.documents 
             (id_request, id_document_type, document_path, document_ext, active)
             VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
-            "); */
+            ");
 
         return response()->json([
             'response' => 'Changes approved',
             'approved_by' => $this->DataModifer($request->rut_employee)
         ]);
+    }
+
+    public function deleteModDoc($id_request, $id_document_type)
+    {
+        try {
+            $desactive = documents::
+            query()->where('id_request', $id_request)
+            ->where('id_document_type', $id_document_type)
+            ->update(['active' => false]);
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Document could not be desatived'], 400);
+        }
+
+        return response()->json(['message' => 'Document desactived'], 200);
     }
 
     public function DataModifer($rut)
