@@ -106,7 +106,7 @@ class ModifyUserController extends Controller
         ]);
     }
 
-    public function updateUserData(Request $request, $id_user)
+    public function updateUserData(Request $request, $rut)
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -126,14 +126,14 @@ class ModifyUserController extends Controller
         }
 
         $data = ModifyUser::where([
-            'id_user' => $id_user
+            'rut' => $rut
         ])->get();
 
         if (!$data->count()) {
             return response()->json(['error' => 'This modify is not exists'], 400);
         }
 
-        $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
+        $gate = DB::table('modify_users')->where('rut', $rut)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
         }
@@ -156,7 +156,7 @@ class ModifyUserController extends Controller
         } 
         
         return response()->json([
-            'message' => 'Record '.$id_user.' updated successfull',
+            'message' => 'Record '.$rut.' updated successfull',
             'approve_by' => $this->DataModifer($request->rut_employee)
         ]);
     }

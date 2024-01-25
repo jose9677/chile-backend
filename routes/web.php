@@ -68,7 +68,7 @@ Route::get('/search-user-modify/{id_user}', [App\Http\Controllers\ModifyUserCont
 Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::class, 'loadUserData']);
 Route::put('/approve-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'approveUserChanges']);
 Route::put('/reject-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'rejectUserChanges']);
-Route::put('/update-user-modify/{id_user}', [App\Http\Controllers\ModifyUserController::class, 'updateUserData']);
+Route::put('/update-user-modify/{rut}', [App\Http\Controllers\ModifyUserController::class, 'updateUserData']);
 
 //MODIFIFYSOLICITUDECONTROLLER...
 Route::get('/all-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'allSolicitudeModify']);
