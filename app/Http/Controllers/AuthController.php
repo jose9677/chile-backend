@@ -202,7 +202,8 @@ class AuthController extends Controller
             'id_rol' => 1,
             'active' => true,
             //'aps' => false,
-            'id_sex' => $request->get('id_sex')
+            'id_sex' => $request->get('id_sex'),
+            'origin' => 'REGISTRO POR PAGINA'
         ]);
 
         $sol = new solicitudes();
