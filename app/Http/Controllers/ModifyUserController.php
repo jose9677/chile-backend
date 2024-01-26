@@ -118,9 +118,6 @@ class ModifyUserController extends Controller
             'landline' => 'required',
             'mobile_phone' => 'required',
             'id_sex' => 'required',
-            'dir_wots' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
             'rut_employee' => 'required'
         ]);
 
@@ -152,10 +149,7 @@ class ModifyUserController extends Controller
                 email = '$request->email',
                 landline = $request->landline,
                 mobile_phone = $request->mobile_phone,
-                id_sex = $request->id_sex,
-                dir_wots = '$request->dir_wots',
-                latitude = $request->latitude,
-                longitude = $request->longitede   
+                id_sex = $request->id_sex
                 WHERE rut = '$request->rut'");    
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Fail to update user data'], 400);

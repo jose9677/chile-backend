@@ -141,8 +141,25 @@ class ModifySolitudeController extends Controller
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
         }
+        $reg_type = DB::table('solicitude')->where('id', $id_request)->value('reg_type');
 
-        try {
+        if ($reg_type == 'wots') {
+            $update = DB::update(
+                "UPDATE consultants.solicitudes
+                SET
+                id_prevention_type_detail = $request->id_prevention_type_detail,
+                assurance = '$request->assurance',
+                id_location = $request->id_location,
+                way_number = $request->way_number,
+                request_date = '$request->request_date',
+                id_status = $request->id_status,
+                dir_wots = '$request->dir_wots',
+                latitude = $request->latitude,
+                longitude = $request->longitude
+                WHERE id = $id_request
+                ");  
+        }
+        elseif ($reg_type != 'wots') {
             $update = DB::update(
                 "UPDATE consultants.solicitudes
                 SET
@@ -154,9 +171,7 @@ class ModifySolitudeController extends Controller
                 id_status = $request->id_status
                 WHERE id = $id_request
                 ");  
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Fail to update solicitude data'], 400);
-        } 
+        }
 
         return response()->json([
             'message' => 'Updated successfull',
