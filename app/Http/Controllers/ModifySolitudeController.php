@@ -129,13 +129,13 @@ class ModifySolitudeController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = ModifySolicitude::where([
+        /* $data = ModifySolicitude::where([
             'id_request' => $id_request
         ])->get();
 
         if (!$data->count()) {
             return response()->json(['error' => 'This modify is not exists'], 400);
-        }
+        } */
 
         $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
@@ -178,13 +178,13 @@ class ModifySolitudeController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = ModifySolicitude::where([
+        /* $data = ModifySolicitude::where([
             'id_request' => $id_request
         ])->get();
 
         if (!$data->count()) {
             return response()->json(['error' => 'This modify is not exists'], 400);
-        }
+        } */
 
         $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {

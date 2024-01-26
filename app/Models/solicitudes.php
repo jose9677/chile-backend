@@ -37,8 +37,8 @@ class solicitudes extends Model
         'admission date',
         'dir_wots',
         'latitude',
-        'longitude'
-
+        'longitude',
+        'reg_type'
     ];
 
     protected $hidden = [

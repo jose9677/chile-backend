@@ -125,13 +125,13 @@ class ModifyUserController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = ModifyUser::where([
+        /* $data = ModifyUser::where([
             'rut' => $rut
         ])->get();
 
         if (!$data->count()) {
             return response()->json(['error' => 'This modify is not exists'], 400);
-        }
+        } */
 
         $gate = DB::table('modify_users')->where('rut', $rut)->value('approve');
         if ($gate == false) {
