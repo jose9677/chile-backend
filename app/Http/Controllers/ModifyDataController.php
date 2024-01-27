@@ -76,6 +76,7 @@ class ModifyDataController extends Controller
             active,
             'http://54.189.74.47/storage/posts/'||document_path as doc_srv_path
             FROM consultants.documents
+            WHERE id_request = $id AND  active = true
             ");
             
         return $data;
