@@ -31,7 +31,7 @@ class ModifySolitudeController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'id_prevention_type_detail' => 'required',
+            /* 'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
             'way_number' => 'required',
@@ -40,7 +40,7 @@ class ModifySolitudeController extends Controller
             'carer' => 'required',
             'id_motive' => 'required',
             'id_dedication' => 'required',
-            'id_remuneration' => 'required',
+            'id_remuneration' => 'required', */
             'rut_employee' => 'required'
         ]);
 
@@ -116,12 +116,12 @@ class ModifySolitudeController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'id_prevention_type_detail' => 'required',
+            /* 'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
             'way_number' => 'required',
             'request_date' => 'required',
-            'id_status' => 'required',
+            'id_status' => 'required', */
             'rut_employee' => 'required'
         ]);
 
@@ -141,7 +141,7 @@ class ModifySolitudeController extends Controller
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
         }
-        $reg_type = DB::table('solicitude')->where('id', $id_request)->value('reg_type');
+        $reg_type = DB::table('solicitudes')->where('id', $id_request)->value('reg_type');
 
         if ($reg_type == 'wots') {
             $update = DB::update(

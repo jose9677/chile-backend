@@ -29,7 +29,7 @@ class ModifyUserController extends Controller
 
     public function loadUserData(Request $request)
     {
-        Log::info($request);
+        /* Log::info($request);
         $validator = Validator::make($request->all(),[
             'rut' => 'required',
             'names' => 'required',
@@ -43,7 +43,7 @@ class ModifyUserController extends Controller
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
-        }
+        } */
 
         $user = User::where([
             'rut' => $request['rut']
@@ -110,14 +110,14 @@ class ModifyUserController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'rut' => 'required',
+            /* 'rut' => 'required',
             'names' => 'required',
             'lastname' => 'required',
             'f_nac' => 'required',
             'email' => 'required',
             'landline' => 'required',
             'mobile_phone' => 'required',
-            'id_sex' => 'required',
+            'id_sex' => 'required', */
             'rut_employee' => 'required'
         ]);
 
