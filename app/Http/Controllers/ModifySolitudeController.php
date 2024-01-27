@@ -114,14 +114,12 @@ class ModifySolitudeController extends Controller
 
     public function updateSolData(Request $request, $id_request)
     {
-        $reg_type = DB::table('solicitudes')->where('id', $id_request)->value('reg_type');
-
         /* $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
         } */
 
-        if ($reg_type == 'wots') {
+        if ($request->reg_type == 'wots') {
             
             $mod_sol = ModifySolicitude::create([
                 'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
@@ -154,11 +152,12 @@ class ModifySolitudeController extends Controller
                 id_status = $request->id_status,
                 dir_wots = '$request->dir_wots',
                 latitude = $request->latitude,
-                longitude = $request->longitude
+                longitude = $request->longitude,
+                reg_type = '$request->reg_type'
                 WHERE id = $id_request
                 ");  
         }
-        elseif ($reg_type != 'wots') {
+        elseif ($request->reg_type != 'wots') {
 
             $mod_sol = ModifySolicitude::create([
                 'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
@@ -185,7 +184,8 @@ class ModifySolitudeController extends Controller
                 id_location = $request->id_location,
                 way_number = $request->way_number,
                 request_date = '$request->request_date',
-                id_status = $request->id_status
+                id_status = $request->id_status,
+                reg_type = '$request->reg_type'
                 WHERE id = $id_request
                 ");  
         }

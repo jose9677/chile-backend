@@ -71,7 +71,7 @@ class ModifyDataController extends Controller
             "SELECT 
             id_request,
             id_document_type,
-            document_path
+            document_path,
             document_ext,
             active,
             'http://54.189.74.47/storage/posts/'||document_path as doc_srv_path
