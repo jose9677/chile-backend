@@ -27,60 +27,18 @@ class ModifyUserController extends Controller
         return response()->json($dataFound, 200);
     }
 
-    public function loadUserData(Request $request)
+    public function approveUserChanges($rut)
     {
-        /* Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'rut' => 'required',
-            'names' => 'required',
-            'lastname' => 'required',
-            'f_nac' => 'required',
-            'email' => 'required',
-            'landline' => 'required',
-            'mobile_phone' => 'required',
-            'id_sex' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        } */
-
-        $user = User::where([
-            'rut' => $request['rut']
-        ])->get();
-
-        if (!$user->count()) {
-            return response()->json(['error' => 'User does not exists in DB'], 400);
-        }
-
-        $mod_user = ModifyUser::create([
-            'rut' => Str::upper($request->get('rut')),
-            'names' => Str::upper($request->get('names')),
-            'lastname' => Str::upper($request->get('lastname')),
-            'f_nac' => $request->get('f_nac'),
-            'email' => Str::lower($request->get('email')),
-            'landline' => $request->get('landline'),
-            'mobile_phone' => $request->get('mobile_phone'),
-            'id_sex' => $request->get('id_sex'),
-            'approve' => false
-        ]);
-
-        return response()->json([
-            'user' => $mod_user
-        ]);
-    }
-
-    public function approveUserChanges($id_user, $rut)
-    {
-        $record = ModifyUser::where([
+        /* $record = ModifyUser::where([
             'id_user' => $id_user
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
-        }
+        } */
 
-        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true]);
+        //$data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true]);
+        $data = ModifyUser::query()->where('rut', $rut)->update(['approve' => true]);
         
         return response()->json([
             'response' => 'Changes approved',
@@ -108,41 +66,31 @@ class ModifyUserController extends Controller
 
     public function updateUserData(Request $request, $rut)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            /* 'rut' => 'required',
-            'names' => 'required',
-            'lastname' => 'required',
-            'f_nac' => 'required',
-            'email' => 'required',
-            'landline' => 'required',
-            'mobile_phone' => 'required',
-            'id_sex' => 'required', */
-            'rut_employee' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+        try {
+            $mod_user = ModifyUser::create([
+                'rut' => Str::upper($rut),
+                'names' => Str::upper($request->get('names')),
+                'lastname' => Str::upper($request->get('lastname')),
+                'f_nac' => $request->get('f_nac'),
+                'email' => Str::lower($request->get('email')),
+                'landline' => $request->get('landline'),
+                'mobile_phone' => $request->get('mobile_phone'),
+                'id_sex' => $request->get('id_sex'),
+                'approve' => true
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Fail to load changes'], 400);
         }
-
-        /* $data = ModifyUser::where([
-            'rut' => $rut
-        ])->get();
-
-        if (!$data->count()) {
-            return response()->json(['error' => 'This modify is not exists'], 400);
-        } */
-
-        $gate = DB::table('modify_users')->where('rut', $rut)->value('approve');
+        
+        /* $gate = DB::table('modify_users')->where('rut', $rut)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         try {
             $update = DB::update(
                 "UPDATE consultants.users 
                 SET
-                rut = '$request->rut',
                 names = '$request->names',
                 lastname = '$request->lastname',
                 f_nac = '$request->f_nac',
@@ -156,8 +104,8 @@ class ModifyUserController extends Controller
         } 
         
         return response()->json([
-            'message' => 'Record '.$rut.' updated successfull',
-            'approve_by' => $this->DataModifer($request->rut_employee)
+            'message' => 'Record '.$rut.' updated successfull'
+            //'approve_by' => $this->DataModifer($request->rut_employee)
         ]);
     }
 

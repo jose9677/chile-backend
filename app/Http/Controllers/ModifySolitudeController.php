@@ -114,36 +114,35 @@ class ModifySolitudeController extends Controller
 
     public function updateSolData(Request $request, $id_request)
     {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            /* 'id_prevention_type_detail' => 'required',
-            'assurance' => 'required',
-            'id_location' => 'required',
-            'way_number' => 'required',
-            'request_date' => 'required',
-            'id_status' => 'required', */
-            'rut_employee' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        /* $data = ModifySolicitude::where([
-            'id_request' => $id_request
-        ])->get();
-
-        if (!$data->count()) {
-            return response()->json(['error' => 'This modify is not exists'], 400);
-        } */
-
-        $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
-        if ($gate == false) {
-            return response()->json(['error' => 'This record is not approved'], 400);
-        }
         $reg_type = DB::table('solicitudes')->where('id', $id_request)->value('reg_type');
 
+        /* $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not approved'], 400);
+        } */
+
         if ($reg_type == 'wots') {
+            
+            $mod_sol = ModifySolicitude::create([
+                'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
+                'assurance' => $request->get('assurance'),
+                'id_location' => $request->get('id_location'),
+                'way_number' => $request->get('way_number'),
+                'request_date' => $request->get('request_date'),
+                'id_status' => $request->get('id_status'),
+                'comments' => $request->get('comments'),
+                'carer' => $request->get('carer'),
+                'id_motive' => $request->get('id_motive'),
+                'id_dedication' => $request->get('id_dedication'),
+                'id_remuneration' => $request->get('id_remuneration'),
+                'dir_wots' =>  $request->get('dir_wots'),
+                'latitude' =>  $request->get('latitude'),
+                'longitude' => $request->get('longitude'),
+                'rut_employee' => $request->get('rut_employee'),
+                'approve' => true,
+                'id_request' => $id_request
+            ]);
+
             $update = DB::update(
                 "UPDATE consultants.solicitudes
                 SET
@@ -160,6 +159,24 @@ class ModifySolitudeController extends Controller
                 ");  
         }
         elseif ($reg_type != 'wots') {
+
+            $mod_sol = ModifySolicitude::create([
+                'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
+                'assurance' => $request->get('assurance'),
+                'id_location' => $request->get('id_location'),
+                'way_number' => $request->get('way_number'),
+                'request_date' => $request->get('request_date'),
+                'id_status' => $request->get('id_status'),
+                'comments' => $request->get('comments'),
+                'carer' => $request->get('carer'),
+                'id_motive' => $request->get('id_motive'),
+                'id_dedication' => $request->get('id_dedication'),
+                'id_remuneration' => $request->get('id_remuneration'),
+                'rut_employee' => $request->get('rut_employee'),
+                'approve' => true,
+                'id_request' => $id_request
+            ]);
+
             $update = DB::update(
                 "UPDATE consultants.solicitudes
                 SET
@@ -174,14 +191,14 @@ class ModifySolitudeController extends Controller
         }
 
         return response()->json([
-            'message' => 'Updated successfull',
-            'approve_by' => $this->DataModifer($request->rut_employee)
+            'message' => 'Updated successfull'
+            //'approve_by' => $this->DataModifer($request->rut_employee)
         ]);
     }
 
     public function updateExtraData(Request $request, $id_request)
     {
-        Log::info($request);
+        /* Log::info($request);
         $validator = Validator::make($request->all(), [
             'carer' => 'required',
             'id_motive' => 'required',
@@ -191,22 +208,25 @@ class ModifySolitudeController extends Controller
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        /* $data = ModifySolicitude::where([
-            'id_request' => $id_request
-        ])->get();
-
-        if (!$data->count()) {
-            return response()->json(['error' => 'This modify is not exists'], 400);
         } */
 
-        $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
+        /* $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         try {
+        $update_mod = DB::update(
+            "UPDATE consultants.modify_solicitudes
+            SET
+            comments = '$request->comments',
+            carer = '$request->carer',
+            id_motive = $request->id_motive,
+            id_dedication = $request->id_dedication,
+            id_remuneration = $request->id_remuneration
+            WHERE id = $id_request;
+            ");   
+
         $update = DB::update(
             "UPDATE consultants.solicitudes 
             SET
