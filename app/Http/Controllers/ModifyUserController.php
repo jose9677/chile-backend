@@ -66,7 +66,7 @@ class ModifyUserController extends Controller
 
     public function updateUserData(Request $request, $rut)
     {
-        try {
+        
             $mod_user = ModifyUser::create([
                 'rut' => Str::upper($rut),
                 'names' => Str::upper($request->get('names')),
@@ -78,9 +78,7 @@ class ModifyUserController extends Controller
                 'id_sex' => $request->get('id_sex'),
                 'approve' => true
             ]);
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Fail to load changes'], 400);
-        }
+        
         
         /* $gate = DB::table('modify_users')->where('rut', $rut)->value('approve');
         if ($gate == false) {

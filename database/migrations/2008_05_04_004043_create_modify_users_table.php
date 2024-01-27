@@ -19,7 +19,7 @@ class CreateModifyUsersTable extends Migration
             $table->string('names');
             $table->string('lastname');
             $table->date('f_nac');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('password');
             $table->integer('landline');
             $table->integer('mobile_phone');

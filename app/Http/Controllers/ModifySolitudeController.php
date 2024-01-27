@@ -216,30 +216,30 @@ class ModifySolitudeController extends Controller
         } */
 
         try {
-        $update_mod = DB::update(
-            "UPDATE consultants.modify_solicitudes
-            SET
-            comments = '$request->comments',
-            carer = '$request->carer',
-            id_motive = $request->id_motive,
-            id_dedication = $request->id_dedication,
-            id_remuneration = $request->id_remuneration
-            WHERE id = $id_request;
-            ");   
-
-        $update = DB::update(
-            "UPDATE consultants.solicitudes 
-            SET
-            comments = '$request->comments',
-            carer = '$request->carer',
-            id_motive = $request->id_motive,
-            id_dedication = $request->id_dedication,
-            id_remuneration = $request->id_remuneration
-            WHERE id = $id_request;
-            ");   
+            $update_mod = DB::update(
+                "UPDATE consultants.modify_solicitudes
+                SET
+                comments = '$request->comments',
+                carer = '$request->carer',
+                id_motive = $request->id_motive,
+                id_dedication = $request->id_dedication,
+                id_remuneration = $request->id_remuneration
+                WHERE id_request = $id_request;
+                ");   
+    
+            $update = DB::update(
+                "UPDATE consultants.solicitudes 
+                SET
+                comments = '$request->comments',
+                carer = '$request->carer',
+                id_motive = $request->id_motive,
+                id_dedication = $request->id_dedication,
+                id_remuneration = $request->id_remuneration
+                WHERE id = $id_request;
+                ");   
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Fail to update solicitude data'], 400);
-        }
+        } 
 
         return response()->json([
             'message' => 'Updated successfull',
