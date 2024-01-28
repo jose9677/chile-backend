@@ -142,21 +142,18 @@ class ModifySolitudeController extends Controller
                 'id_request' => $id_request
             ]);
 
-            $update = DB::update(
-                "UPDATE consultants.solicitudes
-                SET
-                id_prevention_type_detail = $request->id_prevention_type_detail,
-                assurance = '$request->assurance',
-                id_location = $request->id_location,
-                way_number = $request->way_number,
-                request_date = '$request->request_date',
-                id_status = $request->id_status,
-                dir_wots = '$request->dir_wots',
-                latitude = $request->latitude,
-                longitude = $request->longitude,
-                reg_type = '$request->reg_type'
-                WHERE id = $id_request
-                ");  
+            $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                'id_prevention_type_detail' => $request->id_prevention_type_detail,
+                'assurance' => $request->assurance,
+                'id_location' => $request->id_location,
+                'way_number' => $request->way_number,
+                'request_date' => $request->request_date,
+                'id_status' => $request->id_status,
+                'dir_wots' => $request->dir_wots,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'reg_type' => $request->reg_type
+            ]);
         }
         elseif ($request->reg_type != 'wots') {
 
@@ -177,18 +174,15 @@ class ModifySolitudeController extends Controller
                 'id_request' => $id_request
             ]);
 
-            $update = DB::update(
-                "UPDATE consultants.solicitudes
-                SET
-                id_prevention_type_detail = $request->id_prevention_type_detail,
-                assurance = '$request->assurance',
-                id_location = $request->id_location,
-                way_number = $request->way_number,
-                request_date = '$request->request_date',
-                id_status = $request->id_status,
-                reg_type = '$request->reg_type'
-                WHERE id = $id_request
-                ");  
+            $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                'id_prevention_type_detail' => $request->id_prevention_type_detail,
+                'assurance' => $request->assurance,
+                'id_location' => $request->id_location,
+                'way_number' => $request->way_number,
+                'request_date' => $request->request_date,
+                'id_status' => $request->id_status,
+                'reg_type' => $request->reg_type
+            ]);
         }
 
         return response()->json([
