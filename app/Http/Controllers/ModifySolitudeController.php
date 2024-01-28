@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ModifySolicitude;
 use App\Models\solicitudes;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -237,8 +238,8 @@ class ModifySolitudeController extends Controller
                 id_remuneration = $request->id_remuneration
                 WHERE id = $id_request;
                 ");   
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Fail to update solicitude data'], 400);
+        } catch (Exception $e) {
+            return $e->getMessage();
         } 
 
         return response()->json([

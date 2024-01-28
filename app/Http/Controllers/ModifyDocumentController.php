@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\documents;
 use App\Models\ModifyDocument;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -41,7 +42,7 @@ class ModifyDocumentController extends Controller
             $path = $request->file('document_path')->storeAs('public/modify', $comPic);
             $data->document_path = $comPic;
             $data->document_ext = $extension;
-            $data->approve = false;
+            $data->approve = true;
         }
         $data->save();
         return response()->json(['message' => 'Document uploaded successfull'], 200);
@@ -94,23 +95,27 @@ class ModifyDocumentController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
+        /* $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
             return response()->json(['error' => 'This record is not approved'], 400);
-        }
+        } */
 
         $document_path = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_path');
         $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_ext');
 
-        $insert = DB::insert(
-            "INSERT INTO consultants.documents 
-            (id_request, id_document_type, document_path, document_ext, active)
-            VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
-            ");
+        try {
+            $insert = DB::insert(
+                "INSERT INTO consultants.documents 
+                (id_request, id_document_type, document_path, document_ext, active)
+                VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
+                ");
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
 
         return response()->json([
-            'response' => 'Changes approved',
-            'approved_by' => $this->DataModifer($request->rut_employee)
+            'response' => 'Changes approved'
+            //'approved_by' => $this->DataModifer($request->rut_employee)
         ]);
     }
 
@@ -122,8 +127,20 @@ class ModifyDocumentController extends Controller
             ->where('id_document_type', $id_document_type)
             ->update(['active' => false]);
 
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Document could not be desatived'], 400);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return response()->json(['message' => 'Document desactived'], 200);
+    }
+
+    public function deleteDocTest($id)
+    {
+        try {
+            $desactive = documents::query()->where('id', $id)->update(['active' => false]);
+
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
 
         return response()->json(['message' => 'Document desactived'], 200);

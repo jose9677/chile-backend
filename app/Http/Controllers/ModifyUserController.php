@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ModifyUser;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -97,8 +98,8 @@ class ModifyUserController extends Controller
                 mobile_phone = $request->mobile_phone,
                 id_sex = $request->id_sex
                 WHERE rut = '$request->rut'");    
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Fail to update user data'], 400);
+        } catch (Exception $e) {
+            return $e->getMessage();    
         } 
         
         return response()->json([
