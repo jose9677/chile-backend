@@ -217,27 +217,21 @@ class ModifySolitudeController extends Controller
         } */
 
         try {
-            $update_mod = DB::update(
-                "UPDATE consultants.modify_solicitudes
-                SET
-                comments = '$request->comments',
-                carer = '$request->carer',
-                id_motive = $request->id_motive,
-                id_dedication = $request->id_dedication,
-                id_remuneration = $request->id_remuneration
-                WHERE id_request = $id_request;
-                ");   
-    
-            $update = DB::update(
-                "UPDATE consultants.solicitudes 
-                SET
-                comments = '$request->comments',
-                carer = '$request->carer',
-                id_motive = $request->id_motive,
-                id_dedication = $request->id_dedication,
-                id_remuneration = $request->id_remuneration
-                WHERE id = $id_request;
-                ");   
+            $update_mod = DB::table('modify_solicitudes')->where('id_request', $id_request)->update([
+                'comments' => $request->comments,
+                'carer' => $request->carer,
+                'id_motive' => $request->id_motive,
+                'id_dedication' => $request->id_dedication,
+                'id_remuneration' => $request->id_remuneration
+            ]);
+
+            $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                'comments' => $request->comments,
+                'carer' => $request->carer,
+                'id_motive' => $request->id_motive,
+                'id_dedication' => $request->id_dedication,
+                'id_remuneration' => $request->id_remuneration
+            ]);
         } catch (Exception $e) {
             return $e->getMessage();
         } 
