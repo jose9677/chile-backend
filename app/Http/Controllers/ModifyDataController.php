@@ -69,6 +69,7 @@ class ModifyDataController extends Controller
 
         $data = DB::select(
             "SELECT 
+            id as id_document,
             id_request,
             id_document_type,
             document_path,
