@@ -85,7 +85,7 @@ Route::put('/approve-doc-modify/{id_document}/{rut}', [App\Http\Controllers\Modi
 Route::put('/reject-doc-modify/{id_document}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'rejectDocChanges']);
 Route::put('/update-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'updateDocData']);
 Route::put('/delete-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'deleteModDoc']);
-Route::put('/delete-doc-test/{id}', [App\Http\Controllers\ModifyDocumentController::class, 'deleteDocTest']);
+Route::put('/delete-doc-many', [App\Http\Controllers\ModifyDocumentController::class, 'deleteManyDoc']);
 
 //SOLICITUDESCONTROLLER
 /* Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);

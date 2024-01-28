@@ -146,6 +146,26 @@ class ModifyDocumentController extends Controller
         return response()->json(['message' => 'Document desactived'], 200);
     }
 
+    public function deleteManyDoc(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'id_doc' => []
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $doc = $request->id_doc;
+        
+        for ($i=0; $i < count($doc); $i++) { 
+            $desactive = documents::query()->where('id', $doc[$i])->update(['active' => false]);
+        }
+
+        return response()->json(['message' => 'Document desactived'], 200);
+    }
+
     public function DataModifer($rut)
     {
         $names = DB::table('users')->where('rut', $rut)->value('names');
