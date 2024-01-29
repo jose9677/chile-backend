@@ -24,8 +24,11 @@ class ModifyDocumentController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = new ModifyDocument();
-        $id_doc = ModifyDocument::max('id_document') + 1;
+        /* $data = new ModifyDocument();
+        $id_doc = ModifyDocument::max('id_document') + 1; */
+
+        $data = new documents();
+        $id_doc = documents::max('id_document') + 1;
 
         $data->id_request = $id;
         $data->id_document_type = $id_document_type;
@@ -46,6 +49,31 @@ class ModifyDocumentController extends Controller
         }
         $data->save();
         return response()->json(['message' => 'Document uploaded successfull'], 200);
+    }
+
+    public function loadManyDoc(Request $request, $id, $id_document_type)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'document' => []
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $docs = $request->document;
+        foreach ($docs as $key => $value) {
+            $dataDoc = ModifyDocument::create([
+                'id_request' => $id,
+                'id_document_type' => $id_document_type,
+                'document_path' => 'EJEMPLO',
+                'document_ext' => 'ext_ejemplo',
+                'active' => true
+            ]);
+        }
+
+        return 'OK';
     }
 
     public function approveDocChanges($id_document, $rut)
