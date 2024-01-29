@@ -28,7 +28,7 @@ class ModifyDocumentController extends Controller
         $id_doc = ModifyDocument::max('id_document') + 1; */
 
         $data = new documents();
-        $id_doc = documents::max('id_document') + 1;
+        $id_doc = documents::max('id') + 1;
 
         $data->id_request = $id;
         $data->id_document_type = $id_document_type;
@@ -45,7 +45,7 @@ class ModifyDocumentController extends Controller
             $path = $request->file('document_path')->storeAs('public/modify', $comPic);
             $data->document_path = $comPic;
             $data->document_ext = $extension;
-            $data->approve = true;
+            $data->active = true;
         }
         $data->save();
         return response()->json(['message' => 'Document uploaded successfull'], 200);
