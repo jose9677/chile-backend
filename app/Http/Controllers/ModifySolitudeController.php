@@ -181,7 +181,7 @@ class ModifySolitudeController extends Controller
                 'way_number' => $request->way_number,
                 'request_date' => $request->request_date,
                 'id_status' => $request->id_status,
-                'reg_type' => $request->reg_type
+                'reg_type' => $request->reg_type 
             ]);
         }
 

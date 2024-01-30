@@ -48,32 +48,18 @@ class ModifyDocumentController extends Controller
             $data->active = true;
         }
         $data->save();
-        return response()->json(['message' => 'Document uploaded successfull'], 200);
-    }
-
-    public function loadManyDoc(Request $request, $id, $id_document_type)
-    {
-        Log::info($request);
-        $validator = Validator::make($request->all(),[
-            'document' => []
+        
+        $doc_mod = ModifyDocument::create([
+            'id_request' => $id,
+            'id_document_type' => $id_document_type,
+            'document_path' => $comPic,
+            'document_ext' => $extension,
+            'active' => true,
+            'approve' => true,
+            'id_doc_loaded' => $id_doc
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        $docs = $request->document;
-        foreach ($docs as $key => $value) {
-            $dataDoc = ModifyDocument::create([
-                'id_request' => $id,
-                'id_document_type' => $id_document_type,
-                'document_path' => 'EJEMPLO',
-                'document_ext' => 'ext_ejemplo',
-                'active' => true
-            ]);
-        }
-
-        return 'OK';
+        return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
 
     public function approveDocChanges($id_document, $rut)
@@ -145,6 +131,38 @@ class ModifyDocumentController extends Controller
             'response' => 'Changes approved'
             //'approved_by' => $this->DataModifer($request->rut_employee)
         ]);
+    }
+
+    public function updateManyDoc(Request $request)
+    {
+        $requests = $request->all();
+        $files = [];
+        $nameInputFile = 'file';
+
+        foreach ($requests as $key => $value) {
+            if (str_contains($key, $nameInputFile)) {
+                array_push($files, $value);
+            }
+        }
+
+        if (!$files) {
+            return response()->json(['error' => 'documents not found'], 400);
+        }
+
+        $rulesValidationFiles = [
+            'id_document_type' => 'required'
+        ];
+
+        foreach ($files as $key => $value) {
+            try {
+                $extensionFile = $value->extension();
+            } catch (\Exception $e) {
+                $nameFile = $value->getClientOriginalName();
+                return response()->json(['error' => 'Faile to load file'], 400);
+            }
+
+            $rulesValidationFiles = array_merge($rulesValidationFiles, ['file',($key) => '']);
+        }
     }
 
     public function deleteModDoc($id_request, $id_document_type)

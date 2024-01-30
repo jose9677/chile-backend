@@ -86,6 +86,7 @@ Route::post('/load-file-many/{id}/{id_document_type}', [App\Http\Controllers\Mod
 Route::put('/approve-doc-modify/{id_document}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'approveDocChanges']);
 Route::put('/reject-doc-modify/{id_document}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'rejectDocChanges']);
 Route::put('/update-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'updateDocData']);
+Route::put('/update-doc-many/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'updateManyDoc']);
 Route::put('/delete-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'deleteModDoc']);
 Route::put('/delete-doc-many', [App\Http\Controllers\ModifyDocumentController::class, 'deleteManyDoc']);
 
