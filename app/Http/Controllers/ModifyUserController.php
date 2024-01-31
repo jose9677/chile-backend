@@ -77,7 +77,7 @@ class ModifyUserController extends Controller
                 'landline' => $request->get('landline'),
                 'mobile_phone' => $request->get('mobile_phone'),
                 'id_sex' => $request->get('id_sex'),
-                'approve' => true
+                'approve' => null
             ]);
         
         

@@ -70,7 +70,7 @@ class ModifySolitudeController extends Controller
             'id_dedication' => $request->get('id_dedication'),
             'id_remuneration' => $request->get('id_remuneration'),
             'rut_employee' => $request->get('rut_employee'),
-            'approve' => false,
+            'approve' => null,
             'id_request' => $id_request
         ]);
 
@@ -138,7 +138,7 @@ class ModifySolitudeController extends Controller
                 'latitude' =>  $request->get('latitude'),
                 'longitude' => $request->get('longitude'),
                 'rut_employee' => $request->get('rut_employee'),
-                'approve' => true,
+                'approve' => null,
                 'id_request' => $id_request
             ]);
 
@@ -170,7 +170,7 @@ class ModifySolitudeController extends Controller
                 'id_dedication' => $request->get('id_dedication'),
                 'id_remuneration' => $request->get('id_remuneration'),
                 'rut_employee' => $request->get('rut_employee'),
-                'approve' => true,
+                'approve' => null,
                 'id_request' => $id_request
             ]);
 

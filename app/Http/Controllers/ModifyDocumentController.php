@@ -133,7 +133,7 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function updateManyDoc(Request $request)
+    public function loadManyDoc(Request $request, $id)
     {
         $requests = $request->all();
         $files = [];
@@ -161,8 +161,29 @@ class ModifyDocumentController extends Controller
                 return response()->json(['error' => 'Faile to load file'], 400);
             }
 
-            $rulesValidationFiles = array_merge($rulesValidationFiles, ['file',($key) => '']);
+            $rulesValidationFiles = array_merge($rulesValidationFiles, 
+            ['file'.($key) => 'mimetyes:image/jpeg,image/png,image/bmp,application/pdf|max:5120']);
         }
+
+        $filesValidator = Validator::make($request->all(), $rulesValidationFiles);
+        
+        if ($filesValidator->fails()) {
+            $errors = $filesValidator->errors();
+
+            return response()->json(['code' => ['error' => $errors]], 400);
+        }
+
+        $id_document_type = $request->id_document_type;
+        
+        $dataDocument = documents::create([
+            'id_request' => $id,
+            'id_document_type' => $id_document_type,
+            'document_path' => 'PRUEBA_PATH',
+            'document_ext' => $extensionFile,
+            'active' => true
+        ]);
+
+        return response()->json('OK');
     }
 
     public function deleteModDoc($id_request, $id_document_type)
