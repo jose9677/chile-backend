@@ -155,7 +155,7 @@ class ModifySolitudeController extends Controller
                 'reg_type' => $request->reg_type
             ]);
         }
-        elseif ($request->reg_type != 'wots') {
+        elseif ($request->reg_type != 'WOTS') {
 
             $mod_sol = ModifySolicitude::create([
                 'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
