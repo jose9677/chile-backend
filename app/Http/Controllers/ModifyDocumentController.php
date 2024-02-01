@@ -198,10 +198,10 @@ class ModifyDocumentController extends Controller
     {
         $fileName = time().$index.'.'.$file->extension();
 
-        Storage::disk('public/modify')->put($fileName, $file);
-        $file = Storage::disk('public/modify')->files($fileName);
-        $url = Storage::disk('public/modify')->url('/');
-        $pathUrl = $url.$file[0];
+        Storage::disk('modify')->put($fileName, $file);
+        $file = Storage::disk('modify')->files($fileName);
+       // $url = Storage::disk('public/modify')->url('/');
+        $pathUrl = $file[0];
 
         return $pathUrl;
     }

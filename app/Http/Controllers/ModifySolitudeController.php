@@ -120,7 +120,7 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'This record is not approved'], 400);
         } */
 
-        if ($request->reg_type == 'wots') {
+        if ($request->reg_type == 'WOTS') {
             
             $mod_sol = ModifySolicitude::create([
                 'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
