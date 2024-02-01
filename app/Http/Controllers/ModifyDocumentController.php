@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -162,7 +163,7 @@ class ModifyDocumentController extends Controller
             }
 
             $rulesValidationFiles = array_merge($rulesValidationFiles, 
-            ['file'.($key) => 'mimetyes:image/jpeg,image/png,image/bmp,application/pdf|max:5120']);
+            ['file'.($key) => 'mimetypes:image/jpeg,image/png,image/bmp,application/pdf|max:5120']);
         }
 
         $filesValidator = Validator::make($request->all(), $rulesValidationFiles);
@@ -174,16 +175,35 @@ class ModifyDocumentController extends Controller
         }
 
         $id_document_type = $request->id_document_type;
+        $index = 0;
         
-        $dataDocument = documents::create([
-            'id_request' => $id,
-            'id_document_type' => $id_document_type,
-            'document_path' => 'PRUEBA_PATH',
-            'document_ext' => $extensionFile,
-            'active' => true
-        ]);
+        foreach ($files as $key => $value) {
+            $index++;
+
+            $document_path = $this->fileUpload($value, $index);
+
+            $dataDocument = documents::create([
+                'id_request' => $id,
+                'id_document_type' => $id_document_type,
+                'document_path' => 'PRUEBA_PATH',
+                'document_ext' => $extensionFile,
+                'active' => true
+            ]);
+        }
 
         return response()->json('OK');
+    }
+
+    public function fileUpload($file, $index)
+    {
+        $fileName = time().$index.'.'.$file->extension();
+
+        Storage::disk('public/modify')->put($fileName, $file);
+        $file = Storage::disk('public/modify')->files($fileName);
+        $url = Storage::disk('public/modify')->url('/');
+        $pathUrl = $url.$file[0];
+
+        return $pathUrl;
     }
 
     public function deleteModDoc($id_request, $id_document_type)
