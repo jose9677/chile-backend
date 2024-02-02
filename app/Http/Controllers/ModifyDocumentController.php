@@ -179,24 +179,29 @@ class ModifyDocumentController extends Controller
         
         foreach ($files as $key => $value) {
             $index++;
+            $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
+            $id_doc = documents::max('id') + 1;
 
-            $document_path = $this->fileUpload($value, $index);
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id.'-'.$id_doc;
+            $def_path = $comPic.'.'.$extensionFile;
+
+            $document_path = $this->fileUpload($value, $index, $comPic);
 
             $dataDocument = documents::create([
                 'id_request' => $id,
                 'id_document_type' => $id_document_type,
-                'document_path' => 'PRUEBA_PATH',
+                'document_path' => $def_path,
                 'document_ext' => $extensionFile,
                 'active' => true
             ]);
         }
 
-        return response()->json('OK');
+        return response()->json(['message' => 'Files uploaded successfull']);
     }
 
-    public function fileUpload($file, $index)
+    public function fileUpload($file, $index, $comPic)
     {
-        $fileName = time().$index.'.'.$file->extension();
+        $fileName = $comPic.'.'.$file->extension();
 
         Storage::disk('modify')->put($fileName, $file);
         $file = Storage::disk('modify')->files($fileName);
