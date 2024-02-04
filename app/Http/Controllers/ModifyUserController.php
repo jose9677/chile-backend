@@ -28,6 +28,33 @@ class ModifyUserController extends Controller
         return response()->json($dataFound, 200);
     }
 
+    public function loadUserData(Request $request)
+    {
+        $user = User::where([
+            'rut' => $request['rut']
+        ])->get();
+
+        if (!$user->count()) {
+            return response()->json(['error' => 'User does not exists in DB'], 400);
+        }
+
+        $mod_user = ModifyUser::create([
+            'rut' => Str::upper($request->get('rut')),
+            'names' => Str::upper($request->get('names')),
+            'lastname' => Str::upper($request->get('lastname')),
+            'f_nac' => $request->get('f_nac'),
+            'email' => Str::lower($request->get('email')),
+            'landline' => $request->get('landline'),
+            'mobile_phone' => $request->get('mobile_phone'),
+            'id_sex' => $request->get('id_sex'),
+            'approve' => false
+        ]);
+
+        return response()->json([
+            'user' => $mod_user
+        ]);
+    }
+
     public function approveUserChanges($rut)
     {
         /* $record = ModifyUser::where([
