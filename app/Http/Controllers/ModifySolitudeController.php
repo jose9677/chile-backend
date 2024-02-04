@@ -148,6 +148,8 @@ class ModifySolitudeController extends Controller
                 'assurance' => $request->assurance,
                 'id_location' => $request->id_location,
                 'way_number' => $request->way_number,
+                'id_property_type' => $request->id_property_type,
+                'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
                 'id_status' => 11,
                 'dir_wots' => $request->dir_wots,
@@ -181,6 +183,8 @@ class ModifySolitudeController extends Controller
                 'assurance' => $request->assurance,
                 'id_location' => $request->id_location,
                 'way_number' => $request->way_number,
+                'id_property_type' => $request->id_property_type,
+                'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
                 'id_status' => 11,
                 'reg_type' => $request->reg_type 
