@@ -117,7 +117,7 @@ class ModifySolitudeController extends Controller
         ]);
     }
 
-    public function CompareSolData(Request $request, $id_request)
+    public function CompSolData(Request $request, $id_request)
     {
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
@@ -170,7 +170,7 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status' => 11,
+                'id_status' => 12,
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -187,7 +187,7 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status' => 11,
+                'id_status' => 12,
                 'reg_type' => $request->reg_type 
             ]);
         }

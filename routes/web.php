@@ -65,11 +65,11 @@ Route::get('/consult-modify/{id}', [App\Http\Controllers\ModifyDataController::c
 //MODIFIUSERCONTROLLER...
 Route::get('/all-user-modify', [App\Http\Controllers\ModifyUserController::class, 'allMoifyUser']);
 Route::get('/search-user-modify/{id_user}', [App\Http\Controllers\ModifyUserController::class, 'searchModifyUser']);
-Route::get('/comp-user-data/{rut}', [App\Http\Controllers\ModifyUserController::class, 'compUserData']);
 Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::class, 'loadUserData']);
 Route::put('/approve-user-modify/{rut}', [App\Http\Controllers\ModifyUserController::class, 'approveUserChanges']);
 Route::put('/reject-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'rejectUserChanges']);
 Route::put('/update-user-modify/{rut}', [App\Http\Controllers\ModifyUserController::class, 'updateUserData']);
+Route::post('/compare-user-modify', [App\Http\Controllers\ModifyUserController::class, 'compUserData']);
 
 //MODIFIFYSOLICITUDECONTROLLER...
 Route::get('/all-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'allSolicitudeModify']);
@@ -79,6 +79,7 @@ Route::put('/approve-sol-modify/{id_request}/{rut}', [App\Http\Controllers\Modif
 Route::put('/reject-sol-modify/{id_request}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'rejectSolChanges']);
 Route::put('/update-sol-modify/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'updateSolData']);
 Route::put('/update-extra-data/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'updateExtraData']);
+Route::post('/compare-sol-data/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'CompSolData']);
 
 //MODIFYDOCUMENTS...
 Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadModifyFile']);
