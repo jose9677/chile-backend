@@ -94,26 +94,6 @@ class ModifyUserController extends Controller
 
     public function compUserData(Request $request)
     {
-        $data = DB::select(
-            "SELECT 
-            a.rut,
-            case when a.names = $request->names then true else false end as comp_names,
-            case when a.lastname = $request->lastname then true else false end as comp_lastname,
-            case when a.id_sex = $request->id_sex then true else false end as comp_sex,
-            case when a.f_nac = $request->f_nac then true else false end as comp_f_nac,
-            case when a.email = $request->email then true else false end as comp_email,
-            case when a.landline = $request->landline then true else false end as comp_landline,
-            case when a.mobile_phone = $request->mobile_phone then true else false end as comp_mobile
-            FROM consultants.users as a 
-            JOIN consultants.modify_users as b USING (rut)
-            WHERE a.rut = '$request->rut'
-            ");
-
-            return response()->json($data, 200);
-    }
-
-    public function updateUserData(Request $request)
-    {
         $id_user = DB::table('modify_users')->where('rut', $request->rut)->orderByDesc('id_user')->limit(1)->value('id_user');
 
         $compare = DB::select(
@@ -129,10 +109,11 @@ class ModifyUserController extends Controller
             WHERE a.id_user = $id_user AND a.rut = '$request->rut'
             ");
 
-            if ($compare) {
-                $approve = ModifyUser::query()->where(['id_user' => $id_user, 'rut' => $request->rut])->update(['approve' => true]);
-            }
+        return response()->json($compare, 200);
+    }
 
+    public function updateUserData(Request $request)
+    {
         try {
             $update = DB::update(
                 "UPDATE consultants.users 
@@ -150,7 +131,6 @@ class ModifyUserController extends Controller
         } 
         
         return response()->json([
-            'compare' => $compare,
             'message' => 'Record updated successfull'
             //'approve_by' => $this->DataModifer($request->rut_employee)
         ]);

@@ -117,11 +117,11 @@ class ModifySolitudeController extends Controller
         ]);
     }
 
-    public function updateSolData(Request $request, $id_request)
+    public function CompareSolData(Request $request, $id_request)
     {
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
+
         if ($request->reg_type == 'WOTS') {
-            
             $compare = DB::select(
                 "SELECT 
                 case when a.id_prevention_type_detail = $request->id_prevention_type_detail then true else false end as comp_id_prevention_type_detail,
@@ -138,11 +138,30 @@ class ModifySolitudeController extends Controller
                 case when a.id_request = $request->id_request then true else false end as comp_id_request
                 FROM consultants.modify_solicitudes as a 
                 WHERE a.id_solicitude = $id_solicitude AND a.id_request = $id_request");
+        }
+        elseif ($request->reg_type != 'WOTS') {
+            $compare = DB::select(
+                "SELECT 
+                case when a.id_prevention_type_detail = $request->id_prevention_type_detail then true else false end as comp_id_prevention_type_detail,
+                case when a.assurance = '$request->assurance' then true else false end as comp_assurance,
+                case when a.id_location = $request->id_location then true else false end as comp_id_location,
+                case when a.way_number = $request->way_number then true else false end as comp_way_number,
+                case when a.id_property_type = $request->id_property_type then true else false end as comp_id_property_type,
+                case when a.property_number = '$request->property_number' then true else false end as comp_property_number,
+                case when a.request_date = '$request->request_date' then true else false end as comp_request_date,
+                case when a.id_status = $request->id_status then true else false end as comp_id_status,
+                case when a.id_request = $request->id_request then true else false end as comp_id_request
+                FROM consultants.modify_solicitudes as a 
+                WHERE a.id_solicitude = $id_solicitude AND a.id_request = $id_request");
+        }
 
-                if ($compare) {
-                    $approve = ModifySolicitude::query()->where(['id_solicitude' => $id_solicitude, 'id_request' => $id_request])->update(['approve' => true]);
-                }
+        return response()->json($compare, 200);
+    }
 
+    public function updateSolData(Request $request, $id_request)
+    {
+        if ($request->reg_type == 'WOTS') {
+            
             $update = DB::table('solicitudes')->where('id', $id_request)->update([
                 'id_prevention_type_detail' => $request->id_prevention_type_detail,
                 'assurance' => $request->assurance,
@@ -160,24 +179,6 @@ class ModifySolitudeController extends Controller
         }
         elseif ($request->reg_type != 'WOTS') {
 
-            $compare = DB::select(
-                "SELECT 
-                case when a.id_prevention_type_detail = $request->id_prevention_type_detail then true else false end as comp_id_prevention_type_detail,
-                case when a.assurance = '$request->assurance' then true else false end as comp_assurance,
-                case when a.id_location = $request->id_location then true else false end as comp_id_location,
-                case when a.way_number = $request->way_number then true else false end as comp_way_number,
-                case when a.id_property_type = $request->id_property_type then true else false end as comp_id_property_type,
-                case when a.property_number = '$request->property_number' then true else false end as comp_property_number,
-                case when a.request_date = '$request->request_date' then true else false end as comp_request_date,
-                case when a.id_status = $request->id_status then true else false end as comp_id_status,
-                case when a.id_request = $request->id_request then true else false end as comp_id_request
-                FROM consultants.modify_solicitudes as a 
-                WHERE a.id_solicitude = $id_solicitude AND a.id_request = $id_request");
-
-            if ($compare) {
-                $approve = ModifySolicitude::query()->where(['id_solicitude' => $id_solicitude, 'id_request' => $id_request])->update(['approve' => true]);
-            }
-
             $update = DB::table('solicitudes')->where('id', $id_request)->update([
                 'id_prevention_type_detail' => $request->id_prevention_type_detail,
                 'assurance' => $request->assurance,
@@ -192,7 +193,6 @@ class ModifySolitudeController extends Controller
         }
 
         return response()->json([
-            'compare' => $compare,
             'message' => 'Data updated successfull'
             //'approve_by' => $this->DataModifer($request->rut_employee)
         ]); 
