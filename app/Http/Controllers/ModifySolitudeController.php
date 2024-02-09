@@ -45,7 +45,7 @@ class ModifySolitudeController extends Controller
                 'id_location' => $request->get('id_location'),
                 'way_number' => $request->get('way_number'),
                 'request_date' => $request->get('request_date'),
-                'id_status' => $request->get('id_status'),
+                'id_status' => 11,
                 'comments' => $request->get('comments'),
                 'carer' => $request->get('carer'),
                 'id_motive' => $request->get('id_motive'),
@@ -66,7 +66,7 @@ class ModifySolitudeController extends Controller
                 'id_location' => $request->get('id_location'),
                 'way_number' => $request->get('way_number'),
                 'request_date' => $request->get('request_date'),
-                'id_status' => $request->get('id_status'),
+                'id_status' => 11,
                 'comments' => $request->get('comments'),
                 'carer' => $request->get('carer'),
                 'id_motive' => $request->get('id_motive'),
@@ -83,6 +83,12 @@ class ModifySolitudeController extends Controller
 
     public function approveSolChanges($id_request, $rut)
     {
+        $employee = DB::table('users')->where('rut', $rut)->value('employee');
+
+        if ($employee == false) {
+            return response()->json(['error' => 'This user is not a employee'], 400);
+        }
+
         $record = ModifySolicitude::where([
             'id_request' => $id_request
         ])->get();
@@ -101,6 +107,12 @@ class ModifySolitudeController extends Controller
 
     public function rejectSolChanges($id_request, $rut)
     {
+        $employee = DB::table('users')->where('rut', $rut)->value('employee');
+
+        if ($employee == false) {
+            return response()->json(['error' => 'This user is not a employee'], 400);
+        }
+
         $record = ModifySolicitude::where([
             'id_request' => $id_request
         ])->get();
@@ -160,6 +172,14 @@ class ModifySolitudeController extends Controller
 
     public function updateSolData(Request $request, $id_request)
     {
+        $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
+
+        $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
+
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not aproved'], 400);
+        }
+        
         if ($request->reg_type == 'WOTS') {
             
             $update = DB::table('solicitudes')->where('id', $id_request)->update([
@@ -170,7 +190,6 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status' => 12,
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -187,7 +206,6 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status' => 12,
                 'reg_type' => $request->reg_type 
             ]);
         }
@@ -200,22 +218,13 @@ class ModifySolitudeController extends Controller
 
     public function updateExtraData(Request $request, $id_request)
     {
-        /* Log::info($request);
-        $validator = Validator::make($request->all(), [
-            'carer' => 'required',
-            'id_motive' => 'required',
-            'id_dedication' => 'required',
-            'id_remuneration' => 'required',
-        ]);
+        $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        } */
+        $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
 
-        /* $gate = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('approve');
         if ($gate == false) {
-            return response()->json(['error' => 'This record is not approved'], 400);
-        } */
+            return response()->json(['error' => 'This record is not aproved'], 400);
+        }
 
         try {
             $update_mod = DB::table('modify_solicitudes')->where('id_request', $id_request)->update([

@@ -57,38 +57,37 @@ class ModifyUserController extends Controller
 
     public function approveUserChanges($rut)
     {
-        /* $record = ModifyUser::where([
-            'id_user' => $id_user
-        ])->get();
-
-        if (!$record->count()) {
-            return response()->json(['error' => 'This record is not exists'], 400);
-        } */
-
-        //$data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true]);
-        $data = ModifyUser::query()->where('rut', $rut)->update(['approve' => true]);
-        
-        return response()->json([
-            'response' => 'Changes approved',
-            'approved_by' => $this->DataModifer($rut)
-        ]);
-    }
-
-    public function rejectUserChanges($id_user, $rut)
-    {
         $record = ModifyUser::where([
-            'id_user' => $id_user
+            'rut' => $rut
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => false]);
+        $data = ModifyUser::query()->where('rut', $rut)->update(['approve' => true]);
         
         return response()->json([
             'response' => 'Changes approved',
-            'rejected_by' => $this->DataModifer($rut)
+            //'approved_by' => $this->DataModifer($rut)
+        ]);
+    }
+
+    public function rejectUserChanges($rut)
+    {
+        $record = ModifyUser::where([
+            'ru' => $rut
+        ])->get();
+
+        if (!$record->count()) {
+            return response()->json(['error' => 'This record is not exists'], 400);
+        }
+
+        $data = ModifyUser::query()->where('rut', $rut)->update(['approve' => false]);
+        
+        return response()->json([
+            'response' => 'Changes approved',
+            //'rejected_by' => $this->DataModifer($rut)
         ]);
     }
 
@@ -112,8 +111,16 @@ class ModifyUserController extends Controller
         return response()->json($compare, 200);
     }
 
-    public function updateUserData(Request $request)
+    public function updateUserData(Request $request, $rut)
     {
+        $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
+
+        $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
+
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not aproved'], 400);
+        }
+
         try {
             $update = DB::update(
                 "UPDATE consultants.users 
