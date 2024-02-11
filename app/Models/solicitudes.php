@@ -38,7 +38,8 @@ class solicitudes extends Model
         'dir_wots',
         'latitude',
         'longitude',
-        'reg_type'
+        'reg_type',
+        'id_mod_status'
     ];
 
     protected $hidden = [

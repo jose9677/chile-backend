@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         //$this->call(aps_statusSeeder::class);
-        $this->call(desApsStatusSeeder::class);
+        //$this->call(desApsStatusSeeder::class);
+        $this->call(ModStatusSeeder::class);
     }
 }

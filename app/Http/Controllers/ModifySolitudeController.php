@@ -59,7 +59,8 @@ class ModifySolitudeController extends Controller
                 'longitude' => $request->get('longitude'),
                 'rut_employee' => $request->get('rut_employee'),
                 'approve' => null,
-                'id_request' => $id_request
+                'id_request' => $id_request,
+                'id_mod_status' => 1
             ]);
         }
         elseif ($request->reg_type != 'WOTS') {
@@ -78,14 +79,17 @@ class ModifySolitudeController extends Controller
                 'id_remuneration' => $request->get('id_remuneration'),
                 'rut_employee' => $request->get('rut_employee'),
                 'approve' => null,
-                'id_request' => $id_request
+                'id_request' => $id_request,
+                'id_mod_status' => 1
             ]);
         }
+
+        $mod_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 1]);
 
         return response()->json($mod_sol, 200);
     }
 
-    public function approveSolChanges($id_request, $rut)
+    public function approveSolChanges($id_solicitude, $rut)
     {
         $employee = DB::table('users')->where('rut', $rut)->value('employee');
 
@@ -94,14 +98,19 @@ class ModifySolitudeController extends Controller
         }
 
         $record = ModifySolicitude::where([
-            'id_request' => $id_request
+            'id_solicitude' => $id_solicitude
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifySolicitude::query()->where('id_request', $id_request)->update(['approve' => true]);
+        $data = ModifySolicitude::query()->where('id_solicitude', $id_solicitude)->update(['approve' => true]);
+
+        $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 2]);
+        $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
+        
+        $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 2]);
         
         return response()->json([
             'response' => 'Changes approved',
@@ -109,7 +118,7 @@ class ModifySolitudeController extends Controller
         ]);
     }
 
-    public function rejectSolChanges($id_request, $rut)
+    public function rejectSolChanges($id_solicitude, $rut)
     {
         $employee = DB::table('users')->where('rut', $rut)->value('employee');
 
@@ -118,15 +127,20 @@ class ModifySolitudeController extends Controller
         }
 
         $record = ModifySolicitude::where([
-            'id_request' => $id_request
+            'id_solicitude' =>$id_solicitude
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifySolicitude::query()->where('id_solicitude', $id_request)->update(['approve' => false]);
+        $data = ModifySolicitude::query()->where('id_solicitude', $id_solicitude)->update(['approve' => false]);
+    
+        $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 4]);
+        $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
         
+        $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 4]);
+
         return response()->json([
             'response' => 'Changes approved',
             'rejected_by' => $this->DataModifer($rut)

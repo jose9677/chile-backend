@@ -55,39 +55,39 @@ class ModifyUserController extends Controller
         ]);
     }
 
-    public function approveUserChanges($rut)
+    public function approveUserChanges($id_user, $rut)
     {
         $record = ModifyUser::where([
-            'rut' => $rut
+            'id_user' => $id_user
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyUser::query()->where('rut', $rut)->update(['approve' => true]);
+        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true]);
         
         return response()->json([
             'response' => 'Changes approved',
-            //'approved_by' => $this->DataModifer($rut)
+            'approved_by' => $this->DataModifer($rut)
         ]);
     }
 
-    public function rejectUserChanges($rut)
+    public function rejectUserChanges($id_user, $rut)
     {
         $record = ModifyUser::where([
-            'ru' => $rut
+            'id_user' => $id_user
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyUser::query()->where('rut', $rut)->update(['approve' => false]);
+        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => false]);
         
         return response()->json([
             'response' => 'Changes approved',
-            //'rejected_by' => $this->DataModifer($rut)
+            'rejected_by' => $this->DataModifer($rut)
         ]);
     }
 

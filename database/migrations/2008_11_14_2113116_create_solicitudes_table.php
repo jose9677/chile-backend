@@ -44,6 +44,7 @@ class CreateSolicitudesTable extends Migration
             $table->float('latitude')->nullable();
             $table->float('longitude')->nullable();
             $table->string('reg_type')->nullable();
+            $table->unsignedBigInteger('id_mod_status')->nullable();
 
             $table->timestamps();
 
