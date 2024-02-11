@@ -64,7 +64,7 @@ Route::get('/consult-modify/{id}', [App\Http\Controllers\ModifyDataController::c
 
 //MODIFIUSERCONTROLLER...
 Route::get('/all-user-modify', [App\Http\Controllers\ModifyUserController::class, 'allMoifyUser']);
-Route::get('/search-user-modify/{id_user}', [App\Http\Controllers\ModifyUserController::class, 'searchModifyUser']);
+Route::get('/search-user-modify/{id_request}', [App\Http\Controllers\ModifyUserController::class, 'searchModifyUser']);
 Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::class, 'loadUserData']);
 Route::put('/approve-user-modify/{rut}', [App\Http\Controllers\ModifyUserController::class, 'approveUserChanges']);
 Route::put('/reject-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'rejectUserChanges']);

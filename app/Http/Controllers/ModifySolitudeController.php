@@ -38,8 +38,11 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'Solicitude does not exists in DB'], 400);
         }
 
+        $rut_user = DB::table('solicitudes')->where('id', $id_request)->value('rut_user');
+
         if ($request->reg_type == 'WOTS') {
             $mod_sol = ModifySolicitude::create([
+                'rut_user' => $rut_user,
                 'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
                 'assurance' => $request->get('assurance'),
                 'id_location' => $request->get('id_location'),
@@ -61,6 +64,7 @@ class ModifySolitudeController extends Controller
         }
         elseif ($request->reg_type != 'WOTS') {
             $mod_sol = ModifySolicitude::create([
+                'rut_user' => $rut_user,
                 'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
                 'assurance' => $request->get('assurance'),
                 'id_location' => $request->get('id_location'),

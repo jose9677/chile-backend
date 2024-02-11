@@ -20,12 +20,12 @@ class ModifyUserController extends Controller
         return response()->json($data, 200);
     }
 
-    public function searchModifyUser($id_user)
+    public function searchModifyUser($id_request)
     {
-        $data = ModifyUser::findOrFail($id_user);
-        $dataFound = $data;
+        $rut = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('rut_user');
+        $data = DB::table('modify_users')->where('rut', $rut)->orderBy('id_user')->get('*');
 
-        return response()->json($dataFound, 200);
+        return response()->json($data, 200);
     }
 
     public function loadUserData(Request $request)
