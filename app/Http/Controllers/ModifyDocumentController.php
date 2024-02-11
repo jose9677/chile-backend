@@ -63,17 +63,17 @@ class ModifyDocumentController extends Controller
         return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
 
-    public function approveDocChanges($id_document, $rut)
+    public function approveDocChanges($id_request, $rut)
     {
         $record = ModifyDocument::where([
-            'id_document' => $id_document
+            'id_document' => $id_request
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyDocument::query()->where('id_document', $id_document)->update(['approve' => true]);
+        $data = ModifyDocument::query()->where('id_request', $id_request)->update(['approve' => true]);
         
         return response()->json([
             'response' => 'Changes approved',
@@ -81,17 +81,17 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function rejectDocChanges($id_document, $rut)
+    public function rejectDocChanges($id_request, $rut)
     {
         $record = ModifyDocument::where([
-            'id_document' => $id_document
+            'id_document' => $id_request
         ])->get();
 
         if (!$record->count()) {
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyDocument::query()->where('id_document', $id_document)->update(['approve' => false]);
+        $data = ModifyDocument::query()->where('id_reque$id_request', $id_request)->update(['approve' => false]);
         
         return response()->json([
             'response' => 'Changes approved',
