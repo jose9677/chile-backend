@@ -37,6 +37,7 @@ class CreateModifyUsersTable extends Migration
             $table->string('origin');
             $table->string('rut_employee');
             $table->boolean('approve');
+            $table->unsignedBigInteger('id_mod_status')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

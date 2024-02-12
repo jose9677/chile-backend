@@ -36,6 +36,7 @@ class ModifyUser extends Model
         'percent',
         'origin',
         'rut_employee',
-        'approve'
+        'approve',
+        'id_mod_status'
     ];
 }

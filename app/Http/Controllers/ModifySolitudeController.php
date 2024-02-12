@@ -188,7 +188,7 @@ class ModifySolitudeController extends Controller
         return response()->json($compare, 200);
     }
 
-    public function updateSolData(Request $request, $id_request)
+    public function updateSolData(Request $request, $id_request, $rut)
     {
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
@@ -211,8 +211,10 @@ class ModifySolitudeController extends Controller
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'reg_type' => $request->reg_type
+                'reg_type' => $request->reg_type,
+                'id_mod_status' => 3
             ]);
+            $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
         }
         elseif ($request->reg_type != 'WOTS') {
 
@@ -224,17 +226,63 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'reg_type' => $request->reg_type 
+                'reg_type' => $request->reg_type,
+                'id_mod_status' => 3
             ]);
+            $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
         }
 
         return response()->json([
-            'message' => 'Data updated successfull'
-            //'approve_by' => $this->DataModifer($request->rut_employee)
+            'message' => 'Data updated successfull',
+            'approve_by' => $this->DataModifer($rut)
         ]); 
     }
 
-    public function updateExtraData(Request $request, $id_request)
+    public function updateSolDataVIP(Request $request, $id_request, $rut)
+    {
+        $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
+
+        if ($request->reg_type == 'WOTS') {
+            
+            $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                'id_prevention_type_detail' => $request->id_prevention_type_detail,
+                'assurance' => $request->assurance,
+                'id_location' => $request->id_location,
+                'way_number' => $request->way_number,
+                'id_property_type' => $request->id_property_type,
+                'property_number' => $request->property_number,
+                'request_date' => $request->request_date,
+                'dir_wots' => $request->dir_wots,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'reg_type' => $request->reg_type,
+                'id_mod_status' => 3
+            ]);
+            $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
+        }
+        elseif ($request->reg_type != 'WOTS') {
+
+            $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                'id_prevention_type_detail' => $request->id_prevention_type_detail,
+                'assurance' => $request->assurance,
+                'id_location' => $request->id_location,
+                'way_number' => $request->way_number,
+                'id_property_type' => $request->id_property_type,
+                'property_number' => $request->property_number,
+                'request_date' => $request->request_date,
+                'reg_type' => $request->reg_type,
+                'id_mod_status' => 3
+            ]);
+            $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
+        }
+
+        return response()->json([
+            'message' => 'Data updated successfull',
+            'approve_by' => $this->DataModifer($rut)
+        ]); 
+    }
+
+    public function updateExtraData(Request $request, $id_request, $rut)
     {
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
@@ -250,7 +298,8 @@ class ModifySolitudeController extends Controller
                 'carer' => $request->carer,
                 'id_motive' => $request->id_motive,
                 'id_dedication' => $request->id_dedication,
-                'id_remuneration' => $request->id_remuneration
+                'id_remuneration' => $request->id_remuneration,
+                'id_mod_status' => 3
             ]);
 
             $update = DB::table('solicitudes')->where('id', $id_request)->update([
@@ -258,7 +307,8 @@ class ModifySolitudeController extends Controller
                 'carer' => $request->carer,
                 'id_motive' => $request->id_motive,
                 'id_dedication' => $request->id_dedication,
-                'id_remuneration' => $request->id_remuneration
+                'id_remuneration' => $request->id_remuneration,
+                'id_mod_status' => 3
             ]);
         } catch (Exception $e) {
             return $e->getMessage();
@@ -266,6 +316,7 @@ class ModifySolitudeController extends Controller
 
         return response()->json([
             'message' => 'Updated successfull',
+            'approve_by' => $this->DataModifer($rut)
         ]);
     }
 

@@ -14,6 +14,21 @@ use Illuminate\Support\Str;
 
 class ModifyDocumentController extends Controller
 {
+    public function allDocModify()
+    {
+        $data = ModifyDocument::all();
+
+        return response()->json($data, 200);
+    }
+
+    public function searchDocModify($id_request)
+    {
+        $data = DB::table('modify_documents')->where('id_request', $id_request)->get();
+        $dataFound = $data;
+
+        return response()->json($dataFound, 200);
+    }
+
     public function loadModifyFile(Request $request, $id, $id_document_type)
     {
         Log::info($request);
@@ -153,6 +168,11 @@ class ModifyDocumentController extends Controller
         $rulesValidationFiles = [
             'id_document_type' => 'required'
         ];
+
+        /* $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not approved'], 400);
+        } */
 
         foreach ($files as $key => $value) {
             try {

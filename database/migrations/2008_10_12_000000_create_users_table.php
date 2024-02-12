@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('id_sex');
             $table->integer('percent');
             $table->string('origin');
+            $table->unsignedBigInteger('id_mod_status')->nullable();
 
             $table->rememberToken();
             $table->timestamps();

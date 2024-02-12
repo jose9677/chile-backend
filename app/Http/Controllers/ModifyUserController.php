@@ -115,6 +115,33 @@ class ModifyUserController extends Controller
     {
         $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
 
+        try {
+            $update = DB::update(
+                "UPDATE consultants.users 
+                SET
+                names = '$request->names',
+                lastname = '$request->lastname',
+                f_nac = '$request->f_nac',
+                email = '$request->email',
+                landline = $request->landline,
+                mobile_phone = $request->mobile_phone,
+                id_sex = $request->id_sex,
+                id_mod_status = 3
+                WHERE rut = '$request->rut'");    
+        } catch (Exception $e) {
+            return $e->getMessage();    
+        } 
+        
+        return response()->json([
+            'message' => 'Record updated successfull'
+            //'approve_by' => $this->DataModifer($request->rut_employee)
+        ]);
+    }
+
+    public function updateUserDataVIP(Request $request, $rut)
+    {
+        $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
+
         $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
 
         if ($gate == false) {
@@ -131,7 +158,8 @@ class ModifyUserController extends Controller
                 email = '$request->email',
                 landline = $request->landline,
                 mobile_phone = $request->mobile_phone,
-                id_sex = $request->id_sex
+                id_sex = $request->id_sex,
+                id_mod_status = 3
                 WHERE rut = '$request->rut'");    
         } catch (Exception $e) {
             return $e->getMessage();    
