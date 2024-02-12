@@ -121,6 +121,12 @@ class ModifyUserController extends Controller
     {
         $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
 
+        $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
+
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not aproved'], 400);
+        }
+
         try {
             $update = DB::update(
                 "UPDATE consultants.users 
@@ -147,13 +153,7 @@ class ModifyUserController extends Controller
     public function updateUserDataVIP(Request $request, $rut)
     {
         $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
-
-        $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
-
-        if ($gate == false) {
-            return response()->json(['error' => 'This record is not aproved'], 400);
-        }
-
+        
         try {
             $update = DB::update(
                 "UPDATE consultants.users 
