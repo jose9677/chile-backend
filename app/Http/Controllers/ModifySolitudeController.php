@@ -22,7 +22,28 @@ class ModifySolitudeController extends Controller
 
     public function searchSolicitude($id_request)
     {
-        $data = DB::table('modify_solicitudes')->where('id_request', $id_request)->get();
+        $data = DB::table('modify_solicitudes')->where('id_request', $id_request)
+                    ->orderByDesc('id_solicitude')
+                    ->limit(1)
+                    ->get();
+        $dataFound = $data;
+
+        return response()->json($dataFound, 200);
+    }
+
+    public function seacrhExtraData($id_request)
+    {
+        $data = DB::table('modify_solicitudes')->where('id_request', $id_request)
+                    ->orderByDesc('id_solicitude')
+                    ->limit(1)
+                    ->get([
+                        'comments',
+                        'carer',
+                        'id_motive',
+                        'id_dedication',
+                        'id_remuneration',
+                        'id_mod_status'
+                    ]);
         $dataFound = $data;
 
         return response()->json($dataFound, 200);

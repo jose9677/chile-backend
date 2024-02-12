@@ -23,7 +23,10 @@ class ModifyDocumentController extends Controller
 
     public function searchDocModify($id_request)
     {
-        $data = DB::table('modify_documents')->where('id_request', $id_request)->get();
+        $data = DB::table('modify_documents')->where('id_request', $id_request)
+                    ->orderByDesc('id_document')
+                    ->limit(1)
+                    ->get();
         $dataFound = $data;
 
         return response()->json($dataFound, 200);

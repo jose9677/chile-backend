@@ -23,7 +23,7 @@ class ModifyUserController extends Controller
     public function searchModifyUser($id_request)
     {
         $rut = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('rut_user');
-        $data = DB::table('modify_users')->where('rut', $rut)->orderBy('id_user')->get('*');
+        $data = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get('*');
 
         return response()->json($data, 200);
     }

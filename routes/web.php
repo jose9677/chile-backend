@@ -69,12 +69,13 @@ Route::post('/load-user-modify', [App\Http\Controllers\ModifyUserController::cla
 Route::put('/approve-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'approveUserChanges']);
 Route::put('/reject-user-modify/{id_user}/{rut}', [App\Http\Controllers\ModifyUserController::class, 'rejectUserChanges']);
 Route::put('/update-user-modify/{rut}', [App\Http\Controllers\ModifyUserController::class, 'updateUserData']);
-Route::put('/update-user-modify/{rut}', [App\Http\Controllers\ModifyUserController::class, 'updateUserDataVIP']);
+Route::put('/update-user-modify-VIP/{rut}', [App\Http\Controllers\ModifyUserController::class, 'updateUserDataVIP']);
 Route::post('/compare-user-modify', [App\Http\Controllers\ModifyUserController::class, 'compUserData']);
 
 //MODIFIFYSOLICITUDECONTROLLER...
 Route::get('/all-sol-modify', [App\Http\Controllers\ModifySolitudeController::class, 'allSolicitudeModify']);
 Route::get('/search-sol-modify/{id_solicitude}', [App\Http\Controllers\ModifySolitudeController::class, 'searchSolicitude']);
+Route::get('/search-sol-extra-data/{id_solicitude}', [App\Http\Controllers\ModifySolitudeController::class, 'seacrhExtraData']);
 Route::post('/load-sol-modify/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'loadSolicitudeData']);
 Route::put('/approve-sol-modify/{id_solicitude}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'approveSolChanges']);
 Route::put('/reject-sol-modify/{id_solicitude}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'rejectSolChanges']);
@@ -84,6 +85,8 @@ Route::put('/update-extra-data/{id_request}', [App\Http\Controllers\ModifySolitu
 Route::post('/compare-sol-data/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'CompSolData']);
 
 //MODIFYDOCUMENTS...
+Route::get('/all-doc-modify', [App\Http\Controllers\ModifyDocumentController::class, 'allDocModify']);
+Route::get('/search-doc-modify/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'searchDocModify']);
 Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadModifyFile']);
 Route::post('/load-file-many/{id}', [App\Http\Controllers\ModifyDocumentController::class, 'loadManyDoc']);
 

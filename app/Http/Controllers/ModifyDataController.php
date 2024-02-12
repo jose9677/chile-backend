@@ -58,8 +58,15 @@ class ModifyDataController extends Controller
     public function DataUser($rut)
     {
         $data = DB::table('users')->select(
-        'rut', 'names', 'lastname', 'id_sex',
-        'f_nac', 'email', 'landline', 'mobile_phone'
+        'rut', 
+        'names', 
+        'lastname',
+        'id_sex',
+        'f_nac', 
+        'email', 
+        'landline', 
+        'mobile_phone',
+        'id_mod_status'
         )->where('rut', $rut)->get();
 
         return $data;
