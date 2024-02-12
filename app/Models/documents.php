@@ -16,7 +16,8 @@ class documents extends Model
         'id_document_type',
         'document_path',
         'document_ext',
-        'active'
+        'active',
+        'id_mod_status'
     ];
 
     protected $hidden = [

@@ -21,6 +21,7 @@ class ModifyDocument extends Model
         'active',
         'rut_employee',
         'approve',
-        'id_doc_loaded'
+        'id_doc_loaded',
+        'id_mod_status'
     ];
 }
