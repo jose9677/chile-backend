@@ -51,6 +51,8 @@ class ModifyUserController extends Controller
             'id_mod_status' => 1
         ]);
 
+        $update = DB::table('users')->where('rut', $request->rut)->update(['id_mod_status' => 1]);
+
         return response()->json([
             'user' => $mod_user
         ]);
@@ -85,6 +87,9 @@ class ModifyUserController extends Controller
         }
 
         $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => false]);
+        $mod_status = ModifyUser::query()->where('id_user', $id_user)->update(['id_mod_status' => 4]);
+        
+        $update_user = User::query()->where('rut', $rut)->update(['id_mod_status' => 4]);
         
         return response()->json([
             'response' => 'Changes approved',
