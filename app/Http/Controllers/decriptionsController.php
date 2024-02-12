@@ -7,6 +7,7 @@ use App\Models\cancel_motives;
 use App\Models\categories;
 use App\Models\dedications;
 use App\Models\locations;
+use App\Models\ModStatus;
 use App\Models\motives;
 use App\Models\preventions_details;
 use App\Models\preventions_types;
@@ -32,6 +33,7 @@ class decriptionsController extends Controller
         $remunerations = remunerations::all();
         $cancel_motives = cancel_motives::all();
         $sex = sex::all();
+        $mod_status = ModStatus::all();
 
         return response()->json([
             'status' => $status,
@@ -43,7 +45,8 @@ class decriptionsController extends Controller
             'dedications' => $dedications,
             'remunerations' => $remunerations,
             'cancel_motives' => $cancel_motives,
-            'sex' => $sex
+            'sex' => $sex,
+            'mod_staus' => $mod_status
         ]);
     }
 
