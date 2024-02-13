@@ -229,12 +229,12 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status_emp' => $request->id_status,
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'reg_type' => $request->reg_type,
-                'id_mod_status' => 3
+                'id_mod_status' => 3,
+                'id_status_emp' => $request->id_status_emp
             ]);
             $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
         }
@@ -248,9 +248,9 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status_emp' => $request->id_status,
                 'reg_type' => $request->reg_type,
-                'id_mod_status' => 3
+                'id_mod_status' => 3,
+                'id_status_emp' => $request->id_status_emp
             ]);
             $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
         }
@@ -275,12 +275,12 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status_emp' => $request->id_status,
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'reg_type' => $request->reg_type,
-                'id_mod_status' => 3
+                'id_mod_status' => 3,
+                'id_status_emp' => $request->id_status_emp
             ]);
             $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
         }
@@ -294,9 +294,9 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
-                'id_status_emp' => $request->id_status,
                 'reg_type' => $request->reg_type,
-                'id_mod_status' => 3
+                'id_mod_status' => 3,
+                'id_status_emp' => $request->id_status_emp,
             ]);
             $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
         }
