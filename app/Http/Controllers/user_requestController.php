@@ -106,12 +106,15 @@ class user_requestController extends Controller
             d.names as assistant_names,
             d.lastname as assistant_lastname,
             a.id_status,
-            e.status
+            e.status,
+            a.id_status_emp,
+            f.status as status_emp
             FROM consultants.solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
             LEFT JOIN consultants.users as d ON a.rut_employee = d.rut
             JOIN consultants.status as e ON a.id_status = e.id
+            JOIN consultants.status as f ON a.id_status_emp = f.id
             WHERE a.rut_user = '$rut_user'"
 
         );
@@ -238,13 +241,16 @@ class user_requestController extends Controller
             c.description,
             a.property_number,
             a.id_status,
-            e.status
+            e.status,
+            a.id_status_emp,
+            g.status as status_emp
             FROM consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_user = b.rut
             JOIN consultants.property_types as c ON c.id = a.id_property_type
             JOIN consultants.locations as d ON d.id = a.id_location
             JOIN consultants.status as e ON e.id = a.id_status
             JOIN consultants.users as f ON f.rut = a.rut_employee
+            JOIN consultants.status as g ON a.id_status = e.id
             WHERE a.rut_employee = '$rut_employee'"
         );
 
