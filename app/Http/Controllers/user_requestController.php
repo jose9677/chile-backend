@@ -250,7 +250,7 @@ class user_requestController extends Controller
             JOIN consultants.locations as d ON d.id = a.id_location
             JOIN consultants.status as e ON e.id = a.id_status
             JOIN consultants.users as f ON f.rut = a.rut_employee
-            JOIN consultants.status as g ON a.id_status = e.id
+            JOIN consultants.status as g ON a.id_status = g.id
             WHERE a.rut_employee = '$rut_employee'"
         );
 
