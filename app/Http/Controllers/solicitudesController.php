@@ -575,14 +575,17 @@ class solicitudesController extends Controller
             f.names as supervisor_names,
             f.lastname as supervisor_lastname,
             g.id as id_status,
-            g.status
+            a.id_status_emp, 
+            g.status,
+            h.status as status_emp
             FROM consultants.solicitudes as a 
             LEFT JOIN consultants.users as b ON a.rut_user = b.rut
             LEFT JOIN consultants.locations as c ON a.id_location = c.id
             LEFT JOIN consultants.property_types as d ON a.id_property_type = d.id
             LEFT JOIN consultants.users as e ON e.rut = a.rut_employee
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
-            LEFT JOIN consultants.status as g ON a.id_status = g.id
+            LEFT JOIN consultants.status as g ON a.id_status = g.id 
+            LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
             order by a.id ASC"
          );
  
