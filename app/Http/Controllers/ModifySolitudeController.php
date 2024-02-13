@@ -229,6 +229,7 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
+                'id_status_emp' => $request->id_status,
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -247,6 +248,7 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
+                'id_status_emp' => $request->id_status,
                 'reg_type' => $request->reg_type,
                 'id_mod_status' => 3
             ]);
@@ -273,6 +275,7 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
+                'id_status_emp' => $request->id_status,
                 'dir_wots' => $request->dir_wots,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
@@ -291,6 +294,7 @@ class ModifySolitudeController extends Controller
                 'id_property_type' => $request->id_property_type,
                 'property_number' => $request->property_number,
                 'request_date' => $request->request_date,
+                'id_status_emp' => $request->id_status,
                 'reg_type' => $request->reg_type,
                 'id_mod_status' => 3
             ]);
@@ -307,11 +311,11 @@ class ModifySolitudeController extends Controller
     {
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
-        $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
+        /* $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
 
         if ($gate == false) {
             return response()->json(['error' => 'This record is not aproved'], 400);
-        }
+        } */
 
         try {
             $update_mod = DB::table('modify_solicitudes')->where('id_request', $id_request)->update([

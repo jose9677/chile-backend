@@ -158,6 +158,7 @@ class wotsController extends Controller
         $sol->latitude = $request->get('latitude');
         $sol->longitude = $request->get('longitude');
         $sol->reg_type = 'wots';
+        $sol->id_status_emp = 1;
         
         if ($request->terms_condition == true) {
             $user->save();

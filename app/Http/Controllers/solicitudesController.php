@@ -57,7 +57,8 @@ class solicitudesController extends Controller
             'prevention_is_valid' => false,
             'location_is_valid' => false,
             'comments' => $request->get('comments'),
-            'is_active' => false
+            'is_active' => false,
+            'id_status_emp' => 1
         ]);
         
         return response()->json($data, 200);

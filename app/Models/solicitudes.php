@@ -39,7 +39,8 @@ class solicitudes extends Model
         'latitude',
         'longitude',
         'reg_type',
-        'id_mod_status'
+        'id_mod_status',
+        'id_status_emp'
     ];
 
     protected $hidden = [
