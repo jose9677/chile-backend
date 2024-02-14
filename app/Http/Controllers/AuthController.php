@@ -160,7 +160,7 @@ class AuthController extends Controller
             'names'  => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'f_nac' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             
             'password' => ['required',
                 Password::min(8)
@@ -238,6 +238,7 @@ class AuthController extends Controller
         }
 
         $verify_rut = DB::table('aps')->where('rut', $request->rut)->value('rut');
+        $id_sol = DB::table('solicitudes')->where('rut_user', $request->rut)->value('id');
         
         if ($verify_rut) {
             User::query()->where('rut', $request->rut)->update(['aps' => true]);
@@ -272,10 +273,10 @@ class AuthController extends Controller
             $f_nac = DB::table('users')->where('rut', $request->rut)->value('f_nac');
             $age = Carbon::parse($f_nac)->age;
 
-            if ($age < 65) {
+            if ($age < 60) {
                 User::query()->where('rut', $request->input('rut'))->update(['percent' => 30]);
             }
-            elseif ($age >= 65) {
+            elseif ($age >= 60) {
                 User::query()->where('rut', $request->input('rut'))->update(['percent' => 40]);
             }
         }
@@ -314,7 +315,7 @@ class AuthController extends Controller
     {
         $sweep_aps = DB::update("UPDATE consultants.users SET aps = false");
 
-        $lower_letter = DB::update("UPDATE consultants.aps SET rut = lower(rut)");
+        $lower_letter = DB::update("UPDATE consultants.aps SET rut = upper(rut)");
         
         $query = DB::update(
             "UPDATE consultants.users
@@ -363,10 +364,10 @@ class AuthController extends Controller
             $f_nac = DB::table('users')->where('rut', $ruts[$i])->value('f_nac');
             $age = Carbon::parse($f_nac)->age;
 
-            if ($age < 65) {
+            if ($age < 60) {
                 User::query()->where('rut', $ruts[$i])->update(['percent' => 30]);
             }
-            elseif ($age >= 65) {
+            elseif ($age >= 60) {
                 User::query()->where('rut', $ruts[$i])->update(['percent' => 40]);
             }
         }

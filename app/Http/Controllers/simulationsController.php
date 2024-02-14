@@ -330,7 +330,7 @@ class simulationsController extends Controller
                         $f_nac = DB::table('users')->where('rut', $rut)->value('f_nac');
                         $age = Carbon::parse($f_nac)->age;
             
-                            if ($age < 65) {
+                            if ($age < 60) {
                             
                             $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
                             $calc_secure_comp = ($sub_total_aporte * $percent_sec_comp)/100;
@@ -348,7 +348,7 @@ class simulationsController extends Controller
                                 amount_payable = $total_copago
                                 WHERE id = $id_simulation");
                             }
-                            elseif ($age >= 65) {
+                            elseif ($age >= 60) {
                             
                             $calc_cobert_prevention = $balance; //Resta entre el costo y el aporte...
                             $calc_secure_comp = ($sub_total_aporte * $percent_sec_comp)/100;

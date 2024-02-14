@@ -445,7 +445,7 @@ class solicitudesController extends Controller
         'prevention_is_valid' => true,
         'location_is_valid' => true,
         'rut_match' => true
-        ])->first();
+    ])->first();
 
         if (!$response) {
             solicitudes::query()->where(['id' => $id])->update(['id_status' => 7, 'is_active' => false]);
@@ -523,7 +523,7 @@ class solicitudesController extends Controller
         $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes");
         $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6");
         $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7");
-
+        
          /* $query = DB::select(
             "SELECT 
             a.id as id_request,
@@ -555,7 +555,7 @@ class solicitudesController extends Controller
             order by a.id ASC"
          ); */
 
-         $query = DB::select(
+        $query = DB::select(
             "SELECT 
             a.id as id_request,
             a.created_at as request_date, 
@@ -584,7 +584,7 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.property_types as d ON a.id_property_type = d.id
             LEFT JOIN consultants.users as e ON e.rut = a.rut_employee
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
-            LEFT JOIN consultants.status as g ON a.id_status = g.id 
+            LEFT JOIN consultants.status as g ON a.id_status = g.id
             LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
             order by a.id ASC"
          );

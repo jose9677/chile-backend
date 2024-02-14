@@ -130,91 +130,94 @@ class user_requestController extends Controller
         $origin = DB::table('users')->where('rut', $rut)->value('origin');
 
         if (empty($origin)) {
-            $query = DB::select(
-                "SELECT 
-                a.created_at as request_date,
-                b.rut,
-                b.names,
-                b.lastname,
-                b.landline,
-                b.mobile_phone,
-                a.id_status,
-                c.status,
-                a.id_location,
-                a.way_number,
-                d.street,
-                a.id_property_type,
-                e.description,
-                a.property_number,
-                f.rut as rut_assistant,
-                f.names as names_assistant,
-                f.lastname as lastname_assistant,
-                a.visit_date,
-                a.id_prevention_type_detail,
-                g.prevention_detail,
-                h.prevention_type,
-                i.id as id_document,
-                i.id_document_type,
-                i.document_path,
-                'http://54.189.74.47/storage/posts/'||i.document_path as doc_srv_path,
-                i.document_ext,
-                j.document_type
-                FROM consultants.solicitudes as a
-                LEFT JOIN consultants.users as b ON a.rut_user = b.rut
-                LEFT JOIN consultants.status as c ON c.id = a.id_status
-                LEFT JOIN consultants.locations as d ON a.id_location = d.id
-                LEFT JOIN consultants.property_types as e ON a.id_property_type = e.id
-                LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
-                LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
-                LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
-                LEFT JOIN consultants.documents as i ON i.id_request = a.id AND i.active = true
-                LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
-                WHERE a.id = $id "
-            );    
-        }elseif ($origin) {
-            $query = DB::select(
-                "SELECT 
-                a.created_at as request_date,
-                b.rut,
-                b.names,
-                b.lastname,
-                b.landline,
-                b.mobile_phone,
-                a.id_status,
-                c.status,
-                a.id_location,
-                '' as way_number,
-                a.dir_wots as street,
-                a.id_property_type,
-                e.description,
-                a.property_number,
-                f.rut as rut_assistant,
-                f.names as names_assistant,
-                f.lastname as lastname_assistant,
-                a.visit_date,
-                a.id_prevention_type_detail,
-                g.prevention_detail,
-                h.prevention_type,
-                i.id as id_document,
-                i.id_document_type,
-                i.document_path,
-                'http://54.189.74.47/storage/posts/'||i.document_path as doc_srv_path,
-                i.document_ext,
-                j.document_type
-                FROM consultants.solicitudes as a
-                LEFT JOIN consultants.users as b ON a.rut_user = b.rut
-                LEFT JOIN consultants.status as c ON c.id = a.id_status
-                LEFT JOIN consultants.locations as d ON a.id_location = d.id
-                LEFT JOIN consultants.property_types as e ON a.id_property_type = e.id
-                LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
-                LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
-                LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
-                LEFT JOIN consultants.documents as i ON i.id_request = a.id AND i.active = true
-                LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
-                WHERE a.id = $id"
-            );
-        }
-        
+        $query = DB::select(
+            "SELECT 
+            a.created_at as request_date,
+            b.rut,
+            b.names,
+            b.lastname,
+            b.landline,
+            b.mobile_phone,
+            a.id_status,
+            c.status,
+            a.id_location,
+            --a.way_number,
+            --d.street,
+            CASE WHEN b.origin = 'wots' THEN '' ELSE a.way_number::varchar END AS way_number,
+            CASE WHEN b.origin = 'wots' THEN a.dir_wots ELSE d.street END AS street,
+            a.id_property_type,
+            e.description,
+            a.property_number,
+            f.rut as rut_assistant,
+            f.names as names_assistant,
+            f.lastname as lastname_assistant,
+            a.visit_date,
+            a.id_prevention_type_detail,
+            g.prevention_detail,
+            h.prevention_type,
+            i.id as id_document,
+            i.id_document_type,
+            i.document_path,
+            --'http://34.221.38.26:3000/storage/posts/'||i.document_path as doc_srv_path,
+            CASE WHEN b.origin = 'wots' THEN 'https://saludatualcance.net/storage/posts/'||i.document_path ELSE 'http://54.189.74.47/storage/posts/'||i.document_path END AS doc_srv_path,
+            i.document_ext,
+            j.document_type
+            FROM consultants.solicitudes as a
+            LEFT JOIN consultants.users as b ON a.rut_user = b.rut
+            LEFT JOIN consultants.status as c ON c.id = a.id_status
+            LEFT JOIN consultants.locations as d ON a.id_location = d.id
+            LEFT JOIN consultants.property_types as e ON a.id_property_type = e.id
+            LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
+            LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
+            LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
+            LEFT JOIN consultants.documents as i ON i.id_request = a.id AND i.active = true
+            LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
+            WHERE a.id = $id"
+        );    
+    }elseif ($origin) {
+           $query = DB::select(
+            "SELECT 
+            a.created_at as request_date,
+            b.rut,
+            b.names,
+            b.lastname,
+            b.landline,
+            b.mobile_phone,
+            a.id_status,
+            c.status,
+            a.id_location,
+            CASE WHEN b.origin = 'wots' THEN '' ELSE a.way_number::varchar END AS way_number,
+            CASE WHEN b.origin = 'wots' THEN a.dir_wots ELSE d.street END AS street,
+            a.id_property_type,
+            e.description,
+            a.property_number,
+            f.rut as rut_assistant,
+            f.names as names_assistant,
+            f.lastname as lastname_assistant,
+            a.visit_date,
+            a.id_prevention_type_detail,
+            g.prevention_detail,
+            h.prevention_type,
+            i.id as id_document,
+            i.id_document_type,
+            i.document_path,
+            CASE WHEN b.origin = 'wots' THEN 'https://saludatualcance.net/storage/posts/'||i.document_path ELSE 'http://54.189.74.47/storage/posts/'||i.document_path END AS doc_srv_path,
+            i.document_ext,
+            j.document_type
+            FROM consultants.solicitudes as a
+            LEFT JOIN consultants.users as b ON a.rut_user = b.rut
+            LEFT JOIN consultants.status as c ON c.id = a.id_status
+            LEFT JOIN consultants.locations as d ON a.id_location = d.id
+            LEFT JOIN consultants.property_types as e ON a.id_property_type = e.id
+            LEFT JOIN consultants.users as f ON a.rut_employee = f.rut
+            LEFT JOIN consultants.preventions_details as g ON a.id_prevention_type_detail = g.id
+            LEFT JOIN consultants.preventions_types as h ON g.id_prevention_type = h.id
+            LEFT JOIN consultants.documents as i ON i.id_request = a.id AND i.active = true
+            LEFT JOIN consultants.documents_types as j ON j.id = i.id_document_type
+            WHERE a.id = $id"
+        );
+    }
+
         return response()->json($query);
     }
 
