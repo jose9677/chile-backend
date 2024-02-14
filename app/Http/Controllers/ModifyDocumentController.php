@@ -61,7 +61,7 @@ class ModifyDocumentController extends Controller
 
             $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id.'-'.$id_doc.'.'.$extension;
 
-            $path = $request->file('document_path')->storeAs('public/modify', $comPic);
+            $path = $request->file('document_path')->storeAs('public/posts', $comPic);
             $data->document_path = $comPic;
             $data->document_ext = $extension;
             $data->active = true;
