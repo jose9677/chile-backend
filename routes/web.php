@@ -32,6 +32,7 @@ Route::get('/dropdownInfo', [App\Http\Controllers\decriptionsController::class, 
 //USERCONTROLLER
 //Route::get('/details-user', [App\Http\Controllers\usersController::class, 'detailsUser']);
 //Route::get('/search-user/{rut}', [App\Http\Controllers\usersController::class, 'search']);
+Route::get('/get-data-user/{rut}', [App\Http\Controllers\usersController::class, 'getPersonalDataUser']);
 //Route::put('/update-user/{rut}', [App\Http\Controllers\usersController::class, 'update']);
 //Route::put('/update-employee/{rut}', [App\Http\Controllers\usersController::class, 'updateEmployee']);
 //Route::delete('/delete-user/{rut}', [App\Http\Controllers\usersController::class, 'delete']);

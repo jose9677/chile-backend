@@ -17,13 +17,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Str;
 class solicitudesController extends Controller
 {
     public function createRequest(Request $request)
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-           'id_prevention_type_detail' => 'required',
+           'rut_user' => 'required',
+            'id_prevention_type_detail' => 'required',
            'assurance' => 'required',
            'id_location' => 'required',
            'way_number' => 'required',
@@ -43,25 +46,39 @@ class solicitudesController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $data = solicitudes::create([
-            'id_prevention_type_detail' => $request->get('id_prevention_type_detail'),
-            'assurance' => $request->get('assurance'),
-            'id_location' => $request->get('id_location'),
-            'way_number' => $request->get('way_number'),
-            'id_property_type' => $request->get('id_property_type'),
-            'property_number' => $request->get('property_number'),
-            'terms_condition' => false,
-            'request_date' => time(),
-            'id_status' => 1,
-            'applicant_at_home' => false,
-            'prevention_is_valid' => false,
-            'location_is_valid' => false,
-            'comments' => $request->get('comments'),
-            'is_active' => false,
-            'id_status_emp' => 1
-        ]);
+        $sol = new solicitudes();
+        $sol->rut_user = Str::upper($request->rut);
+        $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
+        $sol->assurance = $request->get('assurance');
+        $sol->id_location = $request->get('id_location');
+        $sol->way_number = $request->get('way_number');
+        $sol->id_property_type = $request->get('id_property_type');
+        $sol->property_number = $request->get('property_number');
+        $sol->terms_condition = $request->get('terms_condition');
+        $sol->request_date = time();
+        $sol->id_status = 1;
+        $sol->applicant_at_home = false;
+        $sol->prevention_is_valid = false;
+        $sol->location_is_valid = false;
+        $sol->comments = $request->get('comments');
+        $sol->is_active = true;
+        $sol->rut_match = false;
+        $sol->carer = $request->get('carer');
+        $sol->id_motive = $request->get('id_motive');
+        $sol->id_dedication = $request->get('id_dedication');
+        $sol->id_remuneration = $request->get('id_remuneration');
+        // $sol->admission_date = $request->get('admission_date');
+        //$sol->reg_type = 'REGISTRO POR PAGINA';
+        $sol->id_status_emp = 1;
+
+        if ($request->terms_condition == false) {
+            return response()->json(['error' => 'User must to accept terms condition'], 400);
+        }
+        elseif ($request->terms_condition == true) {
+            $sol->save();
+        }
         
-        return response()->json($data, 200);
+        return response()->json($sol, 200);
     }
 
     public function detailRequest()

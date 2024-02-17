@@ -56,6 +56,23 @@ class usersController extends Controller
         return response()->json($query, 200);
    }
 
+   public function getPersonalDataUser($rut)
+   {
+        $data = DB::table('users')->where('rut', $rut)->get([
+            'rut',
+            'names',
+            'lastname',
+            'id_sex',
+            'f_nac',
+            'email',
+            'landline',
+            'mobile_phone',
+            'origin'
+        ]);
+
+        return response()->json($data, 200);
+   }
+
    public function employees()
    {
         $query = DB::select(
