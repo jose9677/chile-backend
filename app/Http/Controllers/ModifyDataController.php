@@ -27,7 +27,7 @@ class ModifyDataController extends Controller
         $data_sol = DB::select(
             "SELECT 
             a.id as id_solicitude,
-            a.created_at,
+            a.created_at as request_date,
             a.id_status,
             a.id_prevention_type_detail,
             c.id as prevention_type,
