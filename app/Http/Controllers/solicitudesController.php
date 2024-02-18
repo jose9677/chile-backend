@@ -10,6 +10,7 @@ use App\Mail\asignarVisitadorMailable;
 use App\Mail\confirmarCitaMailable;
 use App\Mail\rechazarSolicitudMailable;
 use App\Mail\reprogramarCitaMailable;
+use App\Models\documents;
 use App\Models\solicitudes;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -107,6 +108,50 @@ class solicitudesController extends Controller
         }
         
         return response()->json($sol, 200);
+    }
+
+    public function solDoc(Request $request)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'document' => 'required',
+            'rut_user' => 'required',
+            'id_document_type' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $data = new documents();
+        
+        $query = solicitudes::where('rut_user', $request->rut_user)->max('id'); //ID ULTIMA SOLICITUD DEL USUARIO....
+        $id_doc = documents::max('id') + 1;
+        //$rut = DB::table('solicitudes')->where('id', $query)->value('rut_user');
+
+        $data->id_request = $query;
+        $data->id_document_type = $request->id_document_type;
+
+        $documents_types = DB::table('documents_types')->where('id', $request->id_document_type)->value('document_type');
+
+        if ($request->hasFile('document_path')) {
+            $completeFilename = $request->file('document_path')->getClientOriginalName();
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $extension = $request->file('document_path')->getClientOriginalExtension();
+
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$query.'-'.$id_doc.'.'.$extension;
+ 
+            $path = $request->file('document_path')->storeAs('public/posts', $comPic);
+            $data->document_path = $comPic;
+            $data->document_ext = $extension;
+        }
+        if ($data->save()) {
+            documents::query()->where('id', $id_doc)->update(['active' => true]);
+
+            return response()->json(['message' => 'Document '.$id_doc.' uploaded successfull'],200);
+        }else {
+            return response()->json(['error' => 'Error to upload document'],400);
+        }
     }
 
     public function detailRequest()
