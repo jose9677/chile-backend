@@ -98,9 +98,9 @@ Route::put('/update-doc-many/{id_request}/{id_document_type}', [App\Http\Control
 Route::put('/delete-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'deleteModDoc']);
 Route::put('/delete-doc-many', [App\Http\Controllers\ModifyDocumentController::class, 'deleteManyDoc']);
 
+ Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
 //SOLICITUDESCONTROLLER
-/* Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
-Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
+/*Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
 Route::get('/get-request/{id}', [App\Http\Controllers\solicitudesController::class, 'getRequest']);
 Route::put('/update-request/{id}', [App\Http\Controllers\solicitudesController::class, 'updateRequest']);
 Route::delete('/delete-request/{id}', [App\Http\Controllers\solicitudesController::class, 'deleteRequest']);

@@ -25,20 +25,20 @@ class solicitudesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-           'rut_user' => 'required',
+           /* 'rut_user' => 'required',
             'id_prevention_type_detail' => 'required',
            'assurance' => 'required',
            'id_location' => 'required',
            'way_number' => 'required',
            'id_property_type' => 'required',
-           'property_number' => 'required',
+           'property_number' => 'required', */
            //'terms_condition' => 'required',
-           'request_date' => 'required',
-           'id_status' => 'required',
+           //'request_date' => 'required',
+           //'id_status' => 'required',
            /*'applicant_at_home' => 'required',
            'prevention_is_valid' => 'required',
            'location_is_valid' => 'required',*/
-           'comments' => 'required',
+           //'comments' => 'required',
            //'is_active' => 'required'
         ]);
         
@@ -46,36 +46,76 @@ class solicitudesController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $sol = new solicitudes();
-        $sol->rut_user = Str::upper($request->rut);
-        $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
-        $sol->assurance = $request->get('assurance');
-        $sol->id_location = $request->get('id_location');
-        $sol->way_number = $request->get('way_number');
-        $sol->id_property_type = $request->get('id_property_type');
-        $sol->property_number = $request->get('property_number');
-        $sol->terms_condition = $request->get('terms_condition');
-        $sol->request_date = time();
-        $sol->id_status = 1;
-        $sol->applicant_at_home = false;
-        $sol->prevention_is_valid = false;
-        $sol->location_is_valid = false;
-        $sol->comments = $request->get('comments');
-        $sol->is_active = true;
-        $sol->rut_match = false;
-        $sol->carer = $request->get('carer');
-        $sol->id_motive = $request->get('id_motive');
-        $sol->id_dedication = $request->get('id_dedication');
-        $sol->id_remuneration = $request->get('id_remuneration');
-        // $sol->admission_date = $request->get('admission_date');
-        //$sol->reg_type = 'REGISTRO POR PAGINA';
-        $sol->id_status_emp = 1;
+        $id_sol = DB::table('solicitudes')->where('rut_user', $request->rut_user)->orderByDesc('id')->limit(1)->value('id');
+        $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
+        
+        if (empty($id_sol)) {
+            $sol = new solicitudes();
+            $sol->rut_user = Str::upper($request->rut_user);
+            $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
+            $sol->assurance = $request->get('assurance');
+            $sol->id_location = $request->get('id_location');
+            $sol->way_number = $request->get('way_number');
+            $sol->id_property_type = $request->get('id_property_type');
+            $sol->property_number = $request->get('property_number');
+            $sol->terms_condition = $request->get('terms_condition');
+            //$sol->request_date = time();
+            $sol->id_status = 13;//RENOVACION...
+            $sol->applicant_at_home = false;
+            $sol->prevention_is_valid = false;
+            $sol->location_is_valid = false;
+            $sol->comments = $request->get('comments');
+            $sol->is_active = true;
+            $sol->rut_match = false;
+            $sol->carer = $request->get('carer');
+            $sol->id_motive = $request->get('id_motive');
+            $sol->id_dedication = $request->get('id_dedication');
+            $sol->id_remuneration = $request->get('id_remuneration');
+            // $sol->admission_date = $request->get('admission_date');
+            //$sol->reg_type = 'REGISTRO POR PAGINA';
+            $sol->id_status_emp = 13;//RENOVACION...
 
-        if ($request->terms_condition == false) {
-            return response()->json(['error' => 'User must to accept terms condition'], 400);
-        }
-        elseif ($request->terms_condition == true) {
-            $sol->save();
+            if ($request->terms_condition == false) {
+                return response()->json(['error' => 'User must to accept terms condition'], 400);
+            }
+            elseif ($request->terms_condition == true) {
+                $sol->save();
+            }
+
+        }elseif ($id_status == 7 or $id_status == 9 or $id_status == 14) {
+            $sol = new solicitudes();
+            $sol->rut_user = Str::upper($request->rut);
+            $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
+            $sol->assurance = $request->get('assurance');
+            $sol->id_location = $request->get('id_location');
+            $sol->way_number = $request->get('way_number');
+            $sol->id_property_type = $request->get('id_property_type');
+            $sol->property_number = $request->get('property_number');
+            $sol->terms_condition = $request->get('terms_condition');
+            //$sol->request_date = time();
+            $sol->id_status = 13; //RENOVACION...
+            $sol->applicant_at_home = false;
+            $sol->prevention_is_valid = false;
+            $sol->location_is_valid = false;
+            $sol->comments = $request->get('comments');
+            $sol->is_active = true;
+            $sol->rut_match = false;
+            $sol->carer = $request->get('carer');
+            $sol->id_motive = $request->get('id_motive');
+            $sol->id_dedication = $request->get('id_dedication');
+            $sol->id_remuneration = $request->get('id_remuneration');
+            // $sol->admission_date = $request->get('admission_date');
+            //$sol->reg_type = 'REGISTRO POR PAGINA';
+            $sol->id_status_emp = 13; //RENOVACION...
+
+            if ($request->terms_condition == false) {
+                return response()->json(['error' => 'User must to accept terms condition'], 400);
+            }
+            elseif ($request->terms_condition == true) {
+                $sol->save();
+            }
+        }else {
+            return response()->json(['error' => 'This user has a solicitude active'], 400);
         }
         
         return response()->json($sol, 200);
