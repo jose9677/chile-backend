@@ -48,7 +48,7 @@ class solicitudesController extends Controller
             $sol->property_number = $request->get('property_number');
             $sol->terms_condition = $request->get('terms_condition');
             //$sol->request_date = time();
-            $sol->id_status = 13;//RENOVACION...
+            $sol->id_status = 1;
             $sol->applicant_at_home = false;
             $sol->prevention_is_valid = false;
             $sol->location_is_valid = false;
@@ -61,7 +61,7 @@ class solicitudesController extends Controller
             $sol->id_remuneration = $request->get('id_remuneration');
             // $sol->admission_date = $request->get('admission_date');
             //$sol->reg_type = 'REGISTRO POR PAGINA';
-            $sol->id_status_emp = 13;//RENOVACION...
+            $sol->id_status_emp = 1;
 
             if ($request->terms_condition == false) {
                 return response()->json(['error' => 'User must to accept terms condition'], 400);
@@ -81,7 +81,7 @@ class solicitudesController extends Controller
             $sol->property_number = $request->get('property_number');
             $sol->terms_condition = $request->get('terms_condition');
             //$sol->request_date = time();
-            $sol->id_status = 13; //RENOVACION...
+            $sol->id_status = 1;
             $sol->applicant_at_home = false;
             $sol->prevention_is_valid = false;
             $sol->location_is_valid = false;
@@ -94,7 +94,7 @@ class solicitudesController extends Controller
             $sol->id_remuneration = $request->get('id_remuneration');
             // $sol->admission_date = $request->get('admission_date');
             //$sol->reg_type = 'REGISTRO POR PAGINA';
-            $sol->id_status_emp = 13; //RENOVACION...
+            $sol->id_status_emp = 1;
 
             if ($request->terms_condition == false) {
                 return response()->json(['error' => 'User must to accept terms condition'], 400);
