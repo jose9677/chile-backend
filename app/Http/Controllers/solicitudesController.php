@@ -25,21 +25,9 @@ class solicitudesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(), [
-           /* 'rut_user' => 'required',
+            'rut_user' => 'required',
             'id_prevention_type_detail' => 'required',
-           'assurance' => 'required',
-           'id_location' => 'required',
-           'way_number' => 'required',
-           'id_property_type' => 'required',
-           'property_number' => 'required', */
-           //'terms_condition' => 'required',
-           //'request_date' => 'required',
-           //'id_status' => 'required',
-           /*'applicant_at_home' => 'required',
-           'prevention_is_valid' => 'required',
-           'location_is_valid' => 'required',*/
-           //'comments' => 'required',
-           //'is_active' => 'required'
+            'carer' => 'required',
         ]);
         
         if ($validator->fails()) {
