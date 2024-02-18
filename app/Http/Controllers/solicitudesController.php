@@ -114,7 +114,7 @@ class solicitudesController extends Controller
     {
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'document' => 'required',
+            'document_path' => 'required',
             'rut_user' => 'required',
             'id_document_type' => 'required'
         ]);
