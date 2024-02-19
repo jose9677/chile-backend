@@ -13,6 +13,7 @@ use App\Mail\reprogramarCitaMailable;
 use App\Models\documents;
 use App\Models\solicitudes;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -27,8 +28,23 @@ class solicitudesController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(), [
             'rut_user' => 'required',
+            'names' => 'required',
+            'lastname' => 'required',
+            'id_sex' => 'required',
+            'f_nac' => 'required',
+            'email' => 'required',
+            'landline' => 'required',
+            'mobile_phone' => 'required',
             'id_prevention_type_detail' => 'required',
+            'assurance' => 'required',
+            'id_location' => 'required',
+            'way_number' => 'required',
+            'id_property_type' => 'required',
+            'property_number' => 'required',
             'carer' => 'required',
+            'id_motive' => 'required',
+            'id_dedication' => 'required',
+            'id_remuneration' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -37,6 +53,7 @@ class solicitudesController extends Controller
 
         $id_sol = DB::table('solicitudes')->where('rut_user', $request->rut_user)->orderByDesc('id')->limit(1)->value('id');
         $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
+        $is_active = DB::table('solicitudes')->where('id', $id_sol)->value('is_active');
         
         if (empty($id_sol)) {
             $sol = new solicitudes();
@@ -47,7 +64,7 @@ class solicitudesController extends Controller
             $sol->way_number = $request->get('way_number');
             $sol->id_property_type = $request->get('id_property_type');
             $sol->property_number = $request->get('property_number');
-            $sol->terms_condition = $request->get('terms_condition');
+            //$sol->terms_condition = $request->get('terms_condition');
             //$sol->request_date = time();
             $sol->id_status = 1;
             $sol->applicant_at_home = false;
@@ -61,26 +78,21 @@ class solicitudesController extends Controller
             $sol->id_dedication = $request->get('id_dedication');
             $sol->id_remuneration = $request->get('id_remuneration');
             // $sol->admission_date = $request->get('admission_date');
-            //$sol->reg_type = 'REGISTRO POR PAGINA';
+            $sol->origin = 'REGISTRO POR PAGINA';
             $sol->id_status_emp = 1;
 
-            if ($request->terms_condition == false) {
-                return response()->json(['error' => 'User must to accept terms condition'], 400);
-            }
-            elseif ($request->terms_condition == true) {
-                $sol->save();
-            }
+            $sol->save();
 
-        }elseif ($id_status == 7 or $id_status == 9 or $id_status == 14) {
+        }elseif ($id_status == 7 or $id_status == 9 or $id_status == 14 and $is_active == true) {
             $sol = new solicitudes();
-            $sol->rut_user = Str::upper($request->rut);
+            $sol->rut_user = Str::upper($request->rut_user);
             $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
             $sol->assurance = $request->get('assurance');
             $sol->id_location = $request->get('id_location');
             $sol->way_number = $request->get('way_number');
             $sol->id_property_type = $request->get('id_property_type');
             $sol->property_number = $request->get('property_number');
-            $sol->terms_condition = $request->get('terms_condition');
+            //$sol->terms_condition = $request->get('terms_condition');
             //$sol->request_date = time();
             $sol->id_status = 1;
             $sol->applicant_at_home = false;
@@ -94,20 +106,29 @@ class solicitudesController extends Controller
             $sol->id_dedication = $request->get('id_dedication');
             $sol->id_remuneration = $request->get('id_remuneration');
             // $sol->admission_date = $request->get('admission_date');
-            //$sol->reg_type = 'REGISTRO POR PAGINA';
+            $sol->origin = 'REGISTRO POR PAGINA';
             $sol->id_status_emp = 1;
 
-            if ($request->terms_condition == false) {
-                return response()->json(['error' => 'User must to accept terms condition'], 400);
-            }
-            elseif ($request->terms_condition == true) {
-                $sol->save();
-            }
+            $sol->save();
         }else {
             return response()->json(['error' => 'This user has a solicitude active'], 400);
         }
-        
-        return response()->json($sol, 200);
+
+        try {
+            $update_user = DB::table('users')->where('rut', $request->rut_user)->update([
+                'names' => $request->names,
+                'lastname' => $request->lastname,
+                'id_sex' => $request->id_sex,
+                'f_nac' => $request->f_nac,
+                'email' => $request->email,
+                'landline' => $request->landline,
+                'mobile_phone' => $request->mobile_phone
+            ]);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return response()->json(['sol' => $sol], 200);
     }
 
     public function solDoc(Request $request)
@@ -144,6 +165,7 @@ class solicitudesController extends Controller
             $path = $request->file('document_path')->storeAs('public/posts', $comPic);
             $data->document_path = $comPic;
             $data->document_ext = $extension;
+            $data->active = true;
         }
         if ($data->save()) {
             documents::query()->where('id', $id_doc)->update(['active' => true]);
@@ -153,6 +175,12 @@ class solicitudesController extends Controller
             return response()->json(['error' => 'Error to upload document'],400);
         }
     }
+
+    public function renoveSol($rut_user)
+    {
+        $id_request = DB::table('solicitudes')->where('rut_user', $rut_user)->orderByDesc('id')->get('id');
+        dd($id_request);
+    }   
 
     public function detailRequest()
     {
