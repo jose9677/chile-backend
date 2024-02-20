@@ -51,11 +51,10 @@ class solicitudesController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $id_sol = DB::table('solicitudes')->where('rut_user', $request->rut_user)->orderByDesc('id')->limit(1)->value('id');
+        $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
         $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
-        $is_active = DB::table('solicitudes')->where('id', $id_sol)->value('is_active');
         
-        if (empty($id_sol)) {
+        if ($id_status == 7 or $id_status == 9 or $id_status == 14) {
             $sol = new solicitudes();
             $sol->rut_user = Str::upper($request->rut_user);
             $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
@@ -64,7 +63,7 @@ class solicitudesController extends Controller
             $sol->way_number = $request->get('way_number');
             $sol->id_property_type = $request->get('id_property_type');
             $sol->property_number = $request->get('property_number');
-            //$sol->terms_condition = $request->get('terms_condition');
+            $sol->terms_condition = $request->get('terms_condition');
             //$sol->request_date = time();
             $sol->id_status = 1;
             $sol->applicant_at_home = false;
@@ -81,40 +80,17 @@ class solicitudesController extends Controller
             $sol->origin = 'REGISTRO POR PAGINA';
             $sol->id_status_emp = 1;
 
-            $sol->save();
-
-        }elseif ($id_status == 7 or $id_status == 9 or $id_status == 14 and $is_active == true) {
-            $sol = new solicitudes();
-            $sol->rut_user = Str::upper($request->rut_user);
-            $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
-            $sol->assurance = $request->get('assurance');
-            $sol->id_location = $request->get('id_location');
-            $sol->way_number = $request->get('way_number');
-            $sol->id_property_type = $request->get('id_property_type');
-            $sol->property_number = $request->get('property_number');
-            //$sol->terms_condition = $request->get('terms_condition');
-            //$sol->request_date = time();
-            $sol->id_status = 1;
-            $sol->applicant_at_home = false;
-            $sol->prevention_is_valid = false;
-            $sol->location_is_valid = false;
-            $sol->comments = $request->get('comments');
-            $sol->is_active = true;
-            $sol->rut_match = false;
-            $sol->carer = $request->get('carer');
-            $sol->id_motive = $request->get('id_motive');
-            $sol->id_dedication = $request->get('id_dedication');
-            $sol->id_remuneration = $request->get('id_remuneration');
-            // $sol->admission_date = $request->get('admission_date');
-            $sol->origin = 'REGISTRO POR PAGINA';
-            $sol->id_status_emp = 1;
-
-            $sol->save();
+            if ($request->terms_condition == false) {
+                return response()->json(['error' => 'User must to accept terms condition'], 400);
+            }
+            elseif ($request->terms_condition == true) {
+                $sol->save();
+            }
         }else {
             return response()->json(['error' => 'This user has a solicitude active'], 400);
         }
 
-        try {
+        /* try {
             $update_user = DB::table('users')->where('rut', $request->rut_user)->update([
                 'names' => $request->names,
                 'lastname' => $request->lastname,
@@ -126,7 +102,7 @@ class solicitudesController extends Controller
             ]);
         } catch (Exception $e) {
             return $e->getMessage();
-        }
+        } */
 
         return response()->json(['sol' => $sol], 200);
     }
