@@ -28,13 +28,13 @@ class solicitudesController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(), [
             'rut_user' => 'required',
-            /* 'names' => 'required',
+            'names' => 'required',
             'lastname' => 'required',
             'id_sex' => 'required',
             'f_nac' => 'required',
             'email' => 'required',
             'landline' => 'required',
-            'mobile_phone' => 'required', */
+            'mobile_phone' => 'required',
             'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
@@ -90,7 +90,7 @@ class solicitudesController extends Controller
             return response()->json(['error' => 'This user has a solicitude active'], 400);
         }
 
-        /* try {
+        try {
             $update_user = DB::table('users')->where('rut', $request->rut_user)->update([
                 'names' => $request->names,
                 'lastname' => $request->lastname,
@@ -102,13 +102,14 @@ class solicitudesController extends Controller
             ]);
         } catch (Exception $e) {
             return $e->getMessage();
-        } */
+        }
 
         return response()->json(['sol' => $sol], 200);
     }
 
-    public function renoveRequest()
+    public function renoveRequest($rut_user)
     {
+        $id_sol = DB::table('solicitudes')->where(['rut_user' => $rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
 
     }
 
