@@ -28,13 +28,13 @@ class solicitudesController extends Controller
         Log::info($request);
         $validator = Validator::make($request->all(), [
             'rut_user' => 'required',
-            'names' => 'required',
+            /* 'names' => 'required',
             'lastname' => 'required',
             'id_sex' => 'required',
             'f_nac' => 'required',
             'email' => 'required',
             'landline' => 'required',
-            'mobile_phone' => 'required',
+            'mobile_phone' => 'required', */
             'id_prevention_type_detail' => 'required',
             'assurance' => 'required',
             'id_location' => 'required',
@@ -105,6 +105,11 @@ class solicitudesController extends Controller
         } */
 
         return response()->json(['sol' => $sol], 200);
+    }
+
+    public function renoveRequest()
+    {
+
     }
 
     public function solDoc(Request $request)
