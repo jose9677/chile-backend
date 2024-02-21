@@ -53,9 +53,11 @@ class solicitudesController extends Controller
 
         $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
         $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
+        $status_rule = [7, 9, 14];
+
+        $sol = new solicitudes();
         
-        if ($id_status == 7 or $id_status == 9 or $id_status == 14) {
-            $sol = new solicitudes();
+        if (in_array($id_status, $status_rule)) {
             $sol->rut_user = Str::upper($request->rut_user);
             $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
             $sol->assurance = $request->get('assurance');
@@ -87,7 +89,7 @@ class solicitudesController extends Controller
                 $sol->save();
             }
         }else {
-            return response()->json(['error' => 'This user has a solicitude active'], 400);
+            return response()->json(['error' => 'this user has a solicitude active'], 400);
         }
 
         try {
@@ -110,7 +112,7 @@ class solicitudesController extends Controller
     public function renoveRequest($rut_user)
     {
         $id_sol = DB::table('solicitudes')->where(['rut_user' => $rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
-
+        
     }
 
     public function solDoc(Request $request)
