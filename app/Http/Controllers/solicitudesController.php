@@ -51,7 +51,7 @@ class solicitudesController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
+        $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderBgityDesc('id')->limit(1)->value('id');
         $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
         $status_rule = [7, 9, 14];
 
@@ -109,10 +109,30 @@ class solicitudesController extends Controller
         return response()->json(['sol' => $sol], 200);
     }
 
-    public function renoveRequest($rut_user)
+    public function renoveSol($rut_user)
     {
-        $id_sol = DB::table('solicitudes')->where(['rut_user' => $rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
-        
+        $id_sol = DB::table('solicitudes')->where(['rut_user' => $rut_user, 'is_active' => true, 'id_status' => 6])
+                    ->orderByDesc('id')
+                    ->limit(1)
+                    ->value('id');
+
+        $reno_sol = DB::insert(
+            "INSERT INTO consultants.solicitudes (
+            rut_user, id_prevention_type_detail, assurance, id_location, way_number, id_property_type, property_number, terms_condition,
+            request_date, id_status, rut_employee, visit_date, applicant_at_home, prevention_is_valid, location_is_valid, comments,
+            is_active, rut_match, carer, id_motive, id_dedication, id_remuneration, created_at, updated_at, --admission_date, 
+            dir_wots, latitude, longitude, reg_type, id_mod_status, id_status_emp, origin )
+            SELECT 
+            rut_user, id_prevention_type_detail, assurance, id_location, way_number, id_property_type, property_number, terms_condition,
+            request_date, 13, rut_employee, visit_date, applicant_at_home, prevention_is_valid, location_is_valid, comments,
+            is_active, rut_match, carer, id_motive, id_dedication, id_remuneration, created_at, updated_at, --admission_date,
+            dir_wots, latitude, longitude, reg_type, id_mod_status, id_status_emp, origin
+            FROM consultants.solicitudes WHERE id = $id_sol;
+            ");
+
+        $update_status = DB::table('solicitudes')->where('id', $id_sol)->update(['id_status' => 14]);
+
+        return response()->json(['message' => 'renovation successfull']);
     }
 
     public function solDoc(Request $request)
@@ -159,12 +179,6 @@ class solicitudesController extends Controller
             return response()->json(['error' => 'Error to upload document'],400);
         }
     }
-
-    public function renoveSol($rut_user)
-    {
-        $id_request = DB::table('solicitudes')->where('rut_user', $rut_user)->orderByDesc('id')->get('id');
-        dd($id_request);
-    }   
 
     public function detailRequest()
     {
