@@ -42,16 +42,16 @@ class solicitudesController extends Controller
             'id_property_type' => 'required',
             'property_number' => 'required',
             'carer' => 'required',
-            'id_motive' => 'required',
-            'id_dedication' => 'required',
-            'id_remuneration' => 'required'
+            'id_motive' => 'required_if:carer,true',
+            'id_dedication' => 'required_if:carer,true',
+            'id_remuneration' => 'required_if:carer,true'
         ]);
         
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderBgityDesc('id')->limit(1)->value('id');
+        $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
         $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
         $status_rule = [7, 9, 14];
 
