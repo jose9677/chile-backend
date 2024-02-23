@@ -100,7 +100,8 @@ Route::put('/delete-doc-many', [App\Http\Controllers\ModifyDocumentController::c
 
  Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
  Route::post('/sol-doc', [App\Http\Controllers\solicitudesController::class, 'solDoc']);
- Route::put('/renove-sol/{rut_user}', [App\Http\Controllers\solicitudesController::class, 'renoveSol']);
+ Route::put('/renove-sol', [App\Http\Controllers\solicitudesController::class, 'renoveSol']);
+ Route::get('/all-renove-sol', [App\Http\Controllers\solicitudesController::class, 'consultRenoSol']);
 //SOLICITUDESCONTROLLER
 /*Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
 Route::get('/get-request/{id}', [App\Http\Controllers\solicitudesController::class, 'getRequest']);
