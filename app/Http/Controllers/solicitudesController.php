@@ -147,7 +147,7 @@ class solicitudesController extends Controller
                 FROM consultants.solicitudes WHERE id = $id_sol[$i];
                 ");
     
-            $update_status = DB::table('solicitudes')->where('id', $id_sol[$i])->update(['id_status' => 14]);   
+            $update_status = DB::table('solicitudes')->where('id', $id_sol[$i])->update(['id_status' => 14, 'id_status_emp' => 14]);   
         }
 
         return response()->json(['message' => 'renovation successfull']);
