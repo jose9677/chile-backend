@@ -32,7 +32,7 @@ class copyApsController extends Controller
         $output = shell_exec($shellCommand);
 
         $conn = pg_connect("host = $dbHost dbname = $dbName user = $dbUser password = $dbPass");
-        $update = pg_query($conn, "UPDATE consultants.aps SET rut = UPPER(rut)");
+        $update = pg_query($conn, "UPDATE consultants.aps SET rut = TRIM(UPPER(rut))");
 
         // Verificar si se ejecutó correctamente
         /* if ($output === null) {
