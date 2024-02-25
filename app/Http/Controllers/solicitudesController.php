@@ -88,7 +88,7 @@ class solicitudesController extends Controller
             elseif ($request->terms_condition == true) {
                 $sol->save();
             }
-        }else {
+        }elseif (!in_array($id_status, $status_rule)) {
             return response()->json(['error' => 'this user has a solicitude active'], 400);
         }
 
