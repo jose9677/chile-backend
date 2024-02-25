@@ -57,7 +57,7 @@ class solicitudesController extends Controller
 
         $sol = new solicitudes();
         
-        if (in_array($id_status, $status_rule)) {
+        if (in_array($id_status, $status_rule) or empty($id_sol)) {
             $sol->rut_user = Str::upper($request->rut_user);
             $sol->id_prevention_type_detail = $request->get('id_prevention_type_detail');
             $sol->assurance = $request->get('assurance');
@@ -88,7 +88,7 @@ class solicitudesController extends Controller
             elseif ($request->terms_condition == true) {
                 $sol->save();
             }
-        }elseif (!in_array($id_status, $status_rule)) {
+        }else {
             return response()->json(['error' => 'this user has a solicitude active'], 400);
         }
 
