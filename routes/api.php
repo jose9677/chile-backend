@@ -115,4 +115,5 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/wots-registerNeighbor', [App\Http\Controllers\wotsController::class, 'wotsRegisterNeighbor']);
     Route::put('/wots-change-password', [App\Http\Controllers\usersController::class, 'wotsChangePassword']);
     Route::post('/wots-validate-user', [App\Http\Controllers\usersController::class, 'wotsValidateUser']);
+    Route::put('/wots-renove-sol', [App\Http\Controllers\usersController::class, 'wotsRenoveSol']);
 });

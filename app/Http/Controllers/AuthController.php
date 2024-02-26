@@ -324,7 +324,11 @@ class AuthController extends Controller
         );
         
         //WE GET ALL RECORDS OF USERS TABLE
-        $rut_users = DB::table('users')->select('rut')->where('employee', false)->get();
+        //$rut_users = DB::table('users')->select('rut')->where('employee', false)->get();
+        $rut_users = DB::table('users')
+                        ->join('solicitudes', 'solicitudes.rut_user', '=', 'users.rut')
+                        ->distinct('users.rut')
+                        ->get('users.rut');
         
         //ESTE METODO DA ERROR DE TIEMPO DE EJECUCION A LA HORA DE ACTUALIZAR TODOS LOS PORCENTAJES
         //DE CADA RESULTADO DE LA TABLA USUARIOS, SI LE PONGO UN LIMITE DE 10 SI FUNCIONA....

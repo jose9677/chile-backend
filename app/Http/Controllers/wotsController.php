@@ -413,4 +413,48 @@ class wotsController extends Controller
 
         return compact('success');
     }
+
+    public function consultRenoSol()
+    {
+        $id_sol = DB::table('solicitudes')->where(['is_active' => true, 'id_status' => 6])
+                    ->orderByDesc('id')
+                    ->get(['id', 'rut_user']);
+
+        return $id_sol;
+    }
+
+    public function wotsRenoveSol()
+    {
+        $data = $this->consultRenoSol();
+
+        $count = count($data);
+        $id_sol = [];
+        $rut_user = [];
+
+        for ($i=0; $i < $count; $i++) { 
+            $id_sol[] = $data[$i]->id;
+            $rut_user[] = $data[$i]->rut_user;
+        }
+
+        for ($i=0; $i < $count; $i++) { 
+
+            $reno_sol = DB::insert(
+                "INSERT INTO consultants.solicitudes (
+                rut_user, id_prevention_type_detail, assurance, id_location, way_number, id_property_type, property_number, terms_condition,
+                request_date, id_status, rut_employee, visit_date, applicant_at_home, prevention_is_valid, location_is_valid, comments,
+                is_active, rut_match, carer, id_motive, id_dedication, id_remuneration, created_at, updated_at, --admission_date, 
+                dir_wots, latitude, longitude, reg_type, id_mod_status, id_status_emp, origin )
+                SELECT 
+                '$rut_user[$i]', id_prevention_type_detail, assurance, id_location, way_number, id_property_type, property_number, terms_condition,
+                request_date, 13, rut_employee, visit_date, applicant_at_home, prevention_is_valid, location_is_valid, comments,
+                is_active, rut_match, carer, id_motive, id_dedication, id_remuneration, created_at, updated_at, --admission_date,
+                dir_wots, latitude, longitude, reg_type, id_mod_status, 13, origin
+                FROM consultants.solicitudes WHERE id = $id_sol[$i];
+                ");
+    
+            $update_status = DB::table('solicitudes')->where('id', $id_sol[$i])->update(['id_status' => 14, 'id_status_emp' => 14]);   
+        }
+
+        return response()->json(['message' => 'renovation successfull']);
+    }
 }
