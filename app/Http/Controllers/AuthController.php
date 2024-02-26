@@ -345,14 +345,18 @@ class AuthController extends Controller
         $prevention_detail = DB::table('preventions_details')
         ->select('prevention_detail')
         ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
-        ->where('solicitudes.rut_user', $ruts[$i])
+        ->where(['solicitudes.rut_user' => $ruts[$i], 'solicitudes.is_active' => true])
+        ->orderByDesc('solicitudes.id')
+        ->limit(1)
         ->value('prevention_detail');
 
         $prevention_type = DB::table('preventions_types')
         ->select('prevention_type')
         ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
         ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
-        ->where('solicitudes.rut_user', $ruts[$i])
+        ->where(['solicitudes.rut_user' => $ruts[$i], 'solicitudes.is_active' => true])
+        ->orderByDesc('solicitudes.id')
+        ->limit(1)
         ->value('prevention_type');
 
         if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {

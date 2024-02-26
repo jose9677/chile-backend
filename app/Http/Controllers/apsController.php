@@ -219,10 +219,16 @@ class apsController extends Controller
 
     public function apsCoincidence()
     {
-        $query = DB::table('users')
+        /* $query = DB::table('users')
                       ->join('aps', 'users.rut', '=', 'aps.rut')
                       ->join('solicitudes', 'users.rut', '=', 'solicitudes.rut_user')
-                      ->count();
+                      ->count(); */
+
+        $query = DB::select("SELECT 
+        count(distinct(a.rut))
+        from users a
+        join aps b on b.rut = a .rut
+        join solicitudes c on c.rut_user = a.rut");
 
         return $query;
     }
