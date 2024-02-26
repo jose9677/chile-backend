@@ -171,7 +171,7 @@ class apsController extends Controller
                 }
                 
                 $user_fullName = $name.' '.$lastname;
-
+                
                 try {
                     DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 6");
                     
@@ -219,16 +219,17 @@ class apsController extends Controller
 
     public function apsCoincidence()
     {
-        /* $query = DB::table('users')
+        $query = DB::table('users')
                       ->join('aps', 'users.rut', '=', 'aps.rut')
                       ->join('solicitudes', 'users.rut', '=', 'solicitudes.rut_user')
-                      ->count(); */
+                      ->distinct('users.rut')
+                      ->count();
 
-        $query = DB::select("SELECT 
+        /* $query = DB::select("SELECT 
         count(distinct(a.rut))
         from users a
-        join aps b on b.rut = a .rut
-        join solicitudes c on c.rut_user = a.rut");
+        join aps b on b.rut = a.rut
+        join solicitudes c on c.rut_user = a.rut"); */
 
         return $query;
     }
