@@ -10,11 +10,13 @@ use App\Mail\asignarVisitadorMailable;
 use App\Mail\confirmarCitaMailable;
 use App\Mail\rechazarSolicitudMailable;
 use App\Mail\reprogramarCitaMailable;
+use App\Models\aps;
 use App\Models\documents;
 use App\Models\solicitudes;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -88,6 +90,9 @@ class solicitudesController extends Controller
             }
             elseif ($request->terms_condition == true) {
                 $sol->save();
+                $new_sol = DB::table('solicitudes')->where('rut_user', $sol->rut_user)->orderByDesc('id')->limit(1)->value('id');
+                $this->percentRequets($new_sol);
+
             }
         }else {
             return response()->json(['error' => 'this user has a solicitude active'], 400);
@@ -108,6 +113,56 @@ class solicitudesController extends Controller
         }
 
         return response()->json(['sol' => $sol], 200);
+    }
+
+    public function percentRequets($id)
+    {
+        $rut_user = DB::table('solicitudes')->where('id', $id)->value('rut_user');
+        
+        $aps = DB::table('users')->where('rut', $rut_user)->value('aps');
+
+        $prevention_detail = DB::table('preventions_details')
+        ->select('prevention_detail')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where(['solicitudes.id' => $id, 'solicitudes.is_active' => true])
+        ->value('prevention_detail');
+
+        $prevention_type = DB::table('preventions_types')
+        ->select('prevention_type')
+        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where(['solicitudes.id' => $id, 'solicitudes.is_active' => true])
+        ->value('prevention_type');
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
+            solicitudes::query()->where('id', $id)->update(['percent' => 50]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
+            solicitudes::query()->where('id', $id)->update(['percent' => 20]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
+            $f_nac = DB::table('users')->where('rut', $rut_user)->value('f_nac');
+            $age = Carbon::parse($f_nac)->age;
+
+            if ($age < 60) {
+                solicitudes::query()->where('id', $id)->update(['percent' => 30]);
+            }
+            elseif ($age >= 60) {
+                solicitudes::query()->where('id', $id)->update(['percent' => 40]);
+            }
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == false) {
+            solicitudes::query()->where('id', $id)->update(['percent' => 20]);
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == true) {
+            solicitudes::query()->where('id', $id)->update(['percent' => 20]);
+        }
+
+        return response()->json(['message' => 'All percents updated successfull'], 200);
     }
 
     public function consultRenoSol()

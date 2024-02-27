@@ -339,7 +339,7 @@ class AuthController extends Controller
         }
 
         for ($i=0; $i < count($ruts) ; $i++) { 
-        
+        $id_sol = DB::table('solicitudes')->where(['rut_user' => $ruts[$i], 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
         $aps = DB::table('users')->where('rut', $ruts[$i])->value('aps');
 
         $prevention_detail = DB::table('preventions_details')
@@ -361,10 +361,12 @@ class AuthController extends Controller
 
         if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 50]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 50]);
         }
 
         if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 20]);
         }
 
         //ESTA CONDICION TENIA APS TRUE ANTERIORMENTE...
@@ -374,18 +376,22 @@ class AuthController extends Controller
 
             if ($age < 60) {
                 User::query()->where('rut', $ruts[$i])->update(['percent' => 30]);
+                solicitudes::query()->where('id', $id_sol)->update(['percent' => 30]);
             }
             elseif ($age >= 60) {
                 User::query()->where('rut', $ruts[$i])->update(['percent' => 40]);
+                solicitudes::query()->where('id', $id_sol)->update(['percent' => 40]);
             }
         }
 
         if ($prevention_type != 'FONASA' AND $aps == false) {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 20]);
             }
 
         if ($prevention_type != 'FONASA' AND $aps == true) {
             User::query()->where('rut', $ruts[$i])->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 20]);
             }
         }
 

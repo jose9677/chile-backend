@@ -41,7 +41,8 @@ class solicitudes extends Model
         'reg_type',
         'id_mod_status',
         'id_status_emp',
-        'origin'
+        'origin',
+        'percent'
     ];
 
     protected $hidden = [
