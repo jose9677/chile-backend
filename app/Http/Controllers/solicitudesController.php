@@ -79,6 +79,7 @@ class solicitudesController extends Controller
             $sol->id_dedication = $request->get('id_dedication');
             $sol->id_remuneration = $request->get('id_remuneration');
             // $sol->admission_date = $request->get('admission_date');
+            $sol->reg_type = 'REGISTRO POR PAGINA';
             $sol->origin = 'REGISTRO POR PAGINA';
             $sol->id_status_emp = 1;
 
