@@ -115,8 +115,7 @@ class user_requestController extends Controller
             LEFT JOIN consultants.users as d ON a.rut_employee = d.rut
             JOIN consultants.status as e ON a.id_status = e.id
             JOIN consultants.status as f ON a.id_status_emp = f.id
-            WHERE a.rut_user = '$rut_user'"
-
+            WHERE a.rut_user = '$rut_user' AND a.is_active = true"
         );
 
         return response()->json([
@@ -254,7 +253,7 @@ class user_requestController extends Controller
             JOIN consultants.status as e ON e.id = a.id_status
             JOIN consultants.users as f ON f.rut = a.rut_employee
             JOIN consultants.status as g ON a.id_status = g.id
-            WHERE a.rut_employee = '$rut_employee'"
+            WHERE a.rut_employee = '$rut_employee' AND a.is_active = true"
         );
 
         return response()->json([

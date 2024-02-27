@@ -654,40 +654,9 @@ class solicitudesController extends Controller
      //This Method get all data about Users and their Request assigned throught rut
      public function requestAssigned()
      {
-        $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes");
-        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6");
-        $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7");
-        
-         /* $query = DB::select(
-            "SELECT 
-            a.id as id_request,
-            a.created_at as request_date, 
-            a.rut_user,
-            b.names as user_name,
-            b.lastname as user_lastname,
-            c.id as id_location,
-            c.street,
-			a.way_number,
-            d.id as id_property_type,
-            d.description,
-			a.property_number,
-            e.rut as assistant_rut,
-            e.names as assistant_name,
-            e.lastname as assistant_lastname,
-			f.rut as supervisor_rut,
-            f.names as supervisor_names,
-            f.lastname as supervisor_lastname,
-            g.id as id_status,
-            g.status
-            FROM consultants.solicitudes as a 
-            LEFT JOIN consultants.users as b ON a.rut_user = b.rut
-            LEFT JOIN consultants.locations as c ON a.id_location = c.id
-            LEFT JOIN consultants.property_types as d ON a.id_property_type = d.id
-            LEFT JOIN consultants.users as e ON e.rut = a.rut_employee
-            LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
-            LEFT JOIN consultants.status as g ON a.id_status = g.id
-            order by a.id ASC"
-         ); */
+        $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes WHERE is_active = true");
+        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6 AND is_active = true");
+        $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7 AND is_active = true");
 
         $query = DB::select(
             "SELECT 
@@ -720,6 +689,7 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
             LEFT JOIN consultants.status as g ON a.id_status = g.id
             LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
+            WHERE a.is_active = true
             order by a.id ASC"
          );
  
