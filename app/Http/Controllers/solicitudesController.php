@@ -780,8 +780,8 @@ class solicitudesController extends Controller
             b.names as user_name,
             b.lastname as user_lastname,
             c.id as id_location,
-            CASE WHEN b.origin = 'wots' THEN a.dir_wots ELSE c.street END AS street,
-            CASE WHEN b.origin = 'wots' THEN '' ELSE a.way_number::varchar END AS way_number,
+            CASE WHEN a.origin = 'wots' THEN a.dir_wots ELSE c.street END AS street,
+            CASE WHEN a.origin = 'wots' THEN '' ELSE a.way_number::varchar END AS way_number,
             d.id as id_property_type,
             d.description,
             a.property_number,
@@ -794,7 +794,8 @@ class solicitudesController extends Controller
             g.id as id_status,
             a.id_status_emp, 
             g.status,
-            h.status as status_emp
+            h.status as status_emp,
+            a.percent
             FROM consultants.solicitudes as a 
             LEFT JOIN consultants.users as b ON a.rut_user = b.rut
             LEFT JOIN consultants.locations as c ON a.id_location = c.id

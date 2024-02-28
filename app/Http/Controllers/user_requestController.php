@@ -108,7 +108,9 @@ class user_requestController extends Controller
             a.id_status,
             e.status,
             a.id_status_emp,
-            f.status as status_emp
+            f.status as status_emp,
+            a.origin,
+            a.percent
             FROM consultants.solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
@@ -245,7 +247,9 @@ class user_requestController extends Controller
             a.id_status,
             e.status,
             a.id_status_emp,
-            g.status as status_emp
+            g.status as status_emp,
+            a.origin,
+            a.percent
             FROM consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_user = b.rut
             JOIN consultants.property_types as c ON c.id = a.id_property_type
