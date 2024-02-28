@@ -165,6 +165,64 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'All percents updated successfull'], 200);
     }
 
+    public function confimRenoSol(Request $request, $id)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'rut_user' => 'required',
+            'names' => 'required',
+            'lastname' => 'required',
+            'id_sex' => 'required',
+            'f_nac' => 'required',
+            'email' => 'required',
+            'landline' => 'required',
+            'mobile_phone' => 'required',
+            'id_prevention_type_detail' => 'required',
+            'assurance' => 'required',
+            'id_location' => 'required',
+            'way_number' => 'required',
+            'id_property_type' => 'required',
+            'property_number' => 'required',
+            'carer' => 'required',
+            'id_motive' => 'required_if:carer,true',
+            'id_dedication' => 'required_if:carer,true',
+            'id_remuneration' => 'required_if:carer,true'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }  
+        
+        $update_user = DB::table('users')->where('rut', $request->rut_user)->update([
+            'names' => $request->names,
+            'lastname' => $request->lastname,
+            'id_sex' => $request->id_sex,
+            'f_nac' => $request->f_nac,
+            'email' => $request->email,
+            'landline' => $request->landline,
+            'mobile_phone' => $request->mobile_phone
+        ]);
+
+        $update_sol = DB::table('solicitudes')->where('id', $id)->update([
+            'id_prevention_type_detail' => $request->id_prevention_type_detail,
+            'assurance' => $request->assurance,
+            'id_location' => $request->id_location,
+            'way_number' => $request->way_number,
+            'id_property_type' => $request->id_property_type,
+            'property_number' => $request->property_number,
+            'carer' => $request->carer,
+            'id_motive' => $request->id_motive,
+            'id_dedication' => $request->id_dedication,
+            'id_remuneration' => $request->id_remuneration
+        ]);
+
+        $update_status = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 1, 'id_status_emp' => 1]);
+
+        $this->percentRequets($id);
+
+        return response()->json(['message' => 'Confirmation successfull'], 200);
+    }
+
     public function consultRenoSol()
     {
         $id_sol = DB::table('solicitudes')->where(['is_active' => true, 'id_status' => 6])
