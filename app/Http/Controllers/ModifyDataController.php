@@ -105,7 +105,7 @@ class ModifyDataController extends Controller
             a.id_motive,
             a.id_dedication,
             a.id_remuneration,
-            b.origin as origen
+            a.origin as origen
             FROM consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_user = b.rut
             WHERE a.id = $id"
