@@ -226,23 +226,41 @@ class solicitudesController extends Controller
     public function consultRenoSol()
     {
         $id_sol = DB::table('solicitudes')->where(['is_active' => true, 'id_status' => 6])
-                    ->orderByDesc('id')
+                    ->orderByDesc('solicitudes.id')
                     ->get(['id', 'rut_user']);
 
         return $id_sol;
     }
 
+    public function consultRenoDoc()
+    {
+        $id_doc = DB::table('solicitudes')
+                    ->join('documents', 'documents.id_request', '=', 'solicitudes.id')
+                    ->where(['solicitudes.is_active' => true, 'solicitudes.id_status' => 6, 'documents.active'=> true])
+                    ->orderByDesc('documents.id')
+                    ->get(['documents.id as id_doc']);
+
+        return $id_doc;
+    }
+
     public function renoveSol()
     {
         $data = $this->consultRenoSol();
+        $data_doc = $this->consultRenoDoc();
 
         $count = count($data);
+        $count_doc = count($data_doc);
         $id_sol = [];
         $rut_user = [];
+        $id_doc = [];
 
         for ($i=0; $i < $count; $i++) { 
             $id_sol[] = $data[$i]->id;
             $rut_user[] = $data[$i]->rut_user;
+        }
+
+        for ($i=0; $i < $count_doc; $i++) { 
+            $id_doc[] = $data_doc[$i]->id_doc;
         }
 
         for ($i=0; $i < $count; $i++) { 
@@ -262,6 +280,15 @@ class solicitudesController extends Controller
                 ");
     
             $update_status = DB::table('solicitudes')->where('id', $id_sol[$i])->update(['id_status' => 14, 'id_status_emp' => 14]);   
+        }
+
+        for ($i=0; $i < $count_doc; $i++) { 
+            $reno_doc = DB::insert(
+                "INSERT INTO consultants.documents(
+                    id_request, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status)
+                SELECT id_request, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status
+                FROM consultants.documents WHERE id = $id_doc[$i]
+            ");
         }
 
         return response()->json(['message' => 'renovation successfull']);
