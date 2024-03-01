@@ -287,7 +287,7 @@ class solicitudesController extends Controller
                 "INSERT INTO consultants.documents(
                     id_request, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status)
                 SELECT {$id_reno_sol->id[$i]}, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status
-                FROM consultants.documents WHERE id = $id_doc[$i] AND active = true
+                FROM consultants.documents WHERE id_request = $id_sol[$i] AND active = true
             ");
         }
 
