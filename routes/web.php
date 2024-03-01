@@ -104,6 +104,7 @@ Route::put('/delete-doc-many', [App\Http\Controllers\ModifyDocumentController::c
  Route::get('/all-renove-sol', [App\Http\Controllers\solicitudesController::class, 'consultRenoSol']);
  Route::put('/percent-sol/{id}', [App\Http\Controllers\solicitudesController::class, 'percentRequets']);
  Route::put('/confirm-reno-sol/{id}', [App\Http\Controllers\solicitudesController::class, 'confimRenoSol']);
+ Route::put('/confim-reno-sol-auto-aprove/{id}', [App\Http\Controllers\solicitudesController::class, 'confimRenoSolAutoAprove']);
 //SOLICITUDESCONTROLLER
 /*Route::get('/detail-request', [App\Http\Controllers\solicitudesController::class, 'detailRequest']);
 Route::get('/get-request/{id}', [App\Http\Controllers\solicitudesController::class, 'getRequest']);

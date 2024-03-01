@@ -294,6 +294,19 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'renovation successfull']);
     }
 
+    public function confimRenoSolAutoAprove($id)
+    {
+        $id_status = DB::table('solicitudes')->where('id', $id)->value('id_status');
+        
+        if ($id_status != 13) {
+            return response()->json(['error' => 'This solicitude is not in renovatio status'], 400);
+        }
+
+        $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 1]);
+
+        return response()->json(['message' => 'Solicitude Apporved successfull'], 200);
+    }
+
     public function solDoc(Request $request)
     {
         Log::info($request);
