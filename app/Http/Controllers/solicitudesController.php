@@ -302,7 +302,7 @@ class solicitudesController extends Controller
             return response()->json(['error' => 'This solicitude is not in renovatio status'], 400);
         }
 
-        $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 1]);
+        $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 6]);
 
         return response()->json(['message' => 'Solicitude Apporved successfull'], 200);
     }
