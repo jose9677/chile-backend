@@ -280,14 +280,14 @@ class solicitudesController extends Controller
                 ");
     
             $update_status = DB::table('solicitudes')->where('id', $id_sol[$i])->update(['id_status' => 14, 'id_status_emp' => 14]);   
-        }
 
-        for ($i=0; $i < $count_doc; $i++) { 
+            $id_reno_sol = DB::table('solicitudes')->where(['is_active' => true, 'id_status' => 13, 'rut_user' => $rut_user[$i]])->get('id');
+            
             $reno_doc = DB::insert(
                 "INSERT INTO consultants.documents(
                     id_request, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status)
-                SELECT id_request, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status
-                FROM consultants.documents WHERE id = $id_doc[$i]
+                SELECT {$id_reno_sol->id[$i]}, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status
+                FROM consultants.documents WHERE id = $id_doc[$i] AND active = true
             ");
         }
 
