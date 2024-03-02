@@ -210,32 +210,7 @@ class wotsController extends Controller
         ->where('solicitudes.rut_user', $request->rut)
         ->value('prevention_type');
 
-        $aps = Db::table('users')->where('rut', $request->rut)->value('aps');
-
-        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
-            User::query()->where('rut', $request->input('rut'))->update(['percent' => 50]);
-        }
-
-        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
-            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
-        }
-
-        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
-            $f_nac = DB::table('users')->where('rut', $request->rut)->value('f_nac');
-            $age = Carbon::parse($f_nac)->age;
-
-            if ($age < 65) {
-                User::query()->where('rut', $request->input('rut'))->update(['percent' => 30]);
-            }
-            elseif ($age >= 65) {
-                User::query()->where('rut', $request->input('rut'))->update(['percent' => 40]);
-            }
-        }
-
-        if ($prevention_type != 'FONASA' AND $aps == false) {
-            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
-        }
-
+        
         $token = JWTAuth::fromUser($user);
         return response()->json(['message' => 'User registered'], 200);
     }
@@ -453,6 +428,15 @@ class wotsController extends Controller
                 ");
     
             $update_status = DB::table('solicitudes')->where('id', $id_sol[$i])->update(['id_status' => 14, 'id_status_emp' => 14]);   
+
+            $id_reno_sol = DB::table('solicitudes')->where(['is_active' => true, 'id_status' => 13, 'rut_user' => $rut_user[$i]])->value('id');;
+            
+            $reno_doc = DB::insert(
+                "INSERT INTO consultants.documents(
+                    id_request, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status)
+                SELECT $id_reno_sol, id_document_type, document_path, document_ext, created_at, updated_at, active, id_mod_status
+                FROM consultants.documents WHERE id_request = $id_sol[$i] AND active = true
+            ");
         }
 
         return response()->json(['message' => 'renovation successfull']);
