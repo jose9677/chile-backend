@@ -632,6 +632,36 @@ class AuthController extends Controller
         }
     }
 
+    public function renovePassword(Request $request, $rut)
+    {
+        Log::info($request);
+        $validator = Validator::make($request->all(), [
+            'password' => ['required',
+                Password::min(8)
+                ->letters() //al menos una letra
+                ->mixedCase() //al menos una letra minuscula y una mayuscula
+                ->numbers() //al menos un caracter numerico
+            ],
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::where([
+            'rut' => $rut
+        ])->get();
+
+        if (!$user->count()) {
+            return response()->json(['error' => 'User does not exists in DB'], 400);
+        }
+
+        $new_pass = Hash::make($request->get('password'));
+        $update = DB::table('users')->where('rut', $rut)->update(['password' => $new_pass]);
+
+        return response()->json(['message' => 'Password renoved'], 200);
+    }
+
     public function test(Request $request)
     {
         $digitoVerificador = FacadesChileRut::digitoVerificador($request->rut);

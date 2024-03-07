@@ -59,6 +59,8 @@ Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
 Route::post('/profile-pic/{rut}', [App\Http\Controllers\AuthController::class, 'profilePic']);
 Route::put('/update-aps', [App\Http\Controllers\AuthController::class, 'updateAps']);
 
+Route::put('/renove-password/{rut}', [App\Http\Controllers\AuthController::class, 'renovePassword']);
+
 //MODIFY MODULE...
 Route::get('/data-modifer/{rut}', [App\Http\Controllers\ModifyUserController::class, 'DataModifer']);
 Route::get('/consult-modify/{id}', [App\Http\Controllers\ModifyDataController::class, 'allData']);
