@@ -441,4 +441,40 @@ class wotsController extends Controller
 
         return response()->json(['message' => 'renovation successfull']);
     }
+
+    public function getRonoData($rut)
+    {
+        $sol = DB::table('solicitudes')
+                ->where(['rut_user' => $rut, 'is_active' => true])
+                ->orderByDesc('id')
+                ->limit(1)
+                ->get([
+                    'id',
+                    'id_status'
+                ]);
+
+        if ($sol[0]->id_status == 13) {
+            $data = new ModifyDataController();
+
+            $full_data = $data->allData($sol[0]->id);
+            $result = $full_data->original;
+
+            return response()->json($result, 200);    
+        }else {
+            return response()->json(['error' => 'This user has not a renovation request'], 400);
+        }
+    }
+
+    public function wotsConfimRenoSolAutoAprove($id)
+    {
+        $id_status = DB::table('solicitudes')->where('id', $id)->value('id_status');
+        
+        if ($id_status != 13) {
+            return response()->json(['error' => 'This solicitude is not in renovation status'], 400);
+        }
+
+        $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 6]);
+
+        return response()->json(['message' => 'Solicitude Apporved successfull'], 200);
+    }
 }

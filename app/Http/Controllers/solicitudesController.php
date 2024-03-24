@@ -292,7 +292,7 @@ class solicitudesController extends Controller
         $id_status = DB::table('solicitudes')->where('id', $id)->value('id_status');
         
         if ($id_status != 13) {
-            return response()->json(['error' => 'This solicitude is not in renovatio status'], 400);
+            return response()->json(['error' => 'This solicitude is not in renovation status'], 400);
         }
 
         $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 6]);
