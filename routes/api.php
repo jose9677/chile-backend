@@ -117,5 +117,5 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/wots-validate-user', [App\Http\Controllers\usersController::class, 'wotsValidateUser']);
     Route::put('/wots-renove-sol', [App\Http\Controllers\usersController::class, 'wotsRenoveSol']);
     Route::get('/wots-get-reno-data/{rut}', [App\Http\Controllers\wotsController::class, 'getRonoData']);
-    Route::put('/wots-confirm-reno-sol/{rut}', [App\Http\Controllers\wotsController::class, 'wotsConfimRenoSolAutoAprove']);
+    Route::put('/wots-confirm-reno-sol/{id}', [App\Http\Controllers\wotsController::class, 'wotsConfimRenoSolAutoAprove']);
 });
