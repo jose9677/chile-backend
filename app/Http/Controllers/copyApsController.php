@@ -23,7 +23,7 @@ class copyApsController extends Controller
         putenv("PGPASSWORD=lareinaadmin");
 
         // Comando COPY para copiar el contenido del archivo CSV a la tabla
-        $copyCommand = sprintf("\COPY %s FROM '%s' DELIMITER ';' CSV HEADER", $tableName, $csvFilePath);
+        $copyCommand = sprintf("\COPY %s FROM '%s' DELIMITER ';' CSV HEADER FORCE NOT NULL rut", $tableName, $csvFilePath);
 
         // Comando para ejecutar el comando COPY a través del shell de PHP
         $shellCommand = sprintf('psql -h %s -d %s -U %s -c "%s"', $dbHost, $dbName, $dbUser, $copyCommand);

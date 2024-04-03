@@ -801,8 +801,8 @@ class solicitudesController extends Controller
      //This Method get all data about Users and their Request assigned throught rut
      public function requestAssigned()
      {
-        $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes WHERE is_active = true");
-        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6 AND is_active = true");
+        $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes WHERE id_status != 14 and is_active = true");
+        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6 or id_status = 13 AND is_active = true");
         $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7 AND is_active = true");
 
         $query = DB::select(
