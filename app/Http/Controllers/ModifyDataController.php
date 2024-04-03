@@ -85,7 +85,8 @@ class ModifyDataController extends Controller
             document_path,
             document_ext,
             active,
-            'http://54.189.74.47/storage/posts/'||document_path as doc_srv_path
+            'http://54.189.74.47/storage/posts/'||document_path as doc_srv_path,
+            id_mod_status
             FROM consultants.documents
             WHERE id_request = $id AND  active = true
             ");
@@ -105,7 +106,9 @@ class ModifyDataController extends Controller
             a.id_motive,
             a.id_dedication,
             a.id_remuneration,
-            a.origin as origen
+            a.origin as origen,
+            a.id_mod_status as sol_mod_status,
+            b.id_mod_status as user_mod_status
             FROM consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_user = b.rut
             WHERE a.id = $id"
