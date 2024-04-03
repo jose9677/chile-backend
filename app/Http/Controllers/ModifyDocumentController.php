@@ -91,7 +91,7 @@ class ModifyDocumentController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyDocument::query()->where('id_request', $id_request)->update(['approve' => true]);
+        $data = ModifyDocument::query()->where('id_request', $id_request)->update(['approve' => true, 'id_mod_status' => 2]);
         
         return response()->json([
             'response' => 'Changes approved',
@@ -109,7 +109,7 @@ class ModifyDocumentController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyDocument::query()->where('id_reque$id_request', $id_request)->update(['approve' => false]);
+        $data = ModifyDocument::query()->where('id_reque$id_request', $id_request)->update(['approve' => false, 'id_mod_status' => 4]);
         
         return response()->json([
             'response' => 'Changes approved',

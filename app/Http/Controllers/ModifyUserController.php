@@ -68,7 +68,7 @@ class ModifyUserController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true]);
+        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true, 'id_mod_status' => 2]);
         
         return response()->json([
             'response' => 'Changes approved',
