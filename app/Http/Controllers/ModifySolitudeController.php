@@ -136,9 +136,18 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifySolicitude::query()->where('id_solicitude', $id_solicitude)->update(['approve' => true]);
+        $data = ModifySolicitude::query()->where('id_solicitude', $id_solicitude)
+                                ->update([
+                                    'approve' => true,
+                                    'id_mod_status' => 2,
+                                    'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+                                ]);
 
-        $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 2]);
+        /* $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)
+                        ->update([
+                            'id_mod_status' => 2,
+                        ]); */
+                        
         $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
         
         $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 2]);
@@ -169,16 +178,19 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifySolicitude::query()->where('id_solicitude', $id_solicitude)->update(['approve' => false]);
+        $data = ModifySolicitude::query()->where('id_solicitude', $id_solicitude)
+                                ->update(['approve' => false,
+                                          'id_mod_status' => 4,
+                                          'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+                                 ]);
     
-        $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 4]);
+        //$mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 4]);
         $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
         
         $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 4]);
 
         return response()->json([
-            'response' => 'Changes approved',
-            'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+            'response' => 'Changes approved'
         ]);
     }
 
