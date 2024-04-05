@@ -38,6 +38,9 @@ class CreateModifyUsersTable extends Migration
             $table->string('rut_employee');
             $table->boolean('approve');
             $table->unsignedBigInteger('id_mod_status')->nullable();
+            $table->string('approved_by')->nullable();
+            $table->string('rejected_by')->nullable();
+            $table->string('verificated_by')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ModifyUser;
 use App\Models\User;
+use App\Providers\BearerTokenServiceProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 
 class ModifyUserController extends Controller
 {
@@ -58,8 +60,12 @@ class ModifyUserController extends Controller
         ]);
     }
 
-    public function approveUserChanges($id_user, $rut)
+    public function approveUserChanges(Request $request, $id_user, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $record = ModifyUser::where([
             'id_user' => $id_user
         ])->get();
@@ -68,16 +74,26 @@ class ModifyUserController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => true, 'id_mod_status' => 2]);
+        $data = ModifyUser::query()->where('id_user', $id_user)
+                          ->update([
+                            'approve' => true, 
+                            'id_mod_status' => 2,
+                            'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+                         ]);
+
+        $update_user = User::query()->where('rut', $rut)->update(['id_mod_status' => 2]);
         
         return response()->json([
-            'response' => 'Changes approved',
-            'approved_by' => $this->DataModifer($rut)
+            'response' => 'Changes approved'
         ]);
     }
 
-    public function rejectUserChanges($id_user, $rut)
+    public function rejectUserChanges(Request $request, $id_user, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $record = ModifyUser::where([
             'id_user' => $id_user
         ])->get();
@@ -86,14 +102,18 @@ class ModifyUserController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyUser::query()->where('id_user', $id_user)->update(['approve' => false]);
-        $mod_status = ModifyUser::query()->where('id_user', $id_user)->update(['id_mod_status' => 4]);
+        $data = ModifyUser::query()->where('id_user', $id_user)
+                          ->update([
+                            'approve' => false,
+                            'id_mod_status' => 4,
+                            'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+                        ]);
+        //$mod_status = ModifyUser::query()->where('id_user', $id_user)->update(['id_mod_status' => 4]);
         
         $update_user = User::query()->where('rut', $rut)->update(['id_mod_status' => 4]);
         
         return response()->json([
-            'response' => 'Changes approved',
-            'rejected_by' => $this->DataModifer($rut)
+            'response' => 'Changes approved'
         ]);
     }
 
@@ -119,6 +139,10 @@ class ModifyUserController extends Controller
 
     public function updateUserData(Request $request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
 
         $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
@@ -145,13 +169,17 @@ class ModifyUserController extends Controller
         } 
         
         return response()->json([
-            'message' => 'Record updated successfull'
-            //'approve_by' => $this->DataModifer($request->rut_employee)
+            'message' => 'Record updated successfull',
+            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
     public function updateUserDataVIP(Request $request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
         
         try {
@@ -172,12 +200,12 @@ class ModifyUserController extends Controller
         } 
         
         return response()->json([
-            'message' => 'Record updated successfull'
-            //'approve_by' => $this->DataModifer($request->rut_employee)
+            'message' => 'Record updated successfull',
+            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
-    public function DataModifer($rut)
+    /* public function DataModifer($rut)
     {
         $names = DB::table('users')->where('rut', $rut)->value('names');
         $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
@@ -185,5 +213,5 @@ class ModifyUserController extends Controller
         $response = $names.' '.$lastname;
 
         return Str::upper($response);
-    }
+    } */
 }

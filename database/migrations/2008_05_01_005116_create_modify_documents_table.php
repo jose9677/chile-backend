@@ -24,6 +24,9 @@ class CreateModifyDocumentsTable extends Migration
             $table->boolean('approve');
             $table->unsignedBigInteger('id_doc_loaded');
             $table->unsignedBigInteger('id_mod_status')->nullable();
+            $table->string('approved_by')->nullable();
+            $table->string('rejected_by')->nullable();
+            $table->string('verificated_by')->nullable();
             $table->timestamps();
         });
     }

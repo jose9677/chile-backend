@@ -37,6 +37,9 @@ class ModifyUser extends Model
         'origin',
         'rut_employee',
         'approve',
-        'id_mod_status'
+        'id_mod_status',
+        'approved_by',
+        'rejected_by',
+        'verificated_by'
     ];
 }

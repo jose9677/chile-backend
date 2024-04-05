@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ModifySolicitude;
 use App\Models\solicitudes;
+use App\Providers\BearerTokenServiceProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,7 +82,8 @@ class ModifySolitudeController extends Controller
                 'rut_employee' => $request->get('rut_employee'),
                 'approve' => null,
                 'id_request' => $id_request,
-                'id_mod_status' => 1
+                'id_mod_status' => 1,
+                'prevention_type' => $request->get('prevention_type')
             ]);
         }
         elseif ($request->reg_type != 'WOTS') {
@@ -91,6 +93,8 @@ class ModifySolitudeController extends Controller
                 'assurance' => $request->get('assurance'),
                 'id_location' => $request->get('id_location'),
                 'way_number' => $request->get('way_number'),
+                'id_property_type' => $request->get('id_property_type'),
+                'property_number' => $request->get('property_number'),
                 'request_date' => $request->get('request_date'),
                 'id_status' => 11,
                 'comments' => $request->get('comments'),
@@ -101,7 +105,9 @@ class ModifySolitudeController extends Controller
                 'rut_employee' => $request->get('rut_employee'),
                 'approve' => null,
                 'id_request' => $id_request,
-                'id_mod_status' => 1
+                'id_mod_status' => 1,
+                'reg_type' => $request->get('reg_type'),
+                'prevention_type' => $request->get('prevention_type')
             ]);
         }
 
@@ -110,8 +116,12 @@ class ModifySolitudeController extends Controller
         return response()->json($mod_sol, 200);
     }
 
-    public function approveSolChanges($id_solicitude, $rut)
+    public function approveSolChanges(Request $request, $id_solicitude, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $employee = DB::table('users')->where('rut', $rut)->value('employee');
 
         if ($employee == false) {
@@ -135,12 +145,16 @@ class ModifySolitudeController extends Controller
         
         return response()->json([
             'response' => 'Changes approved',
-            'approved_by' => $this->DataModifer($rut)
+            'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
-    public function rejectSolChanges($id_solicitude, $rut)
+    public function rejectSolChanges(Request $request, $id_solicitude, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $employee = DB::table('users')->where('rut', $rut)->value('employee');
 
         if ($employee == false) {
@@ -164,7 +178,7 @@ class ModifySolitudeController extends Controller
 
         return response()->json([
             'response' => 'Changes approved',
-            'rejected_by' => $this->DataModifer($rut)
+            'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
@@ -211,6 +225,10 @@ class ModifySolitudeController extends Controller
 
     public function updateSolData(Request $request, $id_request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
         $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
@@ -257,12 +275,16 @@ class ModifySolitudeController extends Controller
 
         return response()->json([
             'message' => 'Data updated successfull',
-            'approve_by' => $this->DataModifer($rut)
+            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]); 
     }
 
     public function updateSolDataVIP(Request $request, $id_request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
         if ($request->reg_type == 'WOTS') {
@@ -303,12 +325,16 @@ class ModifySolitudeController extends Controller
 
         return response()->json([
             'message' => 'Data updated successfull',
-            'approve_by' => $this->DataModifer($rut)
+            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]); 
     }
 
     public function updateExtraData(Request $request, $id_request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $id_solicitude = DB::table('modify_solicitudes')->where('id_request', $id_request)->orderByDesc('id_solicitude')->limit(1)->value('id_solicitude');
 
         /* $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
@@ -341,11 +367,11 @@ class ModifySolitudeController extends Controller
 
         return response()->json([
             'message' => 'Updated successfull',
-            'approve_by' => $this->DataModifer($rut)
+            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
-    public function DataModifer($rut)
+    /* public function DataModifer($rut)
     {
         $names = DB::table('users')->where('rut', $rut)->value('names');
         $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
@@ -353,5 +379,5 @@ class ModifySolitudeController extends Controller
         $response = $names.' '.$lastname;
 
         return Str::upper($response);
-    }
+    } */
 }

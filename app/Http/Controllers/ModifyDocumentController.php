@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\documents;
 use App\Models\ModifyDocument;
+use App\Providers\BearerTokenServiceProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,8 +82,12 @@ class ModifyDocumentController extends Controller
         return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
 
-    public function approveDocChanges($id_request, $rut)
+    public function approveDocChanges(Request $request, $id_request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $record = ModifyDocument::where([
             'id_document' => $id_request
         ])->get();
@@ -95,12 +100,16 @@ class ModifyDocumentController extends Controller
         
         return response()->json([
             'response' => 'Changes approved',
-            'approved_by' => $this->DataModifer($rut)
+            'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
-    public function rejectDocChanges($id_request, $rut)
+    public function rejectDocChanges(Request $request, $id_request, $rut)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $record = ModifyDocument::where([
             'id_document' => $id_request
         ])->get();
@@ -113,12 +122,16 @@ class ModifyDocumentController extends Controller
         
         return response()->json([
             'response' => 'Changes approved',
-            'rejected_by' => $this->DataModifer($rut)
+            'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
     public function updateDocData(Request $request, $id_request, $id_document_type)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         Log::info($request);
         $validator = Validator::make($request->all(),[
             'rut_employee' => 'required'
@@ -147,8 +160,8 @@ class ModifyDocumentController extends Controller
         }
 
         return response()->json([
-            'response' => 'Changes approved'
-            //'approved_by' => $this->DataModifer($request->rut_employee)
+            'response' => 'Changes approved',
+            'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
     }
 
@@ -281,7 +294,7 @@ class ModifyDocumentController extends Controller
         return response()->json(['message' => 'Document desactived'], 200);
     }
 
-    public function DataModifer($rut)
+    /* public function DataModifer($rut)
     {
         $names = DB::table('users')->where('rut', $rut)->value('names');
         $lastname = DB::table('users')->where('rut', $rut)->value('lastname');
@@ -289,5 +302,5 @@ class ModifyDocumentController extends Controller
         $response = $names.' '.$lastname;
 
         return Str::upper($response);
-    }
+    } */
 }

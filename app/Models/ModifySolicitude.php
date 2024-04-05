@@ -41,6 +41,10 @@ class ModifySolicitude extends Model
         'latitude',
         'longitude',
         'approve',
-        'id_request'
+        'id_request',
+        'approved_by',
+        'rejected_by',
+        'verificated_by',
+        'prevention_type'
     ];
 }
