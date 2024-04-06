@@ -81,7 +81,7 @@ class ModifyUserController extends Controller
                             'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
                          ]);
 
-        $update_user = User::query()->where('rut', $rut)->update(['id_mod_status' => 2]);
+        //$update_user = User::query()->where('rut', $rut)->update(['id_mod_status' => 2]);
         
         return response()->json([
             'response' => 'Changes approved'
