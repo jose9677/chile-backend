@@ -56,7 +56,8 @@ class ModifyUserController extends Controller
             'mobile_phone' => $request->get('mobile_phone'),
             'id_sex' => $request->get('id_sex'),
             'approve' => null, 
-            'id_mod_status' => 1
+            'id_mod_status' => 1,
+            'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
 
         $update = DB::table('users')->where('rut', $request->rut)->update(['id_mod_status' => 1]);

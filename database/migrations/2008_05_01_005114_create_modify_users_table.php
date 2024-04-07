@@ -41,6 +41,7 @@ class CreateModifyUsersTable extends Migration
             $table->string('approved_by')->nullable();
             $table->string('rejected_by')->nullable();
             $table->string('verificated_by')->nullable();
+            $table->string('created_by')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

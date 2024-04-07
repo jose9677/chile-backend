@@ -83,7 +83,8 @@ class ModifySolitudeController extends Controller
                 'approve' => null,
                 'id_request' => $id_request,
                 'id_mod_status' => 1,
-                'prevention_type' => $request->get('prevention_type')
+                'prevention_type' => $request->get('prevention_type'),
+                'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
             ]);
         }
         elseif ($request->reg_type != 'WOTS') {
@@ -107,7 +108,8 @@ class ModifySolitudeController extends Controller
                 'id_request' => $id_request,
                 'id_mod_status' => 1,
                 'reg_type' => $request->get('reg_type'),
-                'prevention_type' => $request->get('prevention_type')
+                'prevention_type' => $request->get('prevention_type'),
+                'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
             ]);
         }
 

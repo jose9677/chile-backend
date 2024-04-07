@@ -45,6 +45,7 @@ class ModifySolicitude extends Model
         'approved_by',
         'rejected_by',
         'verificated_by',
-        'prevention_type'
+        'prevention_type',
+        'created_by'
     ];
 }

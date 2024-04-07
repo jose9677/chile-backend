@@ -40,6 +40,7 @@ class ModifyUser extends Model
         'id_mod_status',
         'approved_by',
         'rejected_by',
-        'verificated_by'
+        'verificated_by',
+        'created_by'
     ];
 }
