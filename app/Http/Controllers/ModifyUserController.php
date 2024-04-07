@@ -32,6 +32,10 @@ class ModifyUserController extends Controller
 
     public function loadUserData(Request $request)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $user = User::where([
             'rut' => $request['rut']
         ])->get();

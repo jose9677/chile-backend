@@ -52,6 +52,10 @@ class ModifySolitudeController extends Controller
 
     public function loadSolicitudeData(Request $request, $id_request)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $sol = solicitudes::where([
             'id' => $id_request
         ])->get();
