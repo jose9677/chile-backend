@@ -40,6 +40,12 @@ class ModifyUserController extends Controller
             return response()->json(['error' => 'User does not exists in DB'], 400);
         }
 
+        $mod_status = DB::table('users')->where('rut', $request->rut)->value('id_mod_status');
+
+        if ($mod_status == 1) {
+            return response()->json(['error' => 'This users has a modify earring '], 400);
+        }
+
         $mod_user = ModifyUser::create([
             'rut' => Str::upper($request->get('rut')),
             'names' => Str::upper($request->get('names')),
@@ -165,6 +171,8 @@ class ModifyUserController extends Controller
                     id_sex = $request->id_sex,
                     id_mod_status = 3
                     WHERE rut = '$request->rut'");    
+
+            $verificated_by = DB::table('modify_users')->where('id_user', $id_user)->update(['verificated_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())]);
             } catch (Exception $e) {
                 return $e->getMessage();    
             } 
@@ -173,8 +181,7 @@ class ModifyUserController extends Controller
         }
         
         return response()->json([
-            'message' => 'Record updated successfull',
-            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+            'message' => 'Record updated successfull'
         ]);
     }
 
@@ -199,13 +206,14 @@ class ModifyUserController extends Controller
                 id_sex = $request->id_sex,
                 id_mod_status = 3
                 WHERE rut = '$request->rut'");    
+
+            $verificated_by = DB::table('modify_users')->where('id_user', $id_user)->update(['verificated_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())]);
         } catch (Exception $e) {
             return $e->getMessage();    
         } 
         
         return response()->json([
-            'message' => 'Record updated successfull',
-            'approve_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+            'message' => 'Record updated successfull'
         ]);
     }
 
