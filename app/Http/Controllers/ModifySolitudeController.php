@@ -64,6 +64,12 @@ class ModifySolitudeController extends Controller
             return response()->json(['error' => 'Solicitude does not exists in DB'], 400);
         }
 
+        $mod_status = DB::table('solicitudes')->where('id', $id_request)->value('id_mod_status');
+
+        if ($mod_status == 1) {
+            return response()->json(['error' => 'This users has a modify earring '], 400);
+        }
+
         $rut_user = DB::table('solicitudes')->where('id', $id_request)->value('rut_user');
 
         if ($request->reg_type == 'WOTS') {
@@ -159,8 +165,7 @@ class ModifySolitudeController extends Controller
         $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 2]);
         
         return response()->json([
-            'response' => 'Changes approved',
-            'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+            'response' => 'Changes approved'
         ]);
     }
 
