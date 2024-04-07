@@ -146,27 +146,31 @@ class ModifyUserController extends Controller
         $id_user = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->value('id_user');
 
         $gate = DB::table('modify_users')->where('id_user', $id_user)->value('approve');
-
+/* 
         if ($gate == false) {
-            return response()->json(['error' => 'This record is not aproved'], 400);
-        }
+            return response()->json(['error' => 'This record is not approved'], 400);
+        } */
 
-        try {
-            $update = DB::update(
-                "UPDATE consultants.users 
-                SET
-                names = '$request->names',
-                lastname = '$request->lastname',
-                f_nac = '$request->f_nac',
-                email = '$request->email',
-                landline = $request->landline,
-                mobile_phone = $request->mobile_phone,
-                id_sex = $request->id_sex,
-                id_mod_status = 3
-                WHERE rut = '$request->rut'");    
-        } catch (Exception $e) {
-            return $e->getMessage();    
-        } 
+        if ($gate == true) {
+            try {
+                $update = DB::update(
+                    "UPDATE consultants.users 
+                    SET
+                    names = '$request->names',
+                    lastname = '$request->lastname',
+                    f_nac = '$request->f_nac',
+                    email = '$request->email',
+                    landline = $request->landline,
+                    mobile_phone = $request->mobile_phone,
+                    id_sex = $request->id_sex,
+                    id_mod_status = 3
+                    WHERE rut = '$request->rut'");    
+            } catch (Exception $e) {
+                return $e->getMessage();    
+            } 
+        }elseif ($gate == false) {
+            $update = User::query()->where('rut', $request->rut)->update(['id_mod_status' => 4]);
+        }
         
         return response()->json([
             'message' => 'Record updated successfull',

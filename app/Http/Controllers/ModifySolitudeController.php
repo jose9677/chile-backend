@@ -245,45 +245,51 @@ class ModifySolitudeController extends Controller
 
         $gate = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('approve');
 
-        if ($gate == false) {
+      /*   if ($gate == false) {
             return response()->json(['error' => 'This record is not aproved'], 400);
         }
-        
-        if ($request->reg_type == 'WOTS') {
-            
-            $update = DB::table('solicitudes')->where('id', $id_request)->update([
-                'id_prevention_type_detail' => $request->id_prevention_type_detail,
-                'assurance' => $request->assurance,
-                'id_location' => $request->id_location,
-                'way_number' => $request->way_number,
-                'id_property_type' => $request->id_property_type,
-                'property_number' => $request->property_number,
-                'request_date' => $request->request_date,
-                'dir_wots' => $request->dir_wots,
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'reg_type' => $request->reg_type,
-                'id_mod_status' => 3,
-                'id_status_emp' => $request->id_status_emp
-            ]);
-            $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
-        }
-        elseif ($request->reg_type != 'WOTS') {
+         */
 
-            $update = DB::table('solicitudes')->where('id', $id_request)->update([
-                'id_prevention_type_detail' => $request->id_prevention_type_detail,
-                'assurance' => $request->assurance,
-                'id_location' => $request->id_location,
-                'way_number' => $request->way_number,
-                'id_property_type' => $request->id_property_type,
-                'property_number' => $request->property_number,
-                'request_date' => $request->request_date,
-                'reg_type' => $request->reg_type,
-                'id_mod_status' => 3,
-                'id_status_emp' => $request->id_status_emp
-            ]);
-            $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
+        if ($gate == true) {
+            if ($request->reg_type == 'WOTS') {
+            
+                $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                    'id_prevention_type_detail' => $request->id_prevention_type_detail,
+                    'assurance' => $request->assurance,
+                    'id_location' => $request->id_location,
+                    'way_number' => $request->way_number,
+                    'id_property_type' => $request->id_property_type,
+                    'property_number' => $request->property_number,
+                    'request_date' => $request->request_date,
+                    'dir_wots' => $request->dir_wots,
+                    'latitude' => $request->latitude,
+                    'longitude' => $request->longitude,
+                    'reg_type' => $request->reg_type,
+                    'id_mod_status' => 3,
+                    'id_status_emp' => $request->id_status_emp
+                ]);
+                $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
+            }
+            elseif ($request->reg_type != 'WOTS') {
+    
+                $update = DB::table('solicitudes')->where('id', $id_request)->update([
+                    'id_prevention_type_detail' => $request->id_prevention_type_detail,
+                    'assurance' => $request->assurance,
+                    'id_location' => $request->id_location,
+                    'way_number' => $request->way_number,
+                    'id_property_type' => $request->id_property_type,
+                    'property_number' => $request->property_number,
+                    'request_date' => $request->request_date,
+                    'reg_type' => $request->reg_type,
+                    'id_mod_status' => 3,
+                    'id_status_emp' => $request->id_status_emp
+                ]);
+                $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
+            }
+        }elseif ($gate == false) {
+            $update = solicitudes::query()->where('id', $id_request)->update(['id_mod_status' => 4]);
         }
+        
 
         return response()->json([
             'message' => 'Data updated successfull',
