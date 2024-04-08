@@ -162,7 +162,7 @@ class ModifySolitudeController extends Controller
                         
         $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
         
-        $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 2]);
+        //$mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 2]);
         
         return response()->json([
             'response' => 'Changes approved'
@@ -198,7 +198,7 @@ class ModifySolitudeController extends Controller
         //$mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 4]);
         $id_request = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->value('id_request');
         
-        $mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 4]);
+        //$mod_sol_status = DB::table('solicitudes')->where('id', $id_request)->update(['id_mod_status' => 4]);
 
         return response()->json([
             'response' => 'Changes approved'
