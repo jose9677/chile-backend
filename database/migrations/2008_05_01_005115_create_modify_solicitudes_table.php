@@ -49,6 +49,8 @@ class CreateModifySolicitudesTable extends Migration
             $table->string('verificated_by')->nullable();
             $table->unsignedBigInteger('prevention_type');
             $table->string('created_by')->nullable();
+            $table->string('reg_type')->nullable();
+            $table->unsignedBigInteger('id_status_emp')->nullable();
             $table->timestamps();
         });
     }

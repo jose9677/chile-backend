@@ -37,7 +37,7 @@ class ModifyDataController extends Controller
             a.way_number,
             a.id_property_type,
             a.property_number,
-            --d.origin,
+            --a.origin as sol_origin,
             a.reg_type,
             a.dir_wots,
             a.latitude,
