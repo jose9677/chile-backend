@@ -30,12 +30,15 @@ class ModifyDataController extends Controller
             a.created_at as request_date,
             a.id_status,
             a.id_prevention_type_detail,
+            h.prevention_detail,
             c.id as id_prevention_type,
             c.prevention_type,
             a.assurance,
             a.id_location,
+            i.street,
             a.way_number,
             a.id_property_type,
+            g.description as property_type,
             a.property_number,
             --a.origin as sol_origin,
             a.reg_type,
@@ -43,13 +46,19 @@ class ModifyDataController extends Controller
             a.latitude,
             a.longitude,
             a.id_mod_status,
+            --a.approve,
             e.description as mod_status,
-            a.id_status_emp
+            a.id_status_emp,
+            f.description as status_emp
             FROM consultants.solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
             JOIN consultants.users as d ON a.rut_user = d.rut 
             JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
+            JOIN consultants.mod_status as f ON a.id_status_emp = f.id_mod_status
+            JOIN consultants.property_types as g ON a.id_property_type = g.id
+            JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
+            JOIN consultants.locations as i ON a.id_location = i.id
             WHERE a.id = $id"
         );
 
