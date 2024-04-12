@@ -42,6 +42,7 @@ class ModifySolicitude extends Model
         'longitude',
         'approve',
         'id_request',
+        'id_mod_status',
         'approved_by',
         'rejected_by',
         'verificated_by',

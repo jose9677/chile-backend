@@ -55,7 +55,7 @@ class ModifySolitudeController extends Controller
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
             JOIN consultants.users as d ON a.rut_user = d.rut 
             JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
-            WHERE a.id_request = $id_request AND a.id_mod_status = 1 
+            WHERE a.id_request = $id_request
             ORDER BY a.id_solicitude DESC
             LIMIT 1"
         );                    
