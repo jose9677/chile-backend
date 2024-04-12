@@ -27,7 +27,7 @@ class ModifyUserController extends Controller
         $rut = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('rut_user');
         //$data = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get('*');
 
-        $data = DB::table('users')->select(
+        $data = DB::table('modify_solicitudes')->select(
             'users.rut', 
             'users.names', 
             'users.lastname',

@@ -49,13 +49,13 @@ class ModifySolitudeController extends Controller
             a.id_mod_status,
             e.description as mod_status,
             a.id_status_emp
-            FROM consultants.solicitudes as a 
+            FROM consultants.modify_solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
             JOIN consultants.users as d ON a.rut_user = d.rut 
             JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
-            WHERE a.id = $id_request
-            ORDER BY a.id DESC
+            WHERE a.id_request = $id_request
+            ORDER BY a.id_solicitude DESC
             LIMIT 1"
         );                    
         $dataFound = $data;
