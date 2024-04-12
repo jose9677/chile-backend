@@ -41,11 +41,11 @@ class ModifyUserController extends Controller
             'modify_users.id_mod_status',
             'mod_status.description as mod_status',
             'modify_users.approve',
-            'modify_users.id_status_emp',
-            'emp.description as status_emp',
+            //'modify_users.id_status_emp',
+            //'emp.description as status_emp',
             'modify_users.created_by'
             )->join('mod_status', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
-            ->join('mod_status as emp', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
+            //->join('mod_status as emp', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
             ->join('sex', 'sex.id_sex', '=', 'modify_users.id_sex')
             ->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get();
 
