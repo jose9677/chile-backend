@@ -47,6 +47,7 @@ class ModifySolitudeController extends Controller
             a.latitude,
             a.longitude,
             a.id_mod_status,
+            a.approve,
             e.description as mod_status,
             a.id_status_emp
             FROM consultants.modify_solicitudes as a 

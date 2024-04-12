@@ -38,7 +38,8 @@ class ModifyUserController extends Controller
             'modify_users.landline', 
             'modify_users.mobile_phone',
             'modify_users.id_mod_status',
-            'mod_status.description as mod_status'
+            'mod_status.description as mod_status',
+            'modify_users.approve'
             )->join('mod_status', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
             ->join('sex', 'sex.id_sex', '=', 'modify_users.id_sex')
             ->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get();
