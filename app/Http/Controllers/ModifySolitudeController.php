@@ -30,7 +30,7 @@ class ModifySolitudeController extends Controller
 
         $data = DB::select(
             "SELECT 
-            a.id as id_solicitude,
+            a.id_solicitude,
             a.created_at as request_date,
             a.id_status,
             a.id_prevention_type_detail,
