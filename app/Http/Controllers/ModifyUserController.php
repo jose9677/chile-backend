@@ -28,6 +28,7 @@ class ModifyUserController extends Controller
         //$data = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get('*');
 
         $data = DB::table('modify_users')->select(
+            'modify_users.id_user',
             'modify_users.rut', 
             'modify_users.names', 
             'modify_users.lastname',
@@ -39,7 +40,8 @@ class ModifyUserController extends Controller
             'modify_users.mobile_phone',
             'modify_users.id_mod_status',
             'mod_status.description as mod_status',
-            'modify_users.approve'
+            'modify_users.approve',
+            'modify_users.created_by'
             )->join('mod_status', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
             ->join('sex', 'sex.id_sex', '=', 'modify_users.id_sex')
             ->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get();
