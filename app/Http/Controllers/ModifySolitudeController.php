@@ -23,10 +23,41 @@ class ModifySolitudeController extends Controller
 
     public function searchSolicitude($id_request)
     {
-        $data = DB::table('modify_solicitudes')->where('id_request', $id_request)
+        /* $data = DB::table('modify_solicitudes')->where('id_request', $id_request)
                     ->orderByDesc('id_solicitude')
                     ->limit(1)
-                    ->get();
+                    ->get(); */
+
+        $data = DB::select(
+            "SELECT 
+            a.id as id_solicitude,
+            a.created_at as request_date,
+            a.id_status,
+            a.id_prevention_type_detail,
+            c.id as id_prevention_type,
+            c.prevention_type,
+            a.assurance,
+            a.id_location,
+            a.way_number,
+            a.id_property_type,
+            a.property_number,
+            --a.origin as sol_origin,
+            a.reg_type,
+            a.dir_wots,
+            a.latitude,
+            a.longitude,
+            a.id_mod_status,
+            e.description as mod_status,
+            a.id_status_emp
+            FROM consultants.solicitudes as a 
+            JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
+            JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
+            JOIN consultants.users as d ON a.rut_user = d.rut 
+            JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
+            WHERE a.id = $id_request
+            ORDER BY a.id DESC
+            LIMIT 1"
+        );                    
         $dataFound = $data;
 
         return response()->json($dataFound, 200);
