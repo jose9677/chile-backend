@@ -87,6 +87,13 @@ Route::put('/update-sol-modify/{id_request}/{rut}', [App\Http\Controllers\Modify
 Route::put('/update-extra-data/{id_request}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'updateExtraData']);
 Route::post('/compare-sol-data/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'CompSolData']);
 
+//MODIFYADITIONALDATA...
+Route::get('/all-adi-modify', [App\Http\Controllers\ModifyAditionalDataController::class, 'getAllAdiData']);
+Route::post('/load-adi-modify', [App\Http\Controllers\ModifyAditionalDataController::class, 'loadAditionalData']);
+Route::put('/approve-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'approveAdiChanges']);
+Route::put('/reject-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'rejectAdiChanges']);
+
+
 //MODIFYDOCUMENTS...
 Route::get('/all-doc-modify', [App\Http\Controllers\ModifyDocumentController::class, 'allDocModify']);
 Route::get('/search-doc-modify/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'searchDocModify']);
