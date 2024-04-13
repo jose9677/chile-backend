@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ModifyAditionalData;
+use App\Models\solicitudes;
 use App\Providers\BearerTokenServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,29 +23,34 @@ class ModifyAditionalDataController extends Controller
             return response()->json(['error' => 'Request without bearer token'], 400);
         }
 
-        $mod_status = DB::table('users')->where('rut', $request->rut)->value('id_mod_status');
+        $mod_status = DB::table('solicitudes')->where('id', $request->id_request)->value('id_adi_status');
+
+        $exists = solicitudes::where([
+            'id' => $request->id_request
+        ])->get();
+
+        if (!$exists->count()) {
+            return response()->json(['error' => 'Solicitude does not exists in DB'], 400);
+        }
 
         if ($mod_status == 1) {
             return response()->json(['error' => 'This users has a modify earring '], 400);
         }
 
         $mod_adi = ModifyAditionalData::create([
-            'id_request' => 'required',
-            'carer' => 'required',
-            'comments' => 'required',
-            'percent' => 'required',
-            'aps' => 'required',
-            'id_motive' => 'required',
-            'id_dedication' => 'required',
-            'id_remuneration' => 'required',
-            'origin' => 'required',
+            'id_request' => $request->get('id_request'),
+            'carer' => $request->get('carer'),
+            'comments' => $request->get('comments'),
+            'id_motive' => $request->get('id_motive'),
+            'id_dedication' => $request->get('id_dedication'),
+            'id_remuneration' => $request->get('id_remuneration'),
             'approve' => null,
             'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken()),
             'id_mod_status' => 1
         ]);
 
         //$update = DB::table('users')->where('rut', $request->rut)->update(['id_mod_status' => 1]);
-        $update = DB::table('solicitudes')->where('id', $request->id_request)->update(['id_mod_status' => 1]);
+        $update = DB::table('solicitudes')->where('id', $request->id_request)->update(['id_adi_status' => 1]);
 
         return response()->json([
             'adi_data' => $mod_adi
@@ -94,7 +100,7 @@ class ModifyAditionalDataController extends Controller
         $data = ModifyAditionalData::query()->where('id_mod', $id_mod)
                                 ->update([
                                     'approve' => false,
-                                    'id_mod_status' => 2,
+                                    'id_mod_status' => 4,
                                     'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
                                 ]);
 
