@@ -344,7 +344,6 @@ class ModifySolitudeController extends Controller
         }elseif ($gate == false) {
             $update = solicitudes::query()->where('id', $id_request)->update(['id_mod_status' => 4]);
         }
-        
 
         return response()->json([
             'message' => 'Data updated successfull',
