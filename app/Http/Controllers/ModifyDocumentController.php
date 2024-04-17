@@ -103,9 +103,9 @@ class ModifyDocumentController extends Controller
 
     public function loadListFiletoModify(Request $request, $id_request, $id_document_type)
     {
-        /* if (!$request->bearerToken()) {
+        if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
-        } */
+        }
 
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -116,16 +116,6 @@ class ModifyDocumentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
-
-        $doc = json_decode($request->doc);
-        $request_doc = [];
-
-        for ($i=0; $i < count($doc); $i++) { 
-            $data = DB::select("SELECT id_request FROM consultants.documents WHERE id = $doc[$i] AND active = true");
-
-            //array_push($request_doc, $data[$i]);
-        }
-        dd($data);
  
         $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
 
@@ -152,6 +142,8 @@ class ModifyDocumentController extends Controller
             ]);
         }
 
+        $doc = json_decode($request->doc);
+
         for ($i=0; $i < count($doc); $i++) { 
             $delete_doc = DB::insert(
                 "INSERT INTO consultants.modify_documents(
@@ -162,7 +154,7 @@ class ModifyDocumentController extends Controller
                 SELECT 
                     id_request, id_document_type, document_path,
                     document_ext, active, id, id_mod_status, 2
-                FROM consultants.documents WHERE id = $doc[$i]"
+                FROM consultants.documents WHERE id = $doc[$i] AND id_request = $id_request AND active = true"
             );
         }
 
