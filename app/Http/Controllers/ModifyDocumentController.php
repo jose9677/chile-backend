@@ -105,7 +105,7 @@ class ModifyDocumentController extends Controller
     {
         /* if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
-            } */
+        } */
 
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -116,6 +116,16 @@ class ModifyDocumentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
+
+        $doc = json_decode($request->doc);
+        $request_doc = [];
+
+        for ($i=0; $i < count($doc); $i++) { 
+            $data = DB::select("SELECT id_request FROM consultants.documents WHERE id = $doc[$i] AND active = true");
+
+            //array_push($request_doc, $data[$i]);
+        }
+        dd($data);
  
         $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
 
@@ -140,9 +150,7 @@ class ModifyDocumentController extends Controller
                 'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken()),
                 'id_mod_action' => 1
             ]);
-        } 
-
-        $doc = json_decode($request->doc);
+        }
 
         for ($i=0; $i < count($doc); $i++) { 
             $delete_doc = DB::insert(

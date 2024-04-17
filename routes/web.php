@@ -89,6 +89,7 @@ Route::post('/compare-sol-data/{id_request}', [App\Http\Controllers\ModifySolitu
 
 //MODIFYADITIONALDATA...
 Route::get('/all-adi-modify', [App\Http\Controllers\ModifyAditionalDataController::class, 'getAllAdiData']);
+Route::get('/search-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'searchAdiData']);
 Route::post('/load-adi-modify', [App\Http\Controllers\ModifyAditionalDataController::class, 'loadAditionalData']);
 Route::put('/approve-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'approveAdiChanges']);
 Route::put('/reject-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'rejectAdiChanges']);

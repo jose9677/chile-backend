@@ -17,6 +17,14 @@ class ModifyAditionalDataController extends Controller
         return response()->json($data, 200);
     }
 
+    public function searchAdiData($id_mod)
+    {
+        $data = ModifyAditionalData::findOrFail($id_mod);
+        $dataFound = $data;
+
+        return response()->json($dataFound, 200);
+    }
+
     public function loadAditionalData(Request $request)
     {
         if (!$request->bearerToken()) {
