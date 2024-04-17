@@ -93,12 +93,12 @@ Route::post('/load-adi-modify', [App\Http\Controllers\ModifyAditionalDataControl
 Route::put('/approve-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'approveAdiChanges']);
 Route::put('/reject-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'rejectAdiChanges']);
 
-
 //MODIFYDOCUMENTS...
 Route::get('/all-doc-modify', [App\Http\Controllers\ModifyDocumentController::class, 'allDocModify']);
 Route::get('/search-doc-modify/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'searchDocModify']);
 Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadModifyFile']);
 Route::post('/load-file-many/{id}', [App\Http\Controllers\ModifyDocumentController::class, 'loadManyDoc']);
+Route::post('/load-list-file/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadListFiletoModify']);
 
 Route::put('/approve-doc-modify/{id_request}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'approveDocChanges']);
 Route::put('/reject-doc-modify/{id_request}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'rejectDocChanges']);

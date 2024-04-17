@@ -28,6 +28,7 @@ class CreateModifyDocumentsTable extends Migration
             $table->string('rejected_by')->nullable();
             $table->string('verificated_by')->nullable();
             $table->string('created_by')->nullable();
+            $table->unsignedBigInteger('id_mod_action');
             $table->timestamps();
         });
     }

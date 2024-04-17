@@ -226,7 +226,7 @@ class ModifySolitudeController extends Controller
         }
 
         $record = ModifySolicitude::where([
-            'id_solicitude' =>$id_solicitude
+            'id_solicitude' => $id_solicitude
         ])->get();
 
         if (!$record->count()) {

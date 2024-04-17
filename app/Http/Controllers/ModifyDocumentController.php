@@ -35,6 +35,10 @@ class ModifyDocumentController extends Controller
 
     public function loadModifyFile(Request $request, $id, $id_document_type)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         Log::info($request);
         $validator = Validator::make($request->all(),[
             'document_path' => 'required'
@@ -43,6 +47,12 @@ class ModifyDocumentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
+
+        /* $mod_status = DB::table('documents')->where('id', $id)->value('id_mod_status');
+
+        if ($mod_status == 1) {
+            return response()->json(['error' => 'This users has a modify earring '], 400);
+        } */
 
         /* $data = new ModifyDocument();
         $id_doc = ModifyDocument::max('id_document') + 1; */
@@ -66,8 +76,15 @@ class ModifyDocumentController extends Controller
             $data->document_path = $comPic;
             $data->document_ext = $extension;
             $data->active = true;
+            $data->id_mod_status = 1;
         }
         $data->save();
+
+        /* $delete_doc = $request->delete_doc;
+
+        for ($i=0; $i < count($delete_doc); $i++) { 
+            $delete = ModifyDocument::query()->where('id_doc', $delete_doc[$i])->update(['id_mod_action' => 2]);
+        } */
         
         $doc_mod = ModifyDocument::create([
             'id_request' => $id,
@@ -76,8 +93,70 @@ class ModifyDocumentController extends Controller
             'document_ext' => $extension,
             'active' => true,
             'approve' => true,
-            'id_doc_loaded' => $id_doc
+            'id_doc_loaded' => $id_doc,
+            'id_mod_status' => 1,
+            'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
         ]);
+
+        return response()->json(['message' => 'Document uploaded successfull'], 200);
+    }
+
+    public function loadListFiletoModify(Request $request, $id_request, $id_document_type)
+    {
+        /* if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+            } */
+
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'document_path' => 'required',
+            'doc' => []
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+ 
+        $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
+
+        if ($request->hasFile('document_path')) {
+            $completeFilename = $request->file('document_path')->getClientOriginalName();
+            $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
+            $extension = $request->file('document_path')->getClientOriginalExtension();
+
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.'.'.$extension;
+
+            $path = $request->file('document_path')->storeAs('public/modify', $comPic);
+            
+            $doc_mod = ModifyDocument::create([
+                'id_request' => $id_request,
+                'id_document_type' => $id_document_type,
+                'document_path' => $comPic,
+                'document_ext' => $extension,
+                'active' => true,
+                'approve' => null,
+                //'id_doc_loaded' => $id_doc,
+                'id_mod_status' => 1,
+                'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken()),
+                'id_mod_action' => 1
+            ]);
+        } 
+
+        $doc = json_decode($request->doc);
+
+        for ($i=0; $i < count($doc); $i++) { 
+            $delete_doc = DB::insert(
+                "INSERT INTO consultants.modify_documents(
+                    id_request, id_document_type, document_path,
+                    document_ext, active, id_doc_loaded, id_mod_status,
+                    id_mod_action
+                )
+                SELECT 
+                    id_request, id_document_type, document_path,
+                    document_ext, active, id, id_mod_status, 2
+                FROM consultants.documents WHERE id = $doc[$i]"
+            );
+        }
 
         return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
@@ -96,11 +175,15 @@ class ModifyDocumentController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyDocument::query()->where('id_request', $id_request)->update(['approve' => true, 'id_mod_status' => 2]);
+        $data = ModifyDocument::query()->where('id_request', $id_request)
+                              ->update([
+                                'approve' => true, 
+                                'id_mod_status' => 2,
+                                'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+                            ]);
         
         return response()->json([
-            'response' => 'Changes approved',
-            'approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+            'response' => 'Changes approved'
         ]);
     }
 
@@ -118,11 +201,15 @@ class ModifyDocumentController extends Controller
             return response()->json(['error' => 'This record is not exists'], 400);
         }
 
-        $data = ModifyDocument::query()->where('id_reque$id_request', $id_request)->update(['approve' => false, 'id_mod_status' => 4]);
+        $data = ModifyDocument::query()->where('id_reque$id_request', $id_request)
+                              ->update([
+                                'approve' => false,
+                                'id_mod_status' => 4,
+                                'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+                            ]);
         
         return response()->json([
-            'response' => 'Changes approved',
-            'rejected_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
+            'response' => 'Changes approved'
         ]);
     }
 
@@ -155,6 +242,8 @@ class ModifyDocumentController extends Controller
                 (id_request, id_document_type, document_path, document_ext, active)
                 VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
                 ");
+
+            //$verificated_by = DB::table('modify_documents')->where('id_document', $id_user)->update(['verificated_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())]);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -167,6 +256,10 @@ class ModifyDocumentController extends Controller
 
     public function loadManyDoc(Request $request, $id)
     {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
         $requests = $request->all();
         $files = [];
         $nameInputFile = 'file';

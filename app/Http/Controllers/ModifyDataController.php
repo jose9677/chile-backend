@@ -128,11 +128,14 @@ class ModifyDataController extends Controller
             a.id_mod_status as id_sol_mod_status,
             c.description as sol_mod_status,
             b.id_mod_status as id_user_mod_status,
-            d.description as user_mod_status
+            d.description as user_mod_status,
+            a.id_adi_status,
+            e.description as sol_adi_status
             FROM consultants.solicitudes as a 
             JOIN consultants.users as b ON a.rut_user = b.rut
             JOIN consultants.mod_status as c ON a.id_mod_status = c.id_mod_status
             JOIN consultants.mod_status as d ON b.id_mod_status = d.id_mod_status
+            JOIN consultants.mod_status as e ON a.id_adi_status = e.id_mod_status
             WHERE a.id = $id"
         );
 

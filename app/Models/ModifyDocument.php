@@ -26,6 +26,7 @@ class ModifyDocument extends Model
         'approved_by',
         'rejected_by',
         'verificated_by',
-        'created_by'
+        'created_by',
+        'id_mod_action'
     ];
 }
