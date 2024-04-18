@@ -86,7 +86,7 @@ class ModifyDocumentController extends Controller
             $delete = ModifyDocument::query()->where('id_doc', $delete_doc[$i])->update(['id_mod_action' => 2]);
         } */
         
-        $doc_mod = ModifyDocument::create([
+        /* $doc_mod = ModifyDocument::create([
             'id_request' => $id,
             'id_document_type' => $id_document_type,
             'document_path' => $comPic,
@@ -96,7 +96,7 @@ class ModifyDocumentController extends Controller
             'id_doc_loaded' => $id_doc,
             'id_mod_status' => 1,
             'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())
-        ]);
+        ]); */
 
         return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
