@@ -19,10 +19,35 @@ class ModifyAditionalDataController extends Controller
 
     public function searchAdiData($id_mod)
     {
-        $data = ModifyAditionalData::findOrFail($id_mod);
-        $dataFound = $data;
+        $data = DB::table('modify_aditional_data as a')
+                  ->join('motives as b', 'b.id_motive', '=', 'a.id_motive')
+                  ->join('dedications as c', 'c.id_dedication', '=', 'a.id_dedication')
+                  ->join('remunerations as d', 'd.id_remuneration', '=', 'a.id_remuneration')
+                  ->join('mod_status as e', 'e.id_mod_status', '=', 'a.id_mod_status')
+                  ->where('id_mod', $id_mod)
+                  ->get([
+                    'a.id_request',
+                    'a.carer',
+                    'a.comments',
+                    'a.percent',
+                    'a.aps',
+                    'a.id_motive',
+                    'b.description as motive',
+                    'a.id_dedication',
+                    'c.description as dedication',
+                    'a.id_remuneration',
+                    'd.description as remuneration',
+                    'a.origin',
+                    'a.approve',
+                    'a.approved_by',
+                    'a.rejected_by',
+                    'a.verificated_by',
+                    'a.created_by',
+                    'a.id_mod_status',
+                    'e.description as mod_status'
+                  ]);
 
-        return response()->json($dataFound, 200);
+        return response()->json($data, 200);
     }
 
     public function loadAditionalData(Request $request)
