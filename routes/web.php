@@ -93,6 +93,7 @@ Route::get('/search-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalD
 Route::post('/load-adi-modify', [App\Http\Controllers\ModifyAditionalDataController::class, 'loadAditionalData']);
 Route::put('/approve-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'approveAdiChanges']);
 Route::put('/reject-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'rejectAdiChanges']);
+Route::put('/update-adi-modify/{id_mod}', [App\Http\Controllers\ModifyAditionalDataController::class, 'updateAditionalData']);
 
 //MODIFYDOCUMENTS...
 Route::get('/all-doc-modify', [App\Http\Controllers\ModifyDocumentController::class, 'allDocModify']);

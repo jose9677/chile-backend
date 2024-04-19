@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ModifyAditionalData;
 use App\Models\solicitudes;
 use App\Providers\BearerTokenServiceProvider;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -140,5 +141,37 @@ class ModifyAditionalDataController extends Controller
         return response()->json([
             'response' => 'Changes rejected'
         ]);                                
+    }
+
+    public function updateAditionalData(Request $request, $id_mod)
+    {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
+        $gate = DB::table('modify_aditional_data')->where('id_mod', $id_mod)->value('approve');
+
+        if ($gate == false) {
+            return response()->json(['error' => 'This record is not aproved'], 400);
+        }
+
+        $record = DB::table('modify_aditional_data')->where('id_mod', $id_mod)->first();
+        $data = new solicitudes();
+
+        try {
+            solicitudes::query()->where('id', $record->id_request)->update([
+                'carer' => $record->carer,
+                'comments' => $record->comments,
+                'id_motive' => $record->id_motive,
+                'id_dedication' => $record->id_dedication,
+                'id_remuneration' => $record->id_remuneration,
+                'origin' => $record->origin,
+                'id_adi_status' => 3
+            ]);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return response()->json(['message' => 'Aditional data updated'], 200);
     }
 }
