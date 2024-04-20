@@ -139,7 +139,7 @@ class ModifyDataController extends Controller
             JOIN consultants.mod_status as c ON a.id_mod_status = c.id_mod_status
             JOIN consultants.mod_status as d ON b.id_mod_status = d.id_mod_status
             JOIN consultants.mod_status as e ON a.id_adi_status = e.id_mod_status
-            LEFT JOIN consultants.motive as f USING (id_motive)
+            LEFT JOIN consultants.motives as f USING (id_motive)
             LEFT JOIN consultants.dedications as g USING (id_dedication)
             LEFT JOIN consultants.remunerations as h USING (id_remuneration)  
             WHERE a.id = $id"
