@@ -203,7 +203,7 @@ class ModifyAditionalDataController extends Controller
             return $e->getMessage();
         }
 
-        $approved_by = ModifyAditionalData::query()->where('id_mod', $id_mod)->update(['appoved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())]);
+        $approved_by = ModifyAditionalData::query()->where('id_mod', $id_mod)->update(['approved_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())]);
 
         return response()->json(['message' => 'Aditional data updated'], 200);
     }

@@ -213,7 +213,7 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function updateDocData(Request $request, $id_document, $id_document_type)
+    public function updateDocData(Request $request)
     {
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
@@ -239,18 +239,24 @@ class ModifyDocumentController extends Controller
                 return response()->json(['error' => 'This record is not approved'], 400);
             } 
 
-            $document_path = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('document_path');
-            $document_ext = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('document_ext');
-            $id_request = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('id_request');
-            $id_mod_action = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('id_mod_action');
+            $document_path = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('document_path');
+            $id_document_type = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('id_document_type');
+            $document_ext = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('document_ext');
+            $id_request = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('id_request');
+            $id_mod_action = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('id_mod_action');
 
             if ($id_mod_action == 1) {
                 try {
-                    $insert = DB::insert(
-                        "INSERT INTO consultants.documents 
-                        (id_request, id_document_type, document_path, document_ext, active)
-                        VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
-                        ");
+                    $insert = DB::table('documents')->insert([
+                        'id_request' => $id_request,
+                        'id_document_type' => $id_document_type,
+                        'document_path' => $document_path,
+                        'document_ext' => $document_path,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                        'active' => true,
+                        'id_mod_status' => 3
+                    ]);
         
                 } catch (Exception $e) {
                     return $e->getMessage();
@@ -260,7 +266,7 @@ class ModifyDocumentController extends Controller
 
         for ($i=0; $i < count($doc_del); $i++) { 
             try {
-                $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false]);
+                $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 3]);
             } catch (Exception $e) {
                 return $e->getMessage();
             }
