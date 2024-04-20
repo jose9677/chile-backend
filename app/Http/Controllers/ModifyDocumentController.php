@@ -160,7 +160,7 @@ class ModifyDocumentController extends Controller
         return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
 
-    public function approveDocChanges(Request $request, $id_request, $rut)
+    public function approveDocChanges(Request $request, $id_request)
     {
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
@@ -186,7 +186,7 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function rejectDocChanges(Request $request, $id_request, $rut)
+    public function rejectDocChanges(Request $request, $id_request)
     {
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
@@ -238,24 +238,22 @@ class ModifyDocumentController extends Controller
                 return response()->json(['error' => 'This record is not approved'], 400);
             } 
 
-            $document_path = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('document_path');
-            $id_document_type = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('id_document_type');
-            $document_ext = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('document_ext');
-            $id_request = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('id_request');
-            $id_mod_action = DB::table('modify_documents')->where(['id_document' => $doc_add[$i]])->value('id_mod_action');
+            $record = DB::table('modify_documents')->where('id_document', $doc_add[$i])->first();
 
-            if ($id_mod_action == 1) {
+            if ($record->id_mod_action == 1) {
                 try {
                     $insert = DB::table('documents')->insert([
-                        'id_request' => $id_request,
-                        'id_document_type' => $id_document_type,
-                        'document_path' => $document_path,
-                        'document_ext' => $document_path,
+                        'id_request' => $record->id_request,
+                        'id_document_type' => $record->id_document_type,
+                        'document_path' => $record->document_path,
+                        'document_ext' => $record->document_path,
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                         'active' => true,
                         'id_mod_status' => 3
                     ]);
+
+                    $desactive_mod = ModifyDocument::query()->where('id_doc_loaded', $doc_add[$i])->update(['active' => false]);
         
                 } catch (Exception $e) {
                     return $e->getMessage();

@@ -102,8 +102,8 @@ Route::post('/load-file-modify/{id}/{id_document_type}', [App\Http\Controllers\M
 Route::post('/load-file-many/{id}', [App\Http\Controllers\ModifyDocumentController::class, 'loadManyDoc']);
 Route::post('/load-list-file/{id}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'loadListFiletoModify']);
 
-Route::put('/approve-doc-modify/{id_request}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'approveDocChanges']);
-Route::put('/reject-doc-modify/{id_request}/{rut}', [App\Http\Controllers\ModifyDocumentController::class, 'rejectDocChanges']);
+Route::put('/approve-doc-modify/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'approveDocChanges']);
+Route::put('/reject-doc-modify/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'rejectDocChanges']);
 Route::put('/update-doc-modify', [App\Http\Controllers\ModifyDocumentController::class, 'updateDocData']);
 Route::put('/update-doc-many/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'updateManyDoc']);
 Route::put('/delete-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'deleteModDoc']);
