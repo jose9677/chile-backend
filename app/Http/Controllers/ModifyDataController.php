@@ -122,8 +122,11 @@ class ModifyDataController extends Controller
             b.percent porcentaje_descuento,
             b.aps,
             a.id_motive,
+            f.description as motive,
             a.id_dedication,
+            g.description as dedication,
             a.id_remuneration,
+            h.description as remuneration,
             a.origin as origen,
             a.id_mod_status as id_sol_mod_status,
             c.description as sol_mod_status,
@@ -136,6 +139,9 @@ class ModifyDataController extends Controller
             JOIN consultants.mod_status as c ON a.id_mod_status = c.id_mod_status
             JOIN consultants.mod_status as d ON b.id_mod_status = d.id_mod_status
             JOIN consultants.mod_status as e ON a.id_adi_status = e.id_mod_status
+            LEFT JOIN consultants.motive as f USING (id_motive)
+            LEFT JOIN consultants.dedications as g USING (id_dedication)
+            LEFT JOIN consultants.remunerations as h USING (id_remuneration)  
             WHERE a.id = $id"
         );
 
