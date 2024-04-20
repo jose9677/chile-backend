@@ -13,20 +13,51 @@ class ModifyAditionalDataController extends Controller
 {
     public function getAllAdiData()
     {
-        $data = ModifyAditionalData::all();
+        $data = DB::table('modify_aditional_data as a')
+                  ->join('motives as b', 'b.id_motive', '=', 'a.id_motive')
+                  ->join('dedications as c', 'c.id_dedication', '=', 'a.id_dedication')
+                  ->join('remunerations as d', 'd.id_remuneration', '=', 'a.id_remuneration')
+                  ->join('mod_status as e', 'e.id_mod_status', '=', 'a.id_mod_status')
+                  ->orderByDesc('id_mod')
+                  ->limit(1)
+                  ->get([
+                    'a.id_mod',
+                    'a.id_request',
+                    'a.carer',
+                    'a.comments',
+                    'a.percent',
+                    'a.aps',
+                    'a.id_motive',
+                    'b.description as motive',
+                    'a.id_dedication',
+                    'c.description as dedication',
+                    'a.id_remuneration',
+                    'd.description as remuneration',
+                    'a.origin',
+                    'a.approve',
+                    'a.approved_by',
+                    'a.rejected_by',
+                    'a.verificated_by',
+                    'a.created_by',
+                    'a.id_mod_status',
+                    'e.description as mod_status'
+                  ]);
 
         return response()->json($data, 200);
     }
 
-    public function searchAdiData($id_mod)
+    public function searchAdiData($id_request)
     {
         $data = DB::table('modify_aditional_data as a')
                   ->join('motives as b', 'b.id_motive', '=', 'a.id_motive')
                   ->join('dedications as c', 'c.id_dedication', '=', 'a.id_dedication')
                   ->join('remunerations as d', 'd.id_remuneration', '=', 'a.id_remuneration')
                   ->join('mod_status as e', 'e.id_mod_status', '=', 'a.id_mod_status')
-                  ->where('id_mod', $id_mod)
+                  ->where('id_request', $id_request)
+                  ->orderByDesc('id_mod')
+                  ->limit(1)
                   ->get([
+                    'a.id_mod',
                     'a.id_request',
                     'a.carer',
                     'a.comments',
@@ -149,11 +180,11 @@ class ModifyAditionalDataController extends Controller
             return response()->json(['error' => 'Request without bearer token'], 400);
         }
 
-        $gate = DB::table('modify_aditional_data')->where('id_mod', $id_mod)->value('approve');
+        /* $gate = DB::table('modify_aditional_data')->where('id_mod', $id_mod)->value('approve');
 
         if ($gate == false) {
             return response()->json(['error' => 'This record is not aproved'], 400);
-        }
+        } */
 
         $record = DB::table('modify_aditional_data')->where('id_mod', $id_mod)->first();
         $data = new solicitudes();

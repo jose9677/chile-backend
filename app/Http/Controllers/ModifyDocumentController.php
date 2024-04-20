@@ -213,7 +213,7 @@ class ModifyDocumentController extends Controller
         ]);
     }
 
-    public function updateDocData(Request $request, $id_request, $id_document_type)
+    public function updateDocData(Request $request, $id_document, $id_document_type)
     {
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
@@ -221,31 +221,49 @@ class ModifyDocumentController extends Controller
 
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'rut_employee' => 'required'
+            'doc_add' => [],
+            'doc_del' => []
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        /* $gate = DB::table('modify_documents')->where('id_request', $id_request)->value('approve');
-        if ($gate == false) {
-            return response()->json(['error' => 'This record is not approved'], 400);
-        } */
+        $doc_add = $request->doc_add;
+        $doc_del = $request->doc_del;
 
-        $document_path = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_path');
-        $document_ext = DB::table('modify_documents')->where('id_request', $id_request)->where('id_document_type', $id_document_type)->value('document_ext');
+        for ($i=0; $i < count($doc_add); $i++) { 
+            $gate = DB::table('modify_documents')->where('id_document', $doc_add[$i])->value('approve');
 
-        try {
-            $insert = DB::insert(
-                "INSERT INTO consultants.documents 
-                (id_request, id_document_type, document_path, document_ext, active)
-                VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
-                ");
+            if ($gate == false) {
+                return response()->json(['error' => 'This record is not approved'], 400);
+            } 
 
-            //$verificated_by = DB::table('modify_documents')->where('id_document', $id_user)->update(['verificated_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken())]);
-        } catch (Exception $e) {
-            return $e->getMessage();
+            $document_path = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('document_path');
+            $document_ext = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('document_ext');
+            $id_request = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('id_request');
+            $id_mod_action = DB::table('modify_documents')->where(['id_document' => $doc_add[$i], 'id_document_type' => $id_document_type])->value('id_mod_action');
+
+            if ($id_mod_action == 1) {
+                try {
+                    $insert = DB::insert(
+                        "INSERT INTO consultants.documents 
+                        (id_request, id_document_type, document_path, document_ext, active)
+                        VALUES($id_request, $id_document_type, '$document_path', '$document_ext', true)
+                        ");
+        
+                } catch (Exception $e) {
+                    return $e->getMessage();
+                }
+            }
+        }
+
+        for ($i=0; $i < count($doc_del); $i++) { 
+            try {
+                $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false]);
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
         }
 
         return response()->json([
