@@ -187,7 +187,6 @@ class ModifyAditionalDataController extends Controller
         } */
 
         $record = DB::table('modify_aditional_data')->where('id_mod', $id_mod)->first();
-        $data = new solicitudes();
 
         try {
             solicitudes::query()->where('id', $record->id_request)->update([
