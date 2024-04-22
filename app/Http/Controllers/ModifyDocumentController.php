@@ -167,7 +167,8 @@ class ModifyDocumentController extends Controller
         }
 
         $record = ModifyDocument::where([
-            'id_document' => $id_request
+            'id_request' => $id_request,
+            'active' => true
         ])->get();
 
         if (!$record->count()) {
@@ -193,7 +194,8 @@ class ModifyDocumentController extends Controller
         }
 
         $record = ModifyDocument::where([
-            'id_document' => $id_request
+            'id_request' => $id_request,
+            'active' => true
         ])->get();
 
         if (!$record->count()) {
