@@ -108,7 +108,7 @@ Route::put('/update-doc-modify', [App\Http\Controllers\ModifyDocumentController:
 Route::put('/update-doc-many/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'updateManyDoc']);
 Route::put('/delete-doc-modify/{id_request}/{id_document_type}', [App\Http\Controllers\ModifyDocumentController::class, 'deleteModDoc']);
 Route::put('/delete-doc-many', [App\Http\Controllers\ModifyDocumentController::class, 'deleteManyDoc']);
-Route::put('/mod-doc-to-approve', [App\Http\Controllers\ModifyDocumentController::class, 'modifyDocToApprove']);
+Route::put('/mod-doc-to-approve/{id_request}', [App\Http\Controllers\ModifyDocumentController::class, 'modifyDocToApprove']);
 
  Route::post('/create-request', [App\Http\Controllers\solicitudesController::class, 'createRequest']);
  Route::post('/sol-doc', [App\Http\Controllers\solicitudesController::class, 'solDoc']);
