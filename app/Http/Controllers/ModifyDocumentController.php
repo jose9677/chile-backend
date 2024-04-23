@@ -296,6 +296,7 @@ class ModifyDocumentController extends Controller
                 try {
                     $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 4]);
                     $id_request = documents::query()->where('id', $doc_del[$i])->value('id_request');
+                    $desactive_mod = ModifyDocument::query()->where('id_doc_loaded', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 3]);
                     $id_doc_status = solicitudes::query()->where('id', $id_request)->update(['id_doc_status' => 4]);
                 } catch (Exception $e) {
                     return $e->getMessage();
