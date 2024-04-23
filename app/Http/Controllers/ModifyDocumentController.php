@@ -109,8 +109,7 @@ class ModifyDocumentController extends Controller
 
         Log::info($request);
         $validator = Validator::make($request->all(),[
-            'document_path' => 'required',
-            'doc' => []
+            'document_path' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -137,11 +136,31 @@ class ModifyDocumentController extends Controller
                 'document_ext' => $extension,
                 'active' => true,
                 'approve' => null,
-                //'id_doc_loaded' => $id_doc,
+                'id_doc_loaded' => $id_doc,
                 'id_mod_status' => 1,
                 'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken()),
                 'id_mod_action' => 1
             ]);
+        }
+
+        $id_doc_status = solicitudes::query()->where('id', $id_request)->update(['id_doc_status' => 1]);
+
+        return response()->json(['message' => 'Document uploaded successfull'], 200);
+    }
+
+    public function modifyDocToApprove(Request $request, $id_request)
+    {
+        if (!$request->bearerToken()) {
+            return response()->json(['error' => 'Request without bearer token'], 400);
+        }
+
+        Log::info($request);
+        $validator = Validator::make($request->all(),[
+            'doc' => []
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
         }
 
         $doc = json_decode($request->doc);
