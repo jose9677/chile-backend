@@ -49,7 +49,9 @@ class ModifyDataController extends Controller
             --a.approve,
             e.description as mod_status,
             a.id_status_emp,
-            f.status as status_emp
+            f.status as status_emp,
+            a.id_doc_status,
+            j.description as doc_status
             FROM consultants.solicitudes as a 
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
@@ -59,6 +61,7 @@ class ModifyDataController extends Controller
             JOIN consultants.property_types as g ON a.id_property_type = g.id
             JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
             JOIN consultants.locations as i ON a.id_location = i.id
+            JOIN consultants.mod_status as j ON a.id_doc_status = j.id_mod_status
             WHERE a.id = $id"
         );
 

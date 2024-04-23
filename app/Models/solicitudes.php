@@ -43,7 +43,8 @@ class solicitudes extends Model
         'id_status_emp',
         'origin',
         'percent',
-        'id_adi_status'
+        'id_adi_status',
+        'id_doc_status'
     ];
 
     protected $hidden = [

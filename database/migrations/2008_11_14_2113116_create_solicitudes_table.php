@@ -48,6 +48,8 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('id_status_emp')->nullable();
             $table->string('origin')->nullable();
             $table->integer('percent');
+            $table->unsignedBigInteger('id_adi_status')->nullable();
+            $table->unsignedBigInteger('id_doc_status')->nullable();
 
             $table->timestamps();
 

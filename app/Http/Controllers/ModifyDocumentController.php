@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\documents;
 use App\Models\ModifyDocument;
+use App\Models\solicitudes;
 use App\Providers\BearerTokenServiceProvider;
 use Exception;
 use Illuminate\Http\Request;
@@ -157,6 +158,8 @@ class ModifyDocumentController extends Controller
             );
         }
 
+        $id_doc_status = solicitudes::query()->where('id', $id_request)->update(['id_doc_status' => 1]);
+
         return response()->json(['message' => 'Document uploaded successfull'], 200);
     }
 
@@ -255,7 +258,8 @@ class ModifyDocumentController extends Controller
                         'id_mod_status' => 3
                     ]);
 
-                    $desactive_mod = ModifyDocument::query()->where('id_doc_loaded', $doc_add[$i])->update(['active' => false]);
+                    $desactive_mod = ModifyDocument::query()->where('id_doc_loaded', $doc_add[$i])->update(['active' => false, 'id_mod_status' => 3]);
+                    $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 3]);
         
                 } catch (Exception $e) {
                     return $e->getMessage();
@@ -265,7 +269,8 @@ class ModifyDocumentController extends Controller
 
         for ($i=0; $i < count($doc_del); $i++) { 
             try {
-                $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 3]);
+                $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 4]);
+                $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 4]);
             } catch (Exception $e) {
                 return $e->getMessage();
             }
