@@ -251,7 +251,7 @@ class ModifyDocumentController extends Controller
                         'id_request' => $record->id_request,
                         'id_document_type' => $record->id_document_type,
                         'document_path' => $record->document_path,
-                        'document_ext' => $record->document_path,
+                        'document_ext' => $record->document_ext,
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                         'active' => true,
