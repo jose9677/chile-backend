@@ -56,12 +56,12 @@ class ModifyDataController extends Controller
             JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
             JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
             JOIN consultants.users as d ON a.rut_user = d.rut 
-            JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
+            LEFT JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
             JOIN consultants.status as f ON a.id_status_emp = f.id
             JOIN consultants.property_types as g ON a.id_property_type = g.id
             JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
             JOIN consultants.locations as i ON a.id_location = i.id
-            JOIN consultants.mod_status as j ON a.id_doc_status = j.id_mod_status
+            LEFT JOIN consultants.mod_status as j ON a.id_doc_status = j.id_mod_status
             WHERE a.id = $id"
         );
 
