@@ -163,8 +163,8 @@ class ModifyDocumentController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        //$doc = json_decode($request->doc);
-        $doc = $request->doc;
+        $doc = json_decode($request->doc);
+        //$doc = $request->doc;
 
         for ($i=0; $i < count($doc); $i++) { 
             $delete_doc = DB::insert(
