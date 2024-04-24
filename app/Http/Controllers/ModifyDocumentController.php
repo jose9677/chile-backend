@@ -271,45 +271,48 @@ class ModifyDocumentController extends Controller
 
         if (!empty($doc_add)) {
             for ($i=0; $i < count($doc_add); $i++) { 
+                $record = DB::table('modify_documents')->where('id_document', $doc_add[$i])->first();
+                
                 $gate = DB::table('modify_documents')->where('id_document', $doc_add[$i])->value('approve');
     
                 if ($gate == false) {
-                    return response()->json(['error' => 'This record is not approved'], 400);
-                } 
-    
-                $record = DB::table('modify_documents')->where('id_document', $doc_add[$i])->first();
+                    ModifyDocument::query()->where('id_request', $record->id_request)->update(['active' => false, 'id_mod_status' => 4]);
+                    $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 4]);
+                }
 
                 //array_push($id_doc_loaded, $record->id_doc_loaded);
     
-                if ($record->id_mod_action == 1) {
-                    try {
-                        $insert = DB::table('documents')->insert([
-                            'id_request' => $record->id_request,
-                            'id_document_type' => $record->id_document_type,
-                            'document_path' => $record->document_path,
-                            'document_ext' => $record->document_ext,
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s'),
-                            'active' => true,
-                            'id_mod_status' => 3
-                        ]);
-
-                        /* $update = documents::query()->where('id', $id_doc_loaded[$i])->update([
-                            'id_request' => $record->id_request,
-                            'id_document_type' => $record->id_document_type,
-                            'document_path' => $record->document_path,
-                            'document_ext' => $record->document_ext,
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s'),
-                            'active' => true,
-                            'id_mod_status' => 3
-                        ]); */
+                if ($gate == true) {
+                    if ($record->id_mod_action == 1) {
+                        try {
+                            $insert = DB::table('documents')->insert([
+                                'id_request' => $record->id_request,
+                                'id_document_type' => $record->id_document_type,
+                                'document_path' => $record->document_path,
+                                'document_ext' => $record->document_ext,
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s'),
+                                'active' => true,
+                                'id_mod_status' => 3
+                            ]);
     
-                        $desactive_mod = ModifyDocument::query()->where('id_document', $doc_add[$i])->update(['active' => false, 'id_mod_status' => 3]);
-                        $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 3]);
-            
-                    } catch (Exception $e) {
-                        return $e->getMessage();
+                            /* $update = documents::query()->where('id', $id_doc_loaded[$i])->update([
+                                'id_request' => $record->id_request,
+                                'id_document_type' => $record->id_document_type,
+                                'document_path' => $record->document_path,
+                                'document_ext' => $record->document_ext,
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s'),
+                                'active' => true,
+                                'id_mod_status' => 3
+                            ]); */
+        
+                            $desactive_mod = ModifyDocument::query()->where('id_document', $doc_add[$i])->update(['active' => false, 'id_mod_status' => 3]);
+                            $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 3]);
+                
+                        } catch (Exception $e) {
+                            return $e->getMessage();
+                        }
                     }
                 }
             }
@@ -317,13 +320,25 @@ class ModifyDocumentController extends Controller
 
         if (!empty($doc_del)) {
             for ($i=0; $i < count($doc_del); $i++) { 
-                try {
-                    $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 4]);
-                    $id_request = documents::query()->where('id', $doc_del[$i])->value('id_request');
-                    $desactive_mod = ModifyDocument::query()->where('id_doc_loaded', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 3]);
-                    $id_doc_status = solicitudes::query()->where('id', $id_request)->update(['id_doc_status' => 4]);
-                } catch (Exception $e) {
-                    return $e->getMessage();
+                $record = DB::table('modify_documents')->where('id_doc_loaded', $doc_del[$i])->first();
+                
+                $gate = DB::table('modify_documents')->where('id_doc_loaded', $doc_del[$i])->value('approve');
+    
+                if ($gate == false) {
+                    ModifyDocument::query()->where('id_request', $record->id_request)->update(['active' => false, 'id_mod_status' => 4]);
+                    $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 4]);
+                }
+                
+                if ($gate == true) {
+                    try {
+                        $desactive = documents::query()->where('id', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 4]);
+                        $id_request = documents::query()->where('id', $doc_del[$i])->value('id_request');
+    
+                        $desactive_mod = ModifyDocument::query()->where('id_doc_loaded', $doc_del[$i])->update(['active' => false, 'id_mod_status' => 3]);
+                        $id_doc_status = solicitudes::query()->where('id', $id_request)->update(['id_doc_status' => 4]);
+                    } catch (Exception $e) {
+                        return $e->getMessage();
+                    }
                 }
             }
         }
