@@ -266,6 +266,7 @@ class ModifyDocumentController extends Controller
         }
 
         $doc_add = $request->doc_add;
+        $id_doc_loaded = [];
         $doc_del = $request->doc_del;
 
         if (!empty($doc_add)) {
@@ -277,16 +278,29 @@ class ModifyDocumentController extends Controller
                 } 
     
                 $record = DB::table('modify_documents')->where('id_document', $doc_add[$i])->first();
+
+                array_push($id_doc_loaded, $record->id_doc_loaded);
     
                 if ($record->id_mod_action == 1) {
                     try {
-                        $insert = DB::table('documents')->insert([
+                        /* $insert = DB::table('documents')->insert([
                             'id_request' => $record->id_request,
                             'id_document_type' => $record->id_document_type,
                             'document_path' => $record->document_path,
                             'document_ext' => $record->document_ext,
                             'created_at' => date('Y-m-d H:i:s'),
                             'updated_at' => date('Y-m-d H:i:s'),
+                            'active' => true,
+                            'id_mod_status' => 3
+                        ]); */
+
+                        $update = documents::query()->where('id', $id_doc_loaded[$i])->update([
+                            'id_request' => $record->id_request,
+                            'id_document_type' => $record->id_document_type,
+                            'document_path' => $record->document_path,
+                            'document_ext' => $record->document_ext,
+                            //'created_at' => date('Y-m-d H:i:s'),
+                            //'updated_at' => date('Y-m-d H:i:s'),
                             'active' => true,
                             'id_mod_status' => 3
                         ]);
