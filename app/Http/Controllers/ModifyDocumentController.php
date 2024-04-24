@@ -103,9 +103,9 @@ class ModifyDocumentController extends Controller
 
     public function loadListFiletoModify(Request $request, $id_request, $id_document_type)
     {
-        if (!$request->bearerToken()) {
+       /*  if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
-        }
+        } */
 
         Log::info($request);
         $validator = Validator::make($request->all(),[
@@ -118,7 +118,7 @@ class ModifyDocumentController extends Controller
  
         $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
         $data = new documents();
-        $id_doc = documents::query()->where('id_request', $id_request)->max('id');
+        $id_doc = documents::query()->where('id_request', $id_request)->max('id') + 1;
 
         if ($request->hasFile('document_path')) {
             $completeFilename = $request->file('document_path')->getClientOriginalName();
