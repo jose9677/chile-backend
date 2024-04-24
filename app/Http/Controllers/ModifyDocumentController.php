@@ -117,16 +117,16 @@ class ModifyDocumentController extends Controller
         }
  
         $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
-        $data = new documents();
-        $id_doc = documents::query()->where('id_request', $id_request)->max('id') + 1;
+        /* $data = new documents();
+        $id_doc = documents::query()->where('id_request', $id_request)->max('id') + 1; //10 = 11 */
 
         if ($request->hasFile('document_path')) {
             $completeFilename = $request->file('document_path')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
-            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.$id_doc.'.'.$extension;
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.date('YmdHis').'.'.$extension;
 
-            $document = DB::table('documents')->insert([
+            $document = documents::create([
                 'id_request' => $id_request,
                 'id_document_type' => $id_document_type,
                 'document_path' => $comPic,
