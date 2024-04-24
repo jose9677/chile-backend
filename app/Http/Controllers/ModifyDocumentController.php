@@ -124,8 +124,18 @@ class ModifyDocumentController extends Controller
             $completeFilename = $request->file('document_path')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
-
             $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.$id_doc.'.'.$extension;
+
+            $document = DB::table('documents')->insert([
+                'id_request' => $id_request,
+                'id_document_type' => $id_document_type,
+                'document_path' => $comPic,
+                'document_ext' => $extension,
+                'active' => false,
+                'id_mod_status' => 1
+            ]);
+
+            $new_id_doc = documents::query()->where('id_request', $id_request)->max('id');
 
             $path = $request->file('document_path')->storeAs('public/modify', $comPic);
             
@@ -136,7 +146,7 @@ class ModifyDocumentController extends Controller
                 'document_ext' => $extension,
                 'active' => true,
                 'approve' => null,
-                'id_doc_loaded' => $id_doc,
+                'id_doc_loaded' => $new_id_doc,
                 'id_mod_status' => 1,
                 'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken()),
                 'id_mod_action' => 1
