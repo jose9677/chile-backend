@@ -118,7 +118,7 @@ class ModifyDocumentController extends Controller
  
         $documents_types = DB::table('documents_types')->where('id', $id_document_type)->value('document_type');
         $data = new documents();
-        $id_doc = documents::max('id') + 1;
+        $id_doc = documents::query()->where('id_request', $id_request)->max('id');
 
         if ($request->hasFile('document_path')) {
             $completeFilename = $request->file('document_path')->getClientOriginalName();
