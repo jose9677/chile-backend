@@ -124,7 +124,7 @@ class ModifyDocumentController extends Controller
             $completeFilename = $request->file('document_path')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
-            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.date('YmdHis').'.'.$extension;
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.date('YmdHis').microtime().'.'.$extension;
 
             $document = documents::create([
                 'id_request' => $id_request,
