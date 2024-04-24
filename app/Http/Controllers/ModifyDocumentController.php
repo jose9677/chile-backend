@@ -124,18 +124,18 @@ class ModifyDocumentController extends Controller
             $completeFilename = $request->file('document_path')->getClientOriginalName();
             $fileNameOnly = pathinfo($completeFilename, PATHINFO_FILENAME);
             $extension = $request->file('document_path')->getClientOriginalExtension();
-            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.rand(0, 9999999999999).'.'.$extension;
+            $comPic = str_replace(' ', '_', $documents_types).'_'.'SOL'.$id_request.'-'.date('YmdHis').str_replace(' ', '_', microtime()).'.'.$extension;
 
-            $document = documents::create([
+            /* $document = documents::create([
                 'id_request' => $id_request,
                 'id_document_type' => $id_document_type,
                 'document_path' => $comPic,
                 'document_ext' => $extension,
                 'active' => false,
                 'id_mod_status' => 1
-            ]);
+            ]); */
 
-            $new_id_doc = documents::query()->where('id_request', $id_request)->max('id');
+            //$new_id_doc = documents::query()->where('id_request', $id_request)->max('id');
 
             $path = $request->file('document_path')->storeAs('public/modify', $comPic);
             
@@ -146,7 +146,7 @@ class ModifyDocumentController extends Controller
                 'document_ext' => $extension,
                 'active' => true,
                 'approve' => null,
-                'id_doc_loaded' => $new_id_doc,
+                //'id_doc_loaded' => $new_id_doc,
                 'id_mod_status' => 1,
                 'created_by' => BearerTokenServiceProvider::getUserByBearerToken($request->bearerToken()),
                 'id_mod_action' => 1
@@ -266,7 +266,7 @@ class ModifyDocumentController extends Controller
         }
 
         $doc_add = $request->doc_add;
-        $id_doc_loaded = [];
+        //$id_doc_loaded = [];
         $doc_del = $request->doc_del;
 
         if (!empty($doc_add)) {
@@ -279,11 +279,22 @@ class ModifyDocumentController extends Controller
     
                 $record = DB::table('modify_documents')->where('id_document', $doc_add[$i])->first();
 
-                array_push($id_doc_loaded, $record->id_doc_loaded);
+                //array_push($id_doc_loaded, $record->id_doc_loaded);
     
                 if ($record->id_mod_action == 1) {
                     try {
-                        /* $insert = DB::table('documents')->insert([
+                        $insert = DB::table('documents')->insert([
+                            'id_request' => $record->id_request,
+                            'id_document_type' => $record->id_document_type,
+                            'document_path' => $record->document_path,
+                            'document_ext' => $record->document_ext,
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s'),
+                            'active' => true,
+                            'id_mod_status' => 3
+                        ]);
+
+                        /* $update = documents::query()->where('id', $id_doc_loaded[$i])->update([
                             'id_request' => $record->id_request,
                             'id_document_type' => $record->id_document_type,
                             'document_path' => $record->document_path,
@@ -293,17 +304,6 @@ class ModifyDocumentController extends Controller
                             'active' => true,
                             'id_mod_status' => 3
                         ]); */
-
-                        $update = documents::query()->where('id', $id_doc_loaded[$i])->update([
-                            'id_request' => $record->id_request,
-                            'id_document_type' => $record->id_document_type,
-                            'document_path' => $record->document_path,
-                            'document_ext' => $record->document_ext,
-                            //'created_at' => date('Y-m-d H:i:s'),
-                            //'updated_at' => date('Y-m-d H:i:s'),
-                            'active' => true,
-                            'id_mod_status' => 3
-                        ]);
     
                         $desactive_mod = ModifyDocument::query()->where('id_document', $doc_add[$i])->update(['active' => false, 'id_mod_status' => 3]);
                         $id_doc_status = solicitudes::query()->where('id', $record->id_request)->update(['id_doc_status' => 3]);
