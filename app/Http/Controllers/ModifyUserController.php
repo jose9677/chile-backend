@@ -24,7 +24,7 @@ class ModifyUserController extends Controller
 
     public function searchModifyUser($id_request)
     {
-        $rut = DB::table('modify_solicitudes')->where('id_request', $id_request)->value('rut_user');
+        $rut = DB::table('solicitudes')->where('id', $id_request)->value('rut_user');
         //$data = DB::table('modify_users')->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get('*');
 
         $data = DB::table('modify_users')->select(
@@ -41,12 +41,9 @@ class ModifyUserController extends Controller
             'modify_users.id_mod_status',
             'mod_status.description as mod_status',
             'modify_users.approve',
-            //'modify_users.id_status_emp',
-            //'emp.description as status_emp',
             'modify_users.created_by'
-            )->join('mod_status', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
-            //->join('mod_status as emp', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
-            ->join('sex', 'sex.id_sex', '=', 'modify_users.id_sex')
+            )->leftJoin('mod_status', 'mod_status.id_mod_status', '=', 'modify_users.id_mod_status')
+            ->leftJoin('sex', 'sex.id_sex', '=', 'modify_users.id_sex')
             ->where('rut', $rut)->orderByDesc('id_user')->limit(1)->get();
 
         return response()->json($data, 200);

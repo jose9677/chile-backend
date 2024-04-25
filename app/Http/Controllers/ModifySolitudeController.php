@@ -56,14 +56,14 @@ class ModifySolitudeController extends Controller
             f.status as status_emp,
             a.created_by
             FROM consultants.modify_solicitudes as a 
-            JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
-            JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
-            JOIN consultants.users as d ON a.rut_user = d.rut 
-            JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
-            JOIN consultants.status as f ON a.id_status_emp = f.id
-            JOIN consultants.property_types as g ON a.id_property_type = g.id
-            JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
-            JOIN consultants.locations as i ON a.id_location = i.id
+            LEFT JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
+            LEFT JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
+            LEFT JOIN consultants.users as d ON a.rut_user = d.rut 
+            LEFT JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
+            LEFT JOIN consultants.status as f ON a.id_status_emp = f.id
+            LEFT JOIN consultants.property_types as g ON a.id_property_type = g.id
+            LEFT JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
+            LEFT JOIN consultants.locations as i ON a.id_location = i.id
             WHERE a.id_request = $id_request
             ORDER BY a.id_solicitude DESC
             LIMIT 1"
