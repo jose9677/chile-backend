@@ -137,7 +137,7 @@ class ModifyDocumentController extends Controller
 
             //$new_id_doc = documents::query()->where('id_request', $id_request)->max('id');
 
-            $path = $request->file('document_path')->storeAs('public/modify', $comPic);
+            $path = $request->file('document_path')->storeAs('public/posts', $comPic);
             
             $doc_mod = ModifyDocument::create([
                 'id_request' => $id_request,
@@ -427,8 +427,8 @@ class ModifyDocumentController extends Controller
     {
         $fileName = $comPic.'.'.$file->extension();
 
-        Storage::disk('modify')->put($fileName, $file);
-        $file = Storage::disk('modify')->files($fileName);
+        Storage::disk('posts')->put($fileName, $file);
+        $file = Storage::disk('posts')->files($fileName);
        // $url = Storage::disk('public/modify')->url('/');
         $pathUrl = $file[0];
 
