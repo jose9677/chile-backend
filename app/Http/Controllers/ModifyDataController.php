@@ -53,14 +53,14 @@ class ModifyDataController extends Controller
             a.id_doc_status,
             j.description as doc_status
             FROM consultants.solicitudes as a 
-            JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
-            JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
-            JOIN consultants.users as d ON a.rut_user = d.rut 
+            LEFT JOIN consultants.preventions_details as b ON a.id_prevention_type_detail = b.id
+            LEFT JOIN consultants.preventions_types as c ON b.id_prevention_type = c.id
+            LEFT JOIN consultants.users as d ON a.rut_user = d.rut 
             LEFT JOIN consultants.mod_status as e ON a.id_mod_status = e.id_mod_status
-            JOIN consultants.status as f ON a.id_status_emp = f.id
-            JOIN consultants.property_types as g ON a.id_property_type = g.id
-            JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
-            JOIN consultants.locations as i ON a.id_location = i.id
+            LEFT JOIN consultants.status as f ON a.id_status_emp = f.id
+            LEFT JOIN consultants.property_types as g ON a.id_property_type = g.id
+            LEFT JOIN consultants.preventions_details as h ON a.id_prevention_type_detail = h.id
+            LEFT JOIN consultants.locations as i ON a.id_location = i.id
             LEFT JOIN consultants.mod_status as j ON a.id_doc_status = j.id_mod_status
             WHERE a.id = $id"
         );
@@ -85,8 +85,8 @@ class ModifyDataController extends Controller
         'users.mobile_phone',
         'users.id_mod_status',
         'mod_status.description as mod_status'
-        )->join('mod_status', 'mod_status.id_mod_status', '=', 'users.id_mod_status')
-        ->join('sex', 'sex.id_sex', '=', 'users.id_sex')
+        )->leftJoin('mod_status', 'mod_status.id_mod_status', '=', 'users.id_mod_status')
+        ->leftJoin('sex', 'sex.id_sex', '=', 'users.id_sex')
         ->where('rut', $rut)->get();
 
         return $data;
@@ -108,7 +108,7 @@ class ModifyDataController extends Controller
             a.id_mod_status,
             b.description as mod_status
             FROM consultants.documents as a 
-            JOIN consultants.mod_status as b ON a.id_mod_status = b.id_mod_status
+            LEFT JOIN consultants.mod_status as b ON a.id_mod_status = b.id_mod_status
             WHERE a.id_request = $id AND  a.active = true
             ");
             
@@ -138,10 +138,10 @@ class ModifyDataController extends Controller
             a.id_adi_status,
             e.description as sol_adi_status
             FROM consultants.solicitudes as a 
-            JOIN consultants.users as b ON a.rut_user = b.rut
-            JOIN consultants.mod_status as c ON a.id_mod_status = c.id_mod_status
-            JOIN consultants.mod_status as d ON b.id_mod_status = d.id_mod_status
-            JOIN consultants.mod_status as e ON a.id_adi_status = e.id_mod_status
+            LEFT JOIN consultants.users as b ON a.rut_user = b.rut
+            LEFT JOIN consultants.mod_status as c ON a.id_mod_status = c.id_mod_status
+            LEFT JOIN consultants.mod_status as d ON b.id_mod_status = d.id_mod_status
+            LEFT JOIN consultants.mod_status as e ON a.id_adi_status = e.id_mod_status
             LEFT JOIN consultants.motives as f USING (id_motive)
             LEFT JOIN consultants.dedications as g USING (id_dedication)
             LEFT JOIN consultants.remunerations as h USING (id_remuneration)  
