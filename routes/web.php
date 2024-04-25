@@ -136,6 +136,7 @@ Route::put('/reject-request/{id}', [App\Http\Controllers\solicitudesController::
 Route::get('/request-assigned', [App\Http\Controllers\solicitudesController::class, 'requestAssigned']);
 Route::get('/guard-card/{id_simulation}', [App\Http\Controllers\solicitudesController::class, 'guardCard']); */
 
+
 // USER_REQUESTCONTROLLER
 /* Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);
 Route::post('/add_employeeRut', [App\Http\Controllers\user_requestController::class, 'add_employeeRut']);

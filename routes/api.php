@@ -60,6 +60,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/request-assigned', [App\Http\Controllers\solicitudesController::class, 'requestAssigned']);
     Route::get('/guard-card/{id_simulation}', [App\Http\Controllers\solicitudesController::class, 'guardCard']);
     Route::get('/aditonal-data/{id}', [App\Http\Controllers\solicitudesController::class, 'AditionalData']);
+    Route::get('/mod-request-earring', [App\Http\Controllers\solicitudesController::class, 'getModRequestEarring']);
 
     // USER_REQUESTCONTROLLER...
     Route::post('/add-request', [App\Http\Controllers\user_requestController::class, 'add_request']);

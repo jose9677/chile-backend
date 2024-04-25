@@ -875,7 +875,11 @@ class solicitudesController extends Controller
             a.id_status_emp, 
             g.status,
             h.status as status_emp,
-            a.percent
+            a.percent,
+            a.id_mod_status as sol_mod_estatus,
+            a.id_adi_status as adi_mod_status,
+            a.id_doc_status as mod_doc_status,
+            b.id_mod_status as user_mod_status
             FROM consultants.solicitudes as a 
             LEFT JOIN consultants.users as b ON a.rut_user = b.rut
             LEFT JOIN consultants.locations as c ON a.id_location = c.id
@@ -884,7 +888,7 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
             LEFT JOIN consultants.status as g ON a.id_status = g.id
             LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
-            WHERE a.is_active = true
+            WHERE a.id_mod_status = 1 OR a.id_adi_status = 1 OR a.id_doc_status = 1 OR b.id_mod_status = 1
             order by a.id ASC"
         );
 
