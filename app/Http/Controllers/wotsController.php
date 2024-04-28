@@ -62,12 +62,13 @@ class wotsController extends Controller
             }
         }
         
-        /* if ($request->rut) {
+        //REVISAR ESTA VALIDACION, ESTABA COMENTADA....
+        if ($request->rut) {
             //return response()->json(['message' => 'User is not registered'], 200);
             return response()->json(['message' => $request->rut.' Is Valid'], 200);
         }else {
             return response()->json(['error' => $request->rut.' Is not Valid'], 400);
-        } */
+        }
     }
 
     public function wotsRegisterNeighbor(Request $request)
@@ -95,7 +96,7 @@ class wotsController extends Controller
             'latitude' => 'required',
             'longitude'   => 'required',
             'url_residence_file' => 'required',
-            'url_prevition_file' => 'required'
+            //'url_prevition_file' => 'required'
         ]);
         
         if ($validator->fails()) {
@@ -157,17 +158,17 @@ class wotsController extends Controller
         $sol->dir_wots = $request->get('dir_wots');
         $sol->latitude = $request->get('latitude');
         $sol->longitude = $request->get('longitude');
-        $sol->reg_type = 'wots';
+        $sol->reg_type = 'WOTS';
         $sol->id_status_emp = 1;
-        $sol->origin = 'wots';
+        $sol->origin = 'WOTS';
         
         if ($request->terms_condition == true) {
             $user->save();
             $sol->save();
         }
         elseif ($request->terms_condition == false) {
-            $data_user = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
             $data_sol = DB::delete("DELETE FROM consultants.solicitudes WHERE rut = '$request->rut");
+            $data_user = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
 
             return response()->json(['error' => 'User must to accept terms condition'], 400);
         }
@@ -183,13 +184,14 @@ class wotsController extends Controller
         }
         
         if ($gate == false) {
-            $data_user = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
             $data_sol = DB::delete("DELETE FROM consultants.solicitudes WHERE rut = '$request->rut");
+            $data_user = DB::delete("DELETE FROM consultants.users WHERE rut = '$request->rut");
             
             return response()->json(['error' => 'User must to load files'], 400);
         }
 
         $verify_rut = DB::table('aps')->where('rut', $request->rut)->value('rut');
+        $id_sol = DB::table('solicitudes')->where('rut_user', $request->rut)->value('id');
         
         if ($verify_rut) {
             User::query()->where('rut', $request->rut)->update(['aps' => true]);
@@ -210,7 +212,42 @@ class wotsController extends Controller
         ->where('solicitudes.rut_user', $request->rut)
         ->value('prevention_type');
 
-        
+        $aps = Db::table('users')->where('rut', $request->rut)->value('aps');
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 50]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 50]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 20]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
+            $f_nac = DB::table('users')->where('rut', $request->rut)->value('f_nac');
+            $age = Carbon::parse($f_nac)->age;
+
+            if ($age < 60) {
+                User::query()->where('rut', $request->input('rut'))->update(['percent' => 30]);
+                solicitudes::query()->where('id', $id_sol)->update(['percent' => 30]);
+            }
+            elseif ($age >= 60) {
+                User::query()->where('rut', $request->input('rut'))->update(['percent' => 40]);
+                solicitudes::query()->where('id', $id_sol)->update(['percent' => 40]);
+            }
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == false) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 20]);
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == true) {
+            User::query()->where('rut', $request->input('rut'))->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id_sol)->update(['percent' => 20]);
+        }
+ 
         $token = JWTAuth::fromUser($user);
         return response()->json(['message' => 'User registered'], 200);
     }

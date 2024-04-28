@@ -435,6 +435,10 @@ class usersController extends Controller
         $id_request = DB::table('solicitudes')->where('rut_user', $rut)->value('id');
 
         $i = 0; 
+
+        if($id_request == null){
+            $query = DB::delete("DELETE FROM consultants.users WHERE rut = '$rut'");
+        }elseif($id_request){
         
         while ($i < 4) {
             switch ($i) {
@@ -457,7 +461,8 @@ class usersController extends Controller
                     # code...
                     break;
             }
-            ++$i;
+                ++$i;
+            }
         }
         return response()->json(['message' => 'Restart successfull']);
    }
