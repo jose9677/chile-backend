@@ -82,8 +82,8 @@ Route::get('/search-sol-extra-data/{id_solicitude}', [App\Http\Controllers\Modif
 Route::post('/load-sol-modify/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'loadSolicitudeData']);
 Route::put('/approve-sol-modify/{id_solicitude}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'approveSolChanges']);
 Route::put('/reject-sol-modify/{id_solicitude}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'rejectSolChanges']);
-Route::put('/update-sol-modify-VIP/{id_request}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'updateSolDataVIP']);
-Route::put('/update-sol-modify/{id_request}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'updateSolData']);
+Route::put('/update-sol-modify-VIP/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'updateSolDataVIP']);
+Route::put('/update-sol-modify/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'updateSolData']);
 Route::put('/update-extra-data/{id_request}/{rut}', [App\Http\Controllers\ModifySolitudeController::class, 'updateExtraData']);
 Route::post('/compare-sol-data/{id_request}', [App\Http\Controllers\ModifySolitudeController::class, 'CompSolData']);
 

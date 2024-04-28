@@ -290,7 +290,7 @@ class ModifySolitudeController extends Controller
         return response()->json($compare, 200);
     }
 
-    public function updateSolData(Request $request, $id_request, $rut)
+    public function updateSolData(Request $request, $id_request)
     {
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);
@@ -306,41 +306,43 @@ class ModifySolitudeController extends Controller
          */
 
         if ($gate == true) {
-            if ($request->reg_type == 'WOTS') {
+            $record = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->first();
+            if ($record->reg_type == 'WOTS') {
             
                 $update = DB::table('solicitudes')->where('id', $id_request)->update([
-                    'id_prevention_type_detail' => $request->id_prevention_type_detail,
-                    'assurance' => $request->assurance,
-                    'id_location' => $request->id_location,
-                    'way_number' => $request->way_number,
-                    'id_property_type' => $request->id_property_type,
-                    'property_number' => $request->property_number,
-                    'request_date' => $request->request_date,
-                    'dir_wots' => $request->dir_wots,
-                    'latitude' => $request->latitude,
-                    'longitude' => $request->longitude,
-                    'reg_type' => $request->reg_type,
+                    'id_prevention_type_detail' => $record->id_prevention_type_detail,
+                    'assurance' => $record->assurance,
+                    'id_location' => $record->id_location,
+                    'way_number' => $record->way_number,
+                    'id_property_type' => $record->id_property_type,
+                    'property_number' => $record->property_number,
+                    'request_date' => $record->request_date,
+                    'dir_wots' => $record->dir_wots,
+                    'latitude' => $record->latitude,
+                    'longitude' => $record->longitude,
+                    'reg_type' => $record->reg_type,
                     'id_mod_status' => 3,
-                    'id_status_emp' => $request->id_status_emp
+                    'id_status_emp' => $record->id_status_emp
                 ]);
                 $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
             }
-            elseif ($request->reg_type != 'WOTS') {
+            elseif ($record->reg_type != 'WOTS') {
     
                 $update = DB::table('solicitudes')->where('id', $id_request)->update([
-                    'id_prevention_type_detail' => $request->id_prevention_type_detail,
-                    'assurance' => $request->assurance,
-                    'id_location' => $request->id_location,
-                    'way_number' => $request->way_number,
-                    'id_property_type' => $request->id_property_type,
-                    'property_number' => $request->property_number,
-                    'request_date' => $request->request_date,
-                    'reg_type' => $request->reg_type,
+                    'id_prevention_type_detail' => $record->id_prevention_type_detail,
+                    'assurance' => $record->assurance,
+                    'id_location' => $record->id_location,
+                    'way_number' => $record->way_number,
+                    'id_property_type' => $record->id_property_type,
+                    'property_number' => $record->property_number,
+                    'request_date' => $record->request_date,
+                    'reg_type' => $record->reg_type,
                     'id_mod_status' => 3,
-                    'id_status_emp' => $request->id_status_emp
+                    'id_status_emp' => $record->id_status_emp
                 ]);
                 $mod_status = DB::table('modify_solicitudes')->where('id_solicitude', $id_solicitude)->update(['id_mod_status' => 3]);
             }
+
         }elseif ($gate == false) {
             $update = solicitudes::query()->where('id', $id_request)->update(['id_mod_status' => 4]);
         }
@@ -351,7 +353,7 @@ class ModifySolitudeController extends Controller
         ]); 
     }
 
-    public function updateSolDataVIP(Request $request, $id_request, $rut)
+    public function updateSolDataVIP(Request $request, $id_request)
     {
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'Request without bearer token'], 400);

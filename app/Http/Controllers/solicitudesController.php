@@ -888,7 +888,7 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
             LEFT JOIN consultants.status as g ON a.id_status = g.id
             LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
-            WHERE a.id_mod_status = 1 OR a.id_adi_status = 1 OR a.id_doc_status = 1 OR b.id_mod_status = 1
+            WHERE a.is_active = true AND  a.id_mod_status = 1 OR a.id_adi_status = 1 OR a.id_doc_status = 1 OR b.id_mod_status = 1
             order by a.id ASC"
         );
 
