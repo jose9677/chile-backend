@@ -31,8 +31,10 @@ class reportExport implements FromView
             lower(a.email) as Email,
             a.landline as Tel_Fijo,
             a.mobile_phone as Tel_Móvil,
-            CASE WHEN a.origin = 'wots' THEN b.dir_wots ELSE e.street END AS Calle,
-			CASE WHEN a.origin = 'wots' THEN '' ELSE b.way_number::varchar END AS Número_Calle,
+            --CASE WHEN a.origin = 'wots' THEN b.dir_wots ELSE e.street END AS Calle,
+            --CASE WHEN a.origin = 'wots' THEN '' ELSE b.way_number::varchar END AS Número_Calle,
+            CASE WHEN b.reg_type = 'WOTS' THEN b.dir_wots ELSE e.street END AS Calle,
+            CASE WHEN b.reg_type = 'WOTS' THEN '' ELSE b.way_number::varchar END AS Número_Calle,
             f.description as Casa_Dpto_Ofic,
             b.property_number as Número_Casa_Dpto_Ofic,
             CASE WHEN a.aps = 't' THEN 'SI' ELSE 'NO' END AS APS,
@@ -58,7 +60,8 @@ class reportExport implements FromView
             left JOIN consultants.remunerations j ON j.id_remuneration = b.id_remuneration
             left JOIN consultants.sex k on k.id_sex = a.id_sex
             -- WHERE (a.employee = 'f' and a.otp is null) or (a.employee = 't' and b.id is not null)
-            WHERE (a.employee = 'f' and b.id is not null) or (a.employee = 't' and b.id is not null)
+            --before renovation 2024 WHERE (a.employee = 'f' and b.id is not null) or (a.employee = 't' and b.id is not null)
+            WHERE (a.employee = 'f' and b.id is not null and b.id_status != 14) or (a.employee = 't' and b.id is not null and b.id_status != 14)
             order by b.created_at asc)"
             );
             

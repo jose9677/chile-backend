@@ -37,7 +37,9 @@ class integramedicaExport implements FromView
             FROM consultants.users a 
             left JOIN consultants.solicitudes b ON a.rut = b.rut_user
             left JOIN consultants.sex k on k.id_sex = a.id_sex
-            WHERE b.id_status = 6 and ((a.employee = 'f' and a.otp is null) or (a.employee = 't' and b.id is not null))
+            WHERE (b.id_status in(6,12,13,15)) and ((a.employee = 'f') or (a.employee = 't' and b.id is not null)) AND is_active = true
+            --WHERE (b.id_status = 6 or b.id_status = 12 or b.id_status = 13) and ((a.employee = 'f' and a.otp is null) or (a.employee = 't' and b.id is not null)) AND is_active = true
+            --WHERE (b.id_status = 6 and ((a.employee = 'f' and a.otp is null) or (a.employee = 't' and b.id is not null))) or (b.id_status != 6 and b.include_in_integramedica_report = 't')
             order by b.created_at asc
             )");
 

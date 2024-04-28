@@ -55,7 +55,7 @@ class solicitudesController extends Controller
 
         $id_sol = DB::table('solicitudes')->where(['rut_user' => $request->rut_user, 'is_active' => true])->orderByDesc('id')->limit(1)->value('id');
         $id_status = DB::table('solicitudes')->where('id', $id_sol)->value('id_status');
-        $status_rule = [7, 9, 14];
+        $status_rule = [9, 14];
 
         $sol = new solicitudes();
         
@@ -216,7 +216,7 @@ class solicitudesController extends Controller
             'id_remuneration' => $request->id_remuneration
         ]);
 
-        $update_status = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 1, 'id_status_emp' => 1]);
+        $update_status = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 12, 'id_status_emp' => 12]);
 
         $this->percentRequets($id);
 
@@ -295,7 +295,8 @@ class solicitudesController extends Controller
             return response()->json(['error' => 'This solicitude is not in renovation status'], 400);
         }
 
-        $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 6]);
+        //$update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 6]);
+        $update = DB::table('solicitudes')->where('id', $id)->update(['id_status' => 15, 'id_status_emp' => 15]);
 
         return response()->json(['message' => 'Solicitude Apporved successfull'], 200);
     }
@@ -802,7 +803,8 @@ class solicitudesController extends Controller
      public function requestAssigned()
      {
         $query_count = DB::select("SELECT COUNT(id) FROM consultants.solicitudes WHERE id_status != 14 and is_active = true");
-        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6 or id_status = 13 AND is_active = true");
+        //$query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 6 or id_status = 13 AND is_active = true");
+        $query_approveRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE (id_status in (6,12,13,15)) AND is_active = true");
         $query_rejectRequest = DB::select("SELECT * FROM consultants.solicitudes WHERE id_status = 7 AND is_active = true");
 
         $query = DB::select(
@@ -837,7 +839,7 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
             LEFT JOIN consultants.status as g ON a.id_status = g.id
             LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
-            WHERE a.is_active = true
+            WHERE a.is_active = true and a.id_status != 14
             order by a.id ASC"
          );
  
@@ -888,7 +890,7 @@ class solicitudesController extends Controller
             LEFT JOIN consultants.users as f ON f.rut = e.supervisor_rut
             LEFT JOIN consultants.status as g ON a.id_status = g.id
             LEFT JOIN consultants.status as h ON a.id_status_emp = h.id 
-            WHERE a.is_active = true AND  a.id_mod_status = 1 OR a.id_adi_status = 1 OR a.id_doc_status = 1 OR b.id_mod_status = 1
+            WHERE a.is_active = true AND a.id_status_emp not in (14) and (a.id_mod_status = 1 OR a.id_adi_status = 1 OR a.id_doc_status = 1 OR b.id_mod_status = 1)
             order by a.id ASC"
         );
 

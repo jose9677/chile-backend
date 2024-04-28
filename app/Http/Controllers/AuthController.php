@@ -229,6 +229,7 @@ class AuthController extends Controller
         // $sol->admission_date = $request->get('admission_date');
         $sol->reg_type = 'REGISTRO POR PAGINA';
         $sol->id_status_emp = 1;
+        $sol->origin = 'REGISTRO POR PAGINA';
 
         if ($request->terms_condition == false) {
             return response()->json(['error' => 'User must to accept terms condition'], 400);
