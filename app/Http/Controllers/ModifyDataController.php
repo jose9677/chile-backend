@@ -105,7 +105,8 @@ class ModifyDataController extends Controller
             a.document_ext,
             a.active,
             --'http://54.189.74.47/storage/posts/'||a.document_path as doc_srv_path,
-            CASE WHEN c.origin = 'wots' or c.origin = 'WOTS' THEN 'https://saludatualcance.net/storage/posts/'||a.document_path ELSE 'http://34.221.38.26:3000/storage/posts/'||a.document_path END AS doc_srv_path
+            CASE WHEN c.origin = 'wots' or c.origin = 'WOTS' THEN 'https://saludatualcance.net/storage/posts/'||a.document_path 
+            ELSE 'http://34.221.38.26:3000/storage/posts/'||a.document_path END AS doc_srv_path,
             a.id_mod_status,
             b.description as mod_status
             FROM consultants.documents as a 
