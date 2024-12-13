@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Jobs\ExcelReport;
 use Illuminate\Support\Facades\DB;
 use App\Models\reports;
 use Maatwebsite\Excel\Concerns\FromCollection;

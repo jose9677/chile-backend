@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\OauthController;
+use App\Jobs\ExcelReport;
 use Ixudra\Curl\Facades\Curl;
 
 /*
@@ -17,7 +18,7 @@ use Ixudra\Curl\Facades\Curl;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+     return view('welcome');
 });
 
 /*  //COPAGO
@@ -190,8 +191,12 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
 
  //REPORTES EXCEL
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
-Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
+//Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
 Route::get('export-integramedica', [App\Http\Controllers\exportController::class, 'exportIntegramedica']);
+
+Route::get('export-reports', function () {
+    ExcelReport::dispatch();
+});
 
 //IMPORTAR REPORTES 
 Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);

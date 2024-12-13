@@ -88,17 +88,31 @@ class apsController extends Controller
                     $data->update_date = null;
                     $data->save();
                     
+                    //APS_STATUS....
+                    $cleanCurrentList = config('env.cleanCurrentList');
+                    $loadNewList = config('env.loadNewList');
+                    $backupMainFielToServer = config('env.backupMainFielToServer');
+                    $updateNeighborsRegisteredWithAps = config('env.updateNeighborsRegisteredWithAps');
+                    $updateDiscountRate = config('env.updateDiscountRate');
+                    $processFinished = config('env.processFinished');
+
+                    //DES_APS_STATUS...
+                    $finishedSuccessdull = config('env.finishedSuccessdull');
+                    $inProcess = config('env.inProcess');
+                    $pendingAPS = config('env.pendingAPS');
+                    $finishedWithError = config('env.finishedWithError');
+
                     $id_aps = DB::table('update_aps')->orderByDesc('id_aps')->limit(1)->value('id_aps');
-                    DB::update("UPDATE consultants.update_aps SET id_status = 1 WHERE id_aps = $id_aps");
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 1");
+                    DB::update("UPDATE consultants.update_aps SET id_status = $cleanCurrentList WHERE id_aps = $id_aps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $inProcess WHERE id_aps = $id_aps AND id_status = $cleanCurrentList");
                     
                     $this->trucateAPS();
 
                     //PROCESO FINALIZADO...
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 1");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedSuccessdull WHERE id_aps = $id_aps AND id_status = $cleanCurrentList");
 
                 } catch (\Throwable $th) {
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 1");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedWithError WHERE id_aps = $id_aps AND id_status = $cleanCurrentList");
                 }
 
                 $completeFilename = $request->file('document')->getClientOriginalName();
@@ -108,15 +122,15 @@ class apsController extends Controller
 
                 try {
                     //SUBIR ARCHIVO AL SERVIDOR...
-                    DB::update("UPDATE consultants.update_aps SET id_status = 3 WHERE id_aps = $id_aps");
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 3");
+                    DB::update("UPDATE consultants.update_aps SET id_status = $backupMainFielToServer WHERE id_aps = $id_aps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $inProcess WHERE id_aps = $id_aps AND id_status = $backupMainFielToServer");
                     
                     $save = $request->file('document')->storeAs('public/aps', $comPic);
                     
                     //PROCESO FINALIZADO...
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 3");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedSuccessdull WHERE id_aps = $id_aps AND id_status = $backupMainFielToServer");
                     } catch (\Throwable $th) {
-                        DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 3");
+                        DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedWithError WHERE id_aps = $id_aps AND id_status = $backupMainFielToServer");
                     }
 
                 $excel = new apsImport;
@@ -124,17 +138,17 @@ class apsController extends Controller
                 
                 //COPIAR CONTENIDO DEL ARCHIVO CSV DIRECO A LA TABLA APS...
                 try {
-                    DB::update("UPDATE consultants.update_aps SET id_status = 2 WHERE id_aps = $id_aps");
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 2");
+                    DB::update("UPDATE consultants.update_aps SET id_status = $loadNewList WHERE id_aps = $id_aps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $inProcess WHERE id_aps = $id_aps AND id_status = $loadNewList");
 
                     $csvFilePath = storage_path("app/public/aps/".$comPic);
                     $copy->copyAPS($csvFilePath);
                     
                     //PROCESO FINALIZADO...
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 2");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedSuccessdull WHERE id_aps = $id_aps AND id_status = $loadNewList");
                 
                 } catch (\Throwable $th) {
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 2");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedWithError WHERE id_aps = $id_aps AND id_status = $loadNewList");
                 }
             
                 //INSERTAR DATOS EN LA TABLA DE update_aps...
@@ -151,29 +165,29 @@ class apsController extends Controller
             
                 try {    
                     //ACTUALIZACION DE VECINOS CON APS....
-                    DB::update("UPDATE consultants.update_aps SET id_status = 4 WHERE id_aps = $id_aps");
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 4");
+                    DB::update("UPDATE consultants.update_aps SET id_status = $updateNeighborsRegisteredWithAps WHERE id_aps = $id_aps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $inProcess WHERE id_aps = $id_aps AND id_status = $updateNeighborsRegisteredWithAps");
                         
                     //PROCESO FINALIZADO...
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 4");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedSuccessdull WHERE id_aps = $id_aps AND id_status = $updateNeighborsRegisteredWithAps");
 
                     //ACTUALIZACION DE PORCENTAJES APS....
-                    DB::update("UPDATE consultants.update_aps SET id_status = 5 WHERE id_aps = $id_aps");
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 5");
+                    DB::update("UPDATE consultants.update_aps SET id_status = $updateDiscountRate WHERE id_aps = $id_aps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $inProcess WHERE id_aps = $id_aps AND id_status = $updateDiscountRate");
                     
                     $aps->updateAps();
                     
                     //PROCESO FINALIZADO....
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 5");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedSuccessdull WHERE id_aps = $id_aps AND id_status = $updateDiscountRate");
                 } catch (\Throwable $th) {
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 4");
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 5");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedWithError WHERE id_aps = $id_aps AND id_status = $updateNeighborsRegisteredWithAps");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedWithError WHERE id_aps = $id_aps AND id_status = $updateDiscountRate");
                 }
                 
                 $user_fullName = $name.' '.$lastname;
                 
                 try {
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 2 WHERE id_aps = $id_aps AND id_status = 6");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $inProcess WHERE id_aps = $id_aps AND id_status = $processFinished");
                     
                     DB::update(
                         "UPDATE consultants.update_aps 
@@ -182,15 +196,15 @@ class apsController extends Controller
                         coincidence = {$this->apsCoincidence()},
                         user_name =  '$user_fullName',
                         path = '$path',
-                        id_status = 6, --SE DISPARA EL TRIGGER consultants.load_status_aps_change_fnc()
+                        id_status = $processFinished, --SE DISPARA EL TRIGGER consultants.load_status_aps_change_fnc()
                         update_date = '$request->update_date'
                         WHERE id_aps = $id_aps
                         ");
                         
                     //PROCESO FINALIZADO....
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 1 WHERE id_aps = $id_aps AND id_status = 6");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedSuccessdull WHERE id_aps = $id_aps AND id_status = $processFinished");
                 } catch (\Throwable $th) {
-                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = 4 WHERE id_aps = $id_aps AND id_status = 6");
+                    DB::update("UPDATE consultants.aps_historic_status SET id_des_status = $finishedWithError WHERE id_aps = $id_aps AND id_status = $processFinished");
                 } 
             }
         }

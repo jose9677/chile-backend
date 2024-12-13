@@ -6,6 +6,9 @@ use App\Exports\integramedicaExport;
 use App\Exports\reportExport;
 use Illuminate\Http\Request;
 use App\Exports\usersExport;
+use App\Jobs\ExcelReport;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class exportController extends Controller
@@ -18,8 +21,20 @@ class exportController extends Controller
     public function exportReport()
     {
         $date = date('d-m-Y');
+        //$todayDate = Carbon::now()->format('H:i:m');
+        $fileName = 'REPORTE DE PRUEBA - 3 - '.$date.'.xlsx';
+    
+        //return Excel::download(new reportExport, 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'.xlsx');
+        //$report = Excel::download(new reportExport, $fileName);
 
-        return Excel::download(new reportExport, 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'.xlsx');
+        $link = "reports";
+        $report = Excel::store(new reportExport, $link.'/'.$fileName);
+
+        /* $file = $report->getFile();
+        dd($file); */
+        
+        //Storage::disk('posts')->put($fileName, $file);
+        //$test = Storage::disk('posts')->files($fileName);
     }
 
     public function exportIntegramedica()
