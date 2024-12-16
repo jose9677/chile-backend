@@ -102,5 +102,9 @@ return [
     //SEX...
     'male' => 1,
     'female' => 2,
-    'iPreferNotTosay' => 3
+    'iPreferNotTosay' => 3,
+
+    //DOWNLOAD FILES...
+    'reports' => 'public/reports/',
+    'integramedica' => 'public/integramedica/'
 ];

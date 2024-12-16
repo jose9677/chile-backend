@@ -10,6 +10,7 @@ use App\Jobs\ExcelReport;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class exportController extends Controller
 {
@@ -21,26 +22,40 @@ class exportController extends Controller
     public function exportReport()
     {
         $date = date('d-m-Y');
-        //$todayDate = Carbon::now()->format('H:i:m');
-        $fileName = 'REPORTE DE PRUEBA - 3 - '.$date.'.xlsx';
-    
-        //return Excel::download(new reportExport, 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'.xlsx');
-        //$report = Excel::download(new reportExport, $fileName);
+        $fileName = 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'_'.Str::uuid().'.xlsx';
 
-        $link = "reports";
+        $link = "public/reports";
         $report = Excel::store(new reportExport, $link.'/'.$fileName);
+    }
 
-        /* $file = $report->getFile();
-        dd($file); */
-        
-        //Storage::disk('posts')->put($fileName, $file);
-        //$test = Storage::disk('posts')->files($fileName);
+    public function downloadReport($file_name)
+    {
+        if (Storage::exists(config('env.reports').$file_name)) {
+            return Storage::download(config('env.reports').$file_name);
+        }
+        else {
+            return response()->json(['error' => 'File is not exists'], 404);
+        }
     }
 
     public function exportIntegramedica()
     {
         $date = date('d-m-Y');
+        $file_name = 'REPORTE-INTEGRAMEDICA - '.$date.'_'.Str::uuid().'.xlsx';
+        
+        $link = "public/integramedica";
+        $report = Excel::store(new integramedicaExport, $link.'/'.$file_name);
 
-        return Excel::download(new integramedicaExport, 'REPORTE-INTEGRAMEDICA - '.$date.'.xlsx');
+        //return Excel::download(new integramedicaExport, 'REPORTE-INTEGRAMEDICA - '.$date.'.xlsx');
+    }
+
+    public function downloadIntegramedica($file_name)
+    {
+        if (Storage::exists(config('env.integramedica').$file_name)) {
+            return Storage::download(config('env.integramedica').$file_name);
+        }
+        else {
+            return response()->json(['error' => 'File is not exists'], 404);
+        }
     }
 }

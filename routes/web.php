@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\OauthController;
 use App\Jobs\ExcelReport;
+use App\Jobs\IntegramedicaJob;
 use Ixudra\Curl\Facades\Curl;
 
 /*
@@ -191,12 +192,17 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
 
  //REPORTES EXCEL
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
-//Route::get('export-reports', [App\Http\Controllers\exportController::class, 'exportReport']);
-Route::get('export-integramedica', [App\Http\Controllers\exportController::class, 'exportIntegramedica']);
 
 Route::get('export-reports', function () {
-    ExcelReport::dispatch();
+    ExcelReport::dispatch()->onQueue('reports');
 });
+
+Route::get('export-integramedica', function() {
+    IntegramedicaJob::dispatch()->onQueue('integramedica');
+});
+
+Route::get('download-report/{file_name}', [App\Http\Controllers\exportController::class, 'downloadReport']);
+Route::get('download-integramedica/{file_name}', [App\Http\Controllers\exportController::class, 'downloadIntegramedica']);
 
 //IMPORTAR REPORTES 
 Route::get('aps', [App\Http\Controllers\apsController::class, 'index']);
