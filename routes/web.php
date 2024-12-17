@@ -194,11 +194,11 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
 
 Route::get('export-reports', function () {
-    ExcelReport::dispatch()->onQueue('reports');
+    ExcelReport::dispatch();
 });
 
 Route::get('export-integramedica', function() {
-    IntegramedicaJob::dispatch()->onQueue('integramedica');
+    IntegramedicaJob::dispatch();
 });
 
 Route::get('download-report/{file_name}', [App\Http\Controllers\exportController::class, 'downloadReport']);

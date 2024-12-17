@@ -104,6 +104,10 @@ return [
     'female' => 2,
     'iPreferNotTosay' => 3,
 
+    //LINKS...
+    'LinkReports' => 'public/reports',
+    'LinkIntegramedica' => 'public/integramedica',
+
     //DOWNLOAD FILES...
     'reports' => 'public/reports/',
     'integramedica' => 'public/integramedica/'

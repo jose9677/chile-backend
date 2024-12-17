@@ -24,8 +24,7 @@ class exportController extends Controller
         $date = date('d-m-Y');
         $fileName = 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'_'.Str::uuid().'.xlsx';
 
-        $link = "public/reports";
-        $report = Excel::store(new reportExport, $link.'/'.$fileName);
+        $report = Excel::store(new reportExport, config('env.LinkReports').'/'.$fileName);
     }
 
     public function downloadReport($file_name)
@@ -43,8 +42,7 @@ class exportController extends Controller
         $date = date('d-m-Y');
         $file_name = 'REPORTE-INTEGRAMEDICA - '.$date.'_'.Str::uuid().'.xlsx';
         
-        $link = "public/integramedica";
-        $report = Excel::store(new integramedicaExport, $link.'/'.$file_name);
+        $report = Excel::store(new integramedicaExport, config('env.LinkIntegramedica').'/'.$file_name);
 
         //return Excel::download(new integramedicaExport, 'REPORTE-INTEGRAMEDICA - '.$date.'.xlsx');
     }
