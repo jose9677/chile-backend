@@ -60,6 +60,7 @@ Route::post('/validateRut', [App\Http\Controllers\AuthController::class, 'valida
 Route::post('/test', [App\Http\Controllers\AuthController::class, 'test']);
 Route::post('/profile-pic/{rut}', [App\Http\Controllers\AuthController::class, 'profilePic']);
 Route::put('/update-aps', [App\Http\Controllers\AuthController::class, 'updateAps']);
+Route::put('/update-aps-by-request/{id}', [App\Http\Controllers\AuthController::class, 'updateApsByRequest']);
 
 Route::put('/renove-password/{rut}', [App\Http\Controllers\AuthController::class, 'renovePassword']);
 

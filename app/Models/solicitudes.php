@@ -10,6 +10,7 @@ class solicitudes extends Model
     use HasFactory;
 
     protected $primaryKey = 'id';
+    protected $table = 'solicitudes';
 
     protected $fillable = [
         'rut_user',

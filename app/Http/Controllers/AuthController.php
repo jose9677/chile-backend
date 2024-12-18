@@ -409,6 +409,78 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'All percents updated successfull'], 200);
     }
+
+    public function updateApsByRequest($id)
+    {   
+        $rut = solicitudes::where(['id' => $id])->value('rut_user');
+        $sweep_aps = User::query()->where('rut', $rut)->update(['aps' => false]);
+
+        $lower_letter = aps::query()->where(['rut' => $rut])->update(['rut' => Str::upper($rut)]);
+
+        $active_aps = DB::update(
+            "UPDATE consultants.users
+             SET aps = true 
+             WHERE '$rut' in (SELECT rut FROM consultants.aps)"
+        );
+
+        $aps = User::query()->where(['rut' => $rut])->value('aps');
+
+        $is_active = solicitudes::query()->where('id', $id)->value('is_active');
+
+        if ($is_active == false) {
+            return response()->json(['error' => 'This request is not actived'], 400);
+        }
+
+        $prevention_detail = DB::table('preventions_details')
+        ->select('prevention_detail')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where(['solicitudes.id' => $id, 'solicitudes.is_active' => true])
+        ->value('prevention_detail');
+
+        $prevention_type = DB::table('preventions_types')
+        ->select('prevention_type')
+        ->join('preventions_details', 'preventions_details.id_prevention_type', '=', 'preventions_types.id')
+        ->join('solicitudes', 'solicitudes.id_prevention_type_detail', '=', 'preventions_details.id')
+        ->where(['solicitudes.id' => $id, 'solicitudes.is_active' => true])
+        ->value('prevention_type');
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail == 'A') {
+            User::query()->where('rut', $rut)->update(['percent' => 50]);
+            solicitudes::query()->where('id', $id)->update(['percent' => 50]);
+        }
+
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == false) {
+            User::query()->where('rut', $rut)->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id)->update(['percent' => 20]);
+        }
+
+        //ESTA CONDICION TENIA APS TRUE ANTERIORMENTE...
+        if ($prevention_type == 'FONASA' AND $prevention_detail != 'A' AND $aps == true) {
+            $f_nac = DB::table('users')->where('rut', $rut)->value('f_nac');
+            $age = Carbon::parse($f_nac)->age;
+
+            if ($age < 60) {
+                User::query()->where('rut', $rut)->update(['percent' => 30]);
+                solicitudes::query()->where('id', $id)->update(['percent' => 30]);
+            }
+            elseif ($age >= 60) {
+                User::query()->where('rut', $rut)->update(['percent' => 40]);
+                solicitudes::query()->where('id', $id)->update(['percent' => 40]);
+            }
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == false) {
+            User::query()->where('rut', $rut)->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id)->update(['percent' => 20]);
+        }
+
+        if ($prevention_type != 'FONASA' AND $aps == true) {
+            User::query()->where('rut', $rut)->update(['percent' => 20]);
+            solicitudes::query()->where('id', $id)->update(['percent' => 20]);
+        }
+
+        return response()->json(['message' => 'All percents updated successfull'], 200);
+    }
     
     public function login(Request $request)
     {
