@@ -37,6 +37,17 @@ class exportController extends Controller
         }
     }
 
+    public function getReportsFiles()
+    {
+        $reports = Storage::disk('reports')->files();
+        $integramedica = Storage::disk('integramedica')->files();
+
+        return response()->json([
+            'reports' => $reports, 
+            'integramedica' => $integramedica
+        ], 200);
+    }
+
     public function exportIntegramedica()
     {
         $date = date('d-m-Y');

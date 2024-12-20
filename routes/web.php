@@ -193,6 +193,7 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
 
  //REPORTES EXCEL
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
+Route::get('get-reports', [App\Http\Controllers\exportController::class, 'getReportsFiles']);
 
 Route::get('export-reports', function () {
     ExcelReport::dispatch();

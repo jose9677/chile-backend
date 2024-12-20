@@ -23,4 +23,17 @@ class BearerTokenServiceProvider extends ServiceProvider
 
         return $full_name;
     }
+
+    public static function getRutByBearerToken($token)
+    {
+        if (! str_contains($token, '.')) {
+            return false;
+        }
+
+        list($header, $payload, $signature) = explode('.', $token);
+        $jsonToken = base64_decode($payload);
+        $arrayToken = json_decode($jsonToken, true);
+
+        return $arrayToken['rut'];
+    }
 }
