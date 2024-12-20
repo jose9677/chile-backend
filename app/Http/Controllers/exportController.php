@@ -6,7 +6,9 @@ use App\Exports\integramedicaExport;
 use App\Exports\reportExport;
 use Illuminate\Http\Request;
 use App\Exports\usersExport;
+use App\Http\Middleware\ReportsMiddleware;
 use App\Jobs\ExcelReport;
+use App\Models\HistoricReports;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,12 +21,15 @@ class exportController extends Controller
         return Excel::download(new usersExport, 'users.xlsx');
     }
 
-    public function exportReport()
+    public function exportReport(Request $request)
     {
         $date = date('d-m-Y');
         $fileName = 'REPORTE-Usuarios-Solicitudes Salud a tu Alcance - '.$date.'_'.Str::uuid().'.xlsx';
 
         $report = Excel::store(new reportExport, config('env.LinkReports').'/'.$fileName);
+        $log = new HistoricReports();
+
+        $log = $log->reportsHistoric($request, $fileName);
     }
 
     public function downloadReport($file_name)

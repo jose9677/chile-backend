@@ -484,69 +484,34 @@ class AuthController extends Controller
     
     public function login(Request $request)
     {
-        $data = new User();
-        $data = User::query()->where(['rut' => $request->input('rut')])->first();
+        $request->validate([
+            'rut' => ['required', 'string', new ValidChileanRut(new ChileRut)],
+            'password' => 'required|string',
+        ]);
 
-        if (!$data) {
-            return response()->json(['error' => 'User does not exists in Data Base'], 400);
-        }
-        
-        if ($data->email_active == false) {
-            return response()->json(['error' => 'Inactive Email'], 400);
-        }
-        
-        //this validation ask if the user is a employee, in that case the method must to ask if
-        //that employee is active or not.
-        if ($data->employee == true) {
-            $data = User::query()->where(['rut' => $request->input('rut'), 'active' => true])->first();
-                if (!$data) {
-                    return response()->json(['error' => 'This employee is not actived'], 400);
-                }
+        $rut = Str::upper($request->input('rut'));
+        $user = User::where('rut', $rut)->first();
+
+        if (!$user || !$user->email_active || !$user->active) {
+            Log::warning('login fallido: usuario inexistente o inactivo', ['rut' => $rut]);
+
+            return response()->json(['error' => 'Credenciales incorrectas'], 401);
         }
 
-        //$data = DB::select("SELECT rut FROM consultants.users WHERE rut In (SELECT user FROM consultants.wots_token)");
-        $data = DB::select(
-            "SELECT 
-            a.rut 
-            FROM consultants.users as a
-            JOIN consultants.wots_token as b ON a.rut = b.user"
-        );
-        
-        if ($data) {
-            $credentials = $request->only(['rut', 'password']);
+        $credentials = $request->only(['rut', 'password']);
+        $credentials['rut'] = $rut;
 
-            if (Auth::guard('api')->attempt($credentials)) {
-                $user = Auth::guard('api')->user();
-                $jwt = JWTAuth::attempt($credentials);
-                $success = true;
-                $api_token = Str::random(50);
-                wots_token::query()->where('user', $request->input('rut'))->update(['api_token' => $api_token]);
-                User::query()->where('rut', $request->input('rut'))->update(['origin' => 'wots']);
-                $data = compact('user', 'jwt');
+        if (!$jwt = JWTAuth::attempt($credentials)) {
+            Log::warning('login fallido: contraseña incorrecta', ['rut' => $rut]);
 
-                return compact('success', 'data');
-            }else {
-                $success = false;
-                $message = 'User or Password Incorrect';
-                return response()->json(['error' => $message], 400);
-            }
+            return response()->json(['error' => 'Credenciales incorrectas'], 401);
         }
-        elseif (!$data) {
-            $credentials = $request->only(['rut', 'password']);
 
-            if (Auth::guard('api')->attempt($credentials)) {
-                $user = Auth::guard('api')->user();
-                $jwt = JWTAuth::attempt($credentials);
-                $success = true;
-                $data = compact('user', 'jwt');
-
-                return compact('success', 'data');
-            }else {
-                $success = false;
-                $message = 'User or Password Incorrect';
-                return response()->json(['error' => $message], 400);
-            }
+        if (DB::table('wots_token')->where('user', $rut)->exists()) {
+            wots_token::where('user', $rut)->update(['api_token' => Str::random(50)]);
         }
+
+        return response()->json(['success' => true, 'data' => compact('user', 'jwt')]);
     }
 
     public function logout()

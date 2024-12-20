@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->middleware('throttle:10,1');
 Route::post('/registerNeighbor', [App\Http\Controllers\AuthController::class, 'registerNeighbor']);
 Route::post('/registerEmployee', [App\Http\Controllers\AuthController::class, 'registerEmployee']);
 

@@ -15,7 +15,7 @@ class CreateHistoricReportsTable extends Migration
     {
         Schema::create('historic_reports', function (Blueprint $table) {
             $table->id('id_doc');
-            $table->integer('rut');
+            $table->string('rut');
             $table->string('route');
             $table->string('method');
             $table->string('file_name');

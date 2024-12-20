@@ -9,6 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
@@ -32,11 +33,11 @@ class ExcelReport implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(Request $request)
     {
         $report = new exportController();
 
-        $report = $report->exportReport();
+        $report = $report->exportReport($request);
 
         return $report;
     }

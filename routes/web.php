@@ -195,6 +195,16 @@ Route::post('/oauth/token', [OauthController::class, 'doGenerateToken'])->name('
 Route::get('export-users', [App\Http\Controllers\exportController::class, 'export']);
 Route::get('get-reports', [App\Http\Controllers\exportController::class, 'getReportsFiles']);
 
+/* Route::middleware('reports')->group(function (){
+    Route::get('export-reports', function () {
+        ExcelReport::dispatch();
+    });
+    
+    Route::get('export-integramedica', function() {
+        IntegramedicaJob::dispatch();
+    });
+}); */
+
 Route::get('export-reports', function () {
     ExcelReport::dispatch();
 });
@@ -222,6 +232,8 @@ Route::get('process-aps', [App\Http\Controllers\apsController::class, 'ProcessAp
 Route::get('token', [App\Http\Controllers\usersController::class, 'getNewToken']);
 Route::post('wots-auth', [App\Http\Controllers\wotsController::class, 'wotsAuth']);
 Route::post('wots-out', [App\Http\Controllers\wotsController::class, 'wotsOut']);
+
+Route::get('suma', [App\Http\Controllers\SumaController::class, 'sumar']);
 
 Route::get('curl', function(){
     $response = Curl::to('https://jsonplaceholder.typicode.com/posts/7')
